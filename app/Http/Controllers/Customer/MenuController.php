@@ -9,17 +9,18 @@ use Illuminate\View\View;
 
 class MenuController extends Controller
 {
-    // Allow-list of valid category values (matches DB enum)
-    private const VALID_CATEGORIES = ['siomay', 'hakau', 'lumpia', 'bao', 'shumai', 'minuman', 'lainnya'];
+    // Allow-list of valid category values
+    private const VALID_CATEGORIES = ['original', 'spicy_mayo', 'goreng_keju', 'premium_sauce', 'sharing_party', 'snacks', 'minuman', 'add_on'];
 
     private const CATEGORY_LABELS = [
-        'siomay'  => '🥟 Siomay',
-        'hakau'   => '🦐 Hakau',
-        'lumpia'  => '🌯 Lumpia',
-        'bao'     => '🫓 Bao',
-        'shumai'  => '🍢 Shumai',
-        'minuman' => '🍵 Minuman',
-        'lainnya' => '✨ Lainnya',
+        'original'      => '🥟 Original',
+        'spicy_mayo'    => '🌶️ Spicy Mayo',
+        'goreng_keju'   => '🧀 Goreng Keju',
+        'premium_sauce' => '🍯 Premium Sauce',
+        'sharing_party' => '🎉 Sharing Party',
+        'snacks'        => '🍟 Snacks',
+        'minuman'       => '🍵 Minuman',
+        'add_on'        => '➕ Add On',
     ];
 
     public function index(Request $request): View
