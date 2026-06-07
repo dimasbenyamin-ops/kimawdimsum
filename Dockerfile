@@ -118,6 +118,8 @@ RUN mkdir -p /var/www/html/storage/logs \
     && chmod -R 755 /var/www/html/storage \
     && chmod -R 755 /var/www/html/bootstrap/cache
 
-EXPOSE 9000
+EXPOSE 8080
 
-CMD ["php-fpm"]
+# Railway expects an HTTP server to respond to health checks.
+# php-fpm only speaks FastCGI, which causes the container to crash on Railway.
+CMD php artisan serve --host=0.0.0.0 --port=${PORT:-8080}
