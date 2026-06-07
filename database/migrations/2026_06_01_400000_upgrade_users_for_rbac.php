@@ -53,7 +53,9 @@ return new class extends Migration
         });
 
         // Drop old flat `role` enum column — replaced by role_id FK
+        // NOTE: SQLite cannot drop a column that has an index; drop the index first.
         Schema::table('users', function (Blueprint $table) {
+            $table->dropIndex('users_role_index');
             $table->dropColumn('role');
         });
 
