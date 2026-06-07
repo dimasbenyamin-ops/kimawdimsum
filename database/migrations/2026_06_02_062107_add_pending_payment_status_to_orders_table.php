@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -10,27 +12,34 @@ return new class extends Migration
 {
     public function up(): void
     {
-        DB::statement("ALTER TABLE `orders` MODIFY `status` ENUM(
-            'pending_payment',
-            'pending',
-            'confirmed',
-            'preparing',
-            'ready',
-            'completed',
-            'cancelled'
-        ) NOT NULL DEFAULT 'pending_payment'");
+        Schema::table('orders', function (Blueprint $table) {
+            $table->enum('status', [
+                'pending_payment',
+                'pending',
+                'confirmed',
+                'preparing',
+                'ready',
+                'completed',
+                'cancelled'
+            ])->default('pending_payment')->change();
+        });
     }
 
     public function down(): void
     {
-        DB::statement("UPDATE `orders` SET `status` = 'pending' WHERE `status` = 'pending_payment'");
-        DB::statement("ALTER TABLE `orders` MODIFY `status` ENUM(
-            'pending',
-            'confirmed',
-            'preparing',
-            'ready',
-            'completed',
-            'cancelled'
-        ) NOT NULL DEFAULT 'pending'");
+        // Kembalikan semua order dengan status 'pending_payment' menjadi 'pending'
+        // untuk mencegah error Data Truncation/Invalid Enum saat kolom status di-rollback.
+        DB::table('orders')->where('status', 'pending_payment')->update(['status' => 'pending']);
+
+        Schema::table('orders', function (Blueprint $table) {
+            $table->enum('status', [
+                'pending',
+                'confirmed',
+                'preparing',
+                'ready',
+                'completed',
+                'cancelled'
+            ])->default('pending')->change();
+        });
     }
 };
