@@ -75,7 +75,7 @@ return new class extends Migration
                   ->comment('subtotal - discount + tax');
 
             // Payment
-            $table->enum('payment_method', ['cash', 'transfer', 'qris', 'unpaid'])
+            $table->enum('payment_method', ['cash', 'qris', 'unpaid'])
                   ->default('unpaid');
 
             $table->timestamp('paid_at')

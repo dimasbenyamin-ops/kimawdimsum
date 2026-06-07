@@ -109,7 +109,7 @@
 
     .type-tabs {
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(2, 1fr);
         gap: 0.375rem;
         margin-bottom: 1rem;
     }
@@ -219,10 +219,7 @@
                     <span>Subtotal</span>
                     <span>Rp {{ number_format($subtotal, 0, ',', '.') }}</span>
                 </div>
-                <div class="summary-row">
-                    <span>Pajak (11%)</span>
-                    <span>Rp {{ number_format($tax, 0, ',', '.') }}</span>
-                </div>
+
                 <div class="summary-row total">
                     <span>Total</span>
                     <span>Rp {{ number_format($grandTotal, 0, ',', '.') }}</span>
@@ -268,7 +265,7 @@
                             @foreach([
                                 'dine_in'  => ['label' => '🍽️ Makan', 'id' => 'type-dine'],
                                 'takeaway' => ['label' => '📦 Bawa', 'id' => 'type-take'],
-                                'delivery' => ['label' => '🛵 Antar', 'id' => 'type-delivery'],
+
                             ] as $value => $opt)
                                 <label for="{{ $opt['id'] }}" style="margin:0;display:contents">
                                     <input
@@ -350,7 +347,7 @@
                     </div>
 
                     <button type="button" class="btn btn-gold btn-block btn-lg" id="btn-checkout">
-                        ✅ Pesan Sekarang
+                        Pesan Sekarang
                     </button>
                 </form>
             </div>

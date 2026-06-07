@@ -13,18 +13,55 @@
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-        :root {
-            --bg:        #0a0a1a;
-            --bg2:       #12122a;
+        html[data-theme="dark"] {
+            --bg:        #3a0606;
+            --bg2:       #4a0a0a;
             --gold:      #f59e0b;
             --gold-light:#fcd34d;
-            --text:      #e2e8f0;
-            --muted:     #94a3b8;
-            --border:    rgba(255,255,255,0.08);
+            --text:      #ffe4e4;
+            --muted:     #fca5a5;
+            --border:    rgba(255,255,255,0.1);
             --glass:     rgba(255,255,255,0.05);
             --radius:    14px;
             --error:     #f87171;
             --success:   #34d399;
+        }
+
+        :root {
+            --bg:        #fdf5e6;
+            --bg2:       #fbf0df;
+            --gold:      #d97706;
+            --gold-light:#f59e0b;
+            --text:      #4a0a0a;
+            --muted:     #995c5c;
+            --border:    #e6d5b8;
+            --glass:     rgba(255,255,255,0.7);
+            --radius:    14px;
+            --error:     #ef4444;
+            --success:   #10b981;
+        }
+
+        .theme-toggle-fixed {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            background: var(--glass);
+            border: 1px solid var(--border);
+            color: var(--text);
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+        .theme-toggle-fixed:hover {
+            transform: scale(1.05);
         }
 
         body {
@@ -203,11 +240,15 @@
 
         .link-row a:hover { text-decoration: underline; }
     </style>
+    <script>
+        const savedTheme = localStorage.getItem('kumaw-theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+    </script>
 </head>
 <body>
     <div class="auth-wrapper">
         <div class="brand">
-            <img src="{{ asset('images/dimsum-logo.png') }}" alt="Kumaw Dimsum Logo" width="72" height="72" class="mb-4" style="border-radius: 18px; box-shadow: 0 0 40px rgba(245,158,11,0.3); object-fit: cover;">
+            <img src="{{ asset('images/dimsum-logo.png') }}" alt="Kumaw Dimsum Logo" width="72" height="72" class="mb-4" style="border-radius: 50%; box-shadow: 0 0 40px rgba(245,158,11,0.3); object-fit: contain;">
             <h1>Kumaw Dimsum</h1>
             <p>Authentic Dimsum Experience</p>
         </div>
@@ -228,5 +269,36 @@
             @yield('content')
         </div>
     </div>
+
+    <button id="theme-toggle" class="theme-toggle-fixed" aria-label="Toggle theme">
+        <span id="theme-icon">☀️</span>
+    </button>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const themeToggleBtn = document.getElementById('theme-toggle');
+            const themeIcon = document.getElementById('theme-icon');
+            
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            updateThemeIcon(currentTheme);
+
+            themeToggleBtn.addEventListener('click', () => {
+                let theme = document.documentElement.getAttribute('data-theme');
+                let newTheme = theme === 'dark' ? 'light' : 'dark';
+                
+                document.documentElement.setAttribute('data-theme', newTheme);
+                localStorage.setItem('kumaw-theme', newTheme);
+                updateThemeIcon(newTheme);
+            });
+
+            function updateThemeIcon(theme) {
+                if (theme === 'dark') {
+                    themeIcon.textContent = '🌙'; 
+                } else {
+                    themeIcon.textContent = '☀️'; 
+                }
+            }
+        });
+    </script>
 </body>
 </html>

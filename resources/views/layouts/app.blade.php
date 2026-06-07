@@ -17,33 +17,33 @@
         /* Initialize Theme Before Render to Prevent Flash */
         html[data-theme="dark"] {
             /* Dark mode overrides */
-            --bg:           #090910;
-            --bg2:          #111120;
-            --surface:      rgba(255,255,255,0.04);
-            --surface-hover:rgba(255,255,255,0.08);
+            --bg:           #3a0606;
+            --bg2:          #4a0a0a;
+            --surface:      rgba(255,255,255,0.05);
+            --surface-hover:rgba(255,255,255,0.09);
             --gold:         #f59e0b;
             --gold-light:   #fcd34d;
             --gold-dim:     rgba(245,158,11,0.15);
-            --text:         #e2e8f0;
-            --muted:        #94a3b8;
-            --border:       rgba(255,255,255,0.08);
-            --nav-bg:       rgba(9, 9, 16, 0.85);
-            --nav-border:   rgba(255,255,255,0.08);
+            --text:         #ffe4e4;
+            --muted:        #fca5a5;
+            --border:       rgba(255,255,255,0.1);
+            --nav-bg:       rgba(58, 6, 6, 0.85);
+            --nav-border:   rgba(255,255,255,0.1);
             --shadow:       none;
         }
 
         :root {
             /* Default Light Mode Colors */
-            --bg:           #f8fafc;
-            --bg2:          #ffffff;
+            --bg:           #fdf5e6;
+            --bg2:          #fbf0df;
             --surface:      #ffffff;
-            --surface-hover:#f1f5f9;
+            --surface-hover:#fdf5e6;
             --gold:         #d97706; /* slightly darker gold for better contrast on white */
             --gold-light:   #f59e0b;
             --gold-dim:     rgba(245,158,11,0.15);
-            --text:         #0f172a;
-            --muted:        #64748b;
-            --border:       #e2e8f0;
+            --text:         #4a0a0a;
+            --muted:        #995c5c;
+            --border:       #e6d5b8;
             --radius-sm:    8px;
             --radius:       12px;
             --radius-lg:    18px;
@@ -51,8 +51,8 @@
             --success:      #10b981;
             --warning:      #f59e0b;
             --info:         #3b82f6;
-            --nav-bg:       rgba(255, 255, 255, 0.9);
-            --nav-border:   #e2e8f0;
+            --nav-bg:       rgba(253, 245, 230, 0.9);
+            --nav-border:   #e6d5b8;
             --shadow:       0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
         }
 
@@ -448,7 +448,7 @@
     <nav class="navbar">
         <div class="navbar-inner">
             <a href="{{ route('menu.index') }}" class="navbar-brand">
-                <img src="{{ asset('images/dimsum-logo.png') }}" alt="Kumaw Dimsum" width="36" height="36" style="border-radius: 10px; object-fit: cover;">
+                <img src="{{ asset('images/dimsum-logo.png') }}" alt="Kumaw Dimsum" width="36" height="36" style="border-radius: 50%; object-fit: contain;">
                 <span>Kumaw Dimsum</span>
             </a>
 
