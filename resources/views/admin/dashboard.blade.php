@@ -301,7 +301,7 @@
     @php
         $quickLinks = [
             ['label' => 'Dashboard Kasir', 'sub' => 'Kelola pesanan real-time', 'icon' => 'bi-receipt-cutoff', 'color' => 'gold',   'route' => 'cashier.dashboard'],
-            ['label' => 'Rekap Pendapatan','sub' => 'Laporan omzet & transaksi','icon' => 'bi-bar-chart-fill','color' => 'green',  'route' => 'admin.reports.index'],
+            ['label' => 'Rekap Pendapatan','sub' => 'Laporan omzet & transaksi','icon' => 'bi-bar-chart-fill','color' => 'green',  'route' => 'admin.reports.revenue'],
             ['label' => 'Manajemen User', 'sub' => 'Akun & hak akses staf',   'icon' => 'bi-people-fill',    'color' => 'blue',   'route' => 'admin.users.index'],
             ['label' => 'Manajemen Role', 'sub' => 'Klasifikasi role sistem',  'icon' => 'bi-shield-lock-fill','color' => 'purple','route' => 'admin.roles.index'],
             ['label' => 'Menu Makanan',   'sub' => 'Produk & katalog dimsum',  'icon' => 'bi-basket-fill',    'color' => 'red',    'route' => 'admin.menus.index'],

@@ -15,20 +15,21 @@
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-        :root {
-            --bg:           #090910;
-            --bg2:          #111120;
+        /* Initialize Theme Before Render to Prevent Flash */
+        html[data-theme="dark"] {
+            --bg:           #3a0606;
+            --bg2:          #4a0a0a;
             --sidebar-w:    260px;
             --topbar-h:     60px;
             --gold:         #f59e0b;
             --gold-light:   #fcd34d;
             --gold-dim:     rgba(245,158,11,0.12);
             --gold-border:  rgba(245,158,11,0.25);
-            --text:         #e2e8f0;
-            --muted:        #94a3b8;
-            --border:       rgba(255,255,255,0.07);
-            --surface:      rgba(255,255,255,0.04);
-            --surface-hover:rgba(255,255,255,0.08);
+            --text:         #ffe4e4;
+            --muted:        #fca5a5;
+            --border:       rgba(255,255,255,0.1);
+            --surface:      rgba(255,255,255,0.05);
+            --surface-hover:rgba(255,255,255,0.09);
             --radius-sm:    8px;
             --radius:       12px;
             --radius-lg:    16px;
@@ -36,6 +37,31 @@
             --success:      #34d399;
             --warning:      #fbbf24;
             --info:         #60a5fa;
+            --nav-bg:       rgba(58, 6, 6, 0.85);
+        }
+
+        :root {
+            --bg:           #fdf5e6;
+            --bg2:          #fbf0df;
+            --sidebar-w:    260px;
+            --topbar-h:     60px;
+            --gold:         #d97706;
+            --gold-light:   #f59e0b;
+            --gold-dim:     rgba(245,158,11,0.15);
+            --gold-border:  #e6d5b8;
+            --text:         #4a0a0a;
+            --muted:        #995c5c;
+            --border:       #e6d5b8;
+            --surface:      #ffffff;
+            --surface-hover:#fdf5e6;
+            --radius-sm:    8px;
+            --radius:       12px;
+            --radius-lg:    16px;
+            --error:        #ef4444;
+            --success:      #10b981;
+            --warning:      #f59e0b;
+            --info:         #3b82f6;
+            --nav-bg:       rgba(253, 245, 230, 0.9);
         }
 
         html { scroll-behavior: smooth; }
@@ -287,8 +313,8 @@
             left: var(--sidebar-w);
             right: 0;
             height: var(--topbar-h);
-            background: rgba(9,9,16,0.85);
-            backdrop-filter: blur(20px);
+            background: var(--nav-bg);
+            backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--border);
             display: flex;
@@ -592,6 +618,10 @@
     @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     </style>
     @yield('styles')
+    <script>
+        const savedTheme = localStorage.getItem('kumaw-theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+    </script>
 </head>
 <body>
 
@@ -779,6 +809,10 @@
 
     <div class="topbar-spacer"></div>
 
+    <button id="theme-toggle" style="background: transparent; border: none; color: var(--text); font-size: 1.25rem; margin-right: 1rem; cursor: pointer;" aria-label="Toggle theme">
+        <span id="theme-icon">☀️</span>
+    </button>
+
     {{-- Expiry warning --}}
     @if(auth()->user()?->expired_at && auth()->user()->expired_at->diffInDays(now()) <= 7 && !auth()->user()->isExpired())
         <span style="font-size:0.75rem; color:var(--warning);">
@@ -848,6 +882,32 @@
         document.getElementById('sidebar').classList.remove('open');
         this.classList.remove('open');
         document.getElementById('hamburgerBtn').setAttribute('aria-expanded', 'false');
+    });
+
+    // ── Theme Toggle Logic ─────────────────────────────────────────────
+    document.addEventListener('DOMContentLoaded', () => {
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const themeIcon = document.getElementById('theme-icon');
+        
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        updateThemeIcon(currentTheme);
+
+        themeToggleBtn.addEventListener('click', () => {
+            let theme = document.documentElement.getAttribute('data-theme');
+            let newTheme = theme === 'dark' ? 'light' : 'dark';
+            
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('kumaw-theme', newTheme);
+            updateThemeIcon(newTheme);
+        });
+
+        function updateThemeIcon(theme) {
+            if (theme === 'dark') {
+                themeIcon.textContent = '🌙'; 
+            } else {
+                themeIcon.textContent = '☀️'; 
+            }
+        }
     });
 
     // ── Collapsible nav groups ──────────────────────────────────────────────

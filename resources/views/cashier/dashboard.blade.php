@@ -412,7 +412,7 @@
                                 <div class="ticket-time">{{ $order->created_at->format('H:i') }} · {{ $order->created_at->diffForHumans() }}</div>
                             </div>
                             <span class="ticket-type">
-                                {{ match($order->type) { 'dine_in'=>'🍽️ Makan', 'takeaway'=>'📦 Bawa', 'delivery'=>'🛵 Antar', default=>$order->type } }}
+                                {{ match($order->type) { 'dine_in'=>'🍽️ Makan', 'takeaway'=>'📦 Bawa', default=>$order->type } }}
                                 @if($order->table_number) #{{ $order->table_number }} @endif
                             </span>
                         </div>
@@ -472,7 +472,7 @@
                                             'orderNumber'  => $order->order_number,
                                             'customerName' => $order->customer_name ?? 'Guest',
                                             'phone'        => $order->phone_number,
-                                            'type'         => match($order->type){ 'dine_in'=>'Makan di Tempat', 'takeaway'=>'Bawa Pulang', 'delivery'=>'Delivery', default=>$order->type },
+                                            'type'         => match($order->type){ 'dine_in'=>'Makan di Tempat', 'takeaway'=>'Bawa Pulang', default=>$order->type },
                                             'tableNumber'  => $order->table_number,
                                             'notes'        => $order->customer_notes,
                                             'paymentMethod'=> $order->payment_method,
@@ -501,7 +501,6 @@
                                         @if($btn['status'] === 'completed' && !$order->isPaid())
                                             <select name="payment_method" style="margin-bottom:0.5rem">
                                                 <option value="cash" {{ $order->payment_method === 'cash' ? 'selected' : '' }}>💵 Tunai</option>
-                                                <option value="transfer" {{ $order->payment_method === 'transfer' ? 'selected' : '' }}>🏦 Transfer</option>
                                                 <option value="qris" {{ $order->payment_method === 'qris' ? 'selected' : '' }}>📱 QRIS</option>
                                             </select>
                                         @endif
@@ -589,10 +588,7 @@
                         <span>Subtotal</span>
                         <span id="inv-subtotal">—</span>
                     </div>
-                    <div class="invoice-total-row">
-                        <span>Pajak (11%)</span>
-                        <span id="inv-tax">—</span>
-                    </div>
+
                     <div class="invoice-total-row grand">
                         <span>TOTAL</span>
                         <span id="inv-total">—</span>
@@ -697,11 +693,11 @@
 
         // Populate totals
         document.getElementById('inv-subtotal').textContent = formatRp(data.subtotal);
-        document.getElementById('inv-tax').textContent      = formatRp(data.tax);
+
         document.getElementById('inv-total').textContent    = formatRp(data.total);
 
         // Payment method label
-        const pmLabels = { cash: '💵 Tunai', qris: '📱 QRIS', transfer: '🏦 Transfer', unpaid: '—' };
+        const pmLabels = { cash: '💵 Tunai', qris: '📱 QRIS', unpaid: '—' };
         document.getElementById('inv-payment').textContent = pmLabels[data.paymentMethod] ?? data.paymentMethod;
 
         // Set hidden form target

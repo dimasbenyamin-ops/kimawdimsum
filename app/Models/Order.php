@@ -25,7 +25,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property float       $discount_amount
  * @property float       $tax_amount
  * @property float       $total_amount
- * @property string      $payment_method cash|transfer|qris|unpaid
+ * @property string      $payment_method cash|qris|unpaid
  * @property \Carbon\Carbon|null $paid_at
  * @property int|null    $table_number
  * @property string|null $customer_notes
@@ -53,7 +53,6 @@ class Order extends Model
     const TYPE_DELIVERY = 'delivery';
 
     const PAYMENT_CASH     = 'cash';
-    const PAYMENT_TRANSFER = 'transfer';
     const PAYMENT_QRIS     = 'qris';
     const PAYMENT_UNPAID   = 'unpaid';
 

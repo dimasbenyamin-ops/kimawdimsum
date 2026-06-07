@@ -51,7 +51,7 @@ class DashboardController extends Controller
         $validated = $request->validate([
             'status'         => ['required', 'string', 'in:confirmed,preparing,ready,completed,cancelled'],
             'cashier_notes'  => ['nullable', 'string', 'max:500'],
-            'payment_method' => ['nullable', 'in:cash,transfer,qris'],
+            'payment_method' => ['nullable', 'in:cash,qris'],
         ]);
 
         $newStatus     = $validated['status'];

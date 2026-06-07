@@ -59,7 +59,7 @@ class OrderController extends Controller
         $validated = $request->validate([
             'customer_name'  => ['required', 'string', 'max:100'],
             'phone_number'   => ['required', 'string', 'min:10', 'max:20'],
-            'type'           => ['required', 'in:dine_in,takeaway,delivery'],
+            'type'           => ['required', 'in:dine_in,takeaway'],
             'payment_method' => ['required', 'in:cash,qris'],
             'table_number'   => ['nullable', 'integer', 'min:1', 'max:999'],
             'customer_notes' => ['nullable', 'string', 'max:1000'],
@@ -76,8 +76,8 @@ class OrderController extends Controller
         try {
             DB::transaction(function () use ($cart, $validated, &$orderId) {
                 $subtotal = collect($cart)->sum(fn ($i) => $i['unit_price'] * $i['quantity']);
-                $tax      = round($subtotal * 0.11, 2);
-                $total    = round($subtotal + $tax, 2);
+                $tax      = 0;
+                $total    = $subtotal;
 
                 $order = Order::create([
                     'order_number'    => $this->generateOrderNumber(),

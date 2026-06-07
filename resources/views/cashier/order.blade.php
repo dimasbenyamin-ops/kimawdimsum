@@ -273,7 +273,7 @@
 
     .type-btns {
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(2, 1fr);
         gap: 0.375rem;
     }
 
@@ -295,7 +295,7 @@
 
     .pay-btns {
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(2, 1fr);
         gap: 0.375rem;
     }
 
@@ -309,6 +309,10 @@
         font-size: 1rem;
         font-weight: 700;
         border-radius: var(--radius);
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 
     .btn-submit-order:disabled {
@@ -326,66 +330,18 @@
 
     .pop { animation: cartPop 0.25s ease; }
 
-    /* ================================================================
-       MOBILE FAB + BOTTOM SHEET
-    ================================================================ */
-    .mobile-cart-fab { display: none; }
-    .mobile-sheet-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.65); z-index: 900; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
-    .mobile-sheet-overlay.open { display: block; }
-    .mobile-cart-sheet { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg2); border-top: 1px solid var(--border); border-radius: 20px 20px 0 0; z-index: 901; max-height: 92vh; overflow-y: auto; -webkit-overflow-scrolling: touch; transform: translateY(100%); transition: transform 0.32s cubic-bezier(0.4,0,0.2,1); display: none; }
-    .mobile-cart-sheet.open { display: block; transform: translateY(0); }
-    .sheet-drag-handle { width: 40px; height: 4px; background: var(--border); border-radius: 2px; margin: 0.875rem auto 0.5rem; }
-    .sheet-header { display: flex; align-items: center; justify-content: space-between; padding: 0 1.25rem 0.75rem; border-bottom: 1px solid var(--border); }
-    .sheet-title { font-size: 1rem; font-weight: 700; }
-    .sheet-close-btn { background: var(--surface); border: 1px solid var(--border); color: var(--muted); width: 32px; height: 32px; border-radius: 50%; cursor: pointer; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; }
-    .sheet-body { padding: 1rem 1.25rem; }
+    /* Removed mobile fab and sheet CSS */
 </style>
 <style>
     @@media (max-width: 1100px) {
         .pos-grid { grid-template-columns: 1fr; display: flex; flex-direction: column; }
-        .menu-panel { order: 2; }
-        .order-panel { order: 1; position: static; }
+        .menu-panel { order: 1; }
+        .order-panel { order: 2; position: static; width: 100%; margin-bottom: 2rem; }
     }
     @@media (max-width: 768px) {
-        .order-panel { display: none !important; }
-        .mobile-cart-fab {
-            display: flex;
-            position: fixed;
-            bottom: 1.25rem;
-            right: 1.25rem;
-            z-index: 800;
-            align-items: center;
-            gap: 0.625rem;
-            padding: 0.875rem 1.375rem;
-            background: linear-gradient(135deg, #f59e0b, #d97706);
-            color: #1a0a00;
-            border: none;
-            border-radius: 999px;
-            font-family: inherit;
-            font-size: 0.9375rem;
-            font-weight: 700;
-            cursor: pointer;
-            box-shadow: 0 8px 30px rgba(245,158,11,0.45);
-            transition: transform 0.2s, box-shadow 0.2s;
-            -webkit-tap-highlight-color: transparent;
-        }
-        .mobile-cart-fab:active { transform: scale(0.96); }
-        .fab-count {
-            background: rgba(0,0,0,0.2);
-            min-width: 22px;
-            height: 22px;
-            border-radius: 999px;
-            font-size: 0.75rem;
-            font-weight: 800;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0 5px;
-        }
-        .fab-total { font-size: 0.8125rem; opacity: 0.85; }
         .menu-cards { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 0.625rem; }
         .menu-card { padding: 0.75rem; }
-        .menu-panel { padding-bottom: 6rem; }
+        .menu-panel { padding-bottom: 2rem; }
         .page-header h1 { font-size: 1.2rem; }
         .page-header p  { font-size: 0.8rem; }
     }
@@ -402,7 +358,6 @@
         <h1>🛒 Pesan di Kasir</h1>
         <p>Buat pesanan langsung untuk pelanggan di kasir</p>
     </div>
-    <a href="{{ route('cashier.dashboard') }}" class="btn btn-ghost btn-sm">← Kembali ke Dashboard</a>
 </div>
 
 @if($errors->any())
@@ -419,46 +374,7 @@
     </div>
 @endif
 
-{{-- Mobile: FAB button (shows cart count) --}}
-<button type="button" class="mobile-cart-fab" id="mobile-fab" onclick="openMobileSheet()">
-    🛒 Pesanan
-    <span class="fab-count" id="fab-count">0</span>
-    <span class="fab-total" id="fab-total"></span>
-</button>
 
-{{-- Mobile: overlay --}}
-<div class="mobile-sheet-overlay" id="sheet-overlay" onclick="closeMobileSheet()"></div>
-
-{{-- Mobile: bottom sheet (mirrors the order panel) --}}
-<div class="mobile-cart-sheet" id="mobile-sheet">
-    <div class="sheet-drag-handle"></div>
-    <div class="sheet-header">
-        <span class="sheet-title">🧾 Pesanan</span>
-        <button type="button" class="sheet-close-btn" onclick="closeMobileSheet()">✕</button>
-    </div>
-    <div class="sheet-body">
-        <div class="cart-items" id="cart-items-mobile">
-            <div class="cart-empty" id="cart-empty-mobile" style="text-align:center;padding:1.5rem 1rem;color:var(--muted);font-size:.875rem">
-                <div style="font-size:1.75rem;margin-bottom:.375rem">🛒</div>
-                Klik menu untuk menambah pesanan
-            </div>
-        </div>
-        <div class="order-summary" id="order-summary-mobile" style="display:none">
-            <div class="summary-row"><span>Subtotal</span><span id="sum-subtotal-m">Rp 0</span></div>
-            <div class="summary-row"><span>Pajak (11%)</span><span id="sum-tax-m">Rp 0</span></div>
-            <div class="summary-row total"><span>TOTAL</span><span id="sum-total-m">Rp 0</span></div>
-        </div>
-        <div class="customer-form">
-            <div class="form-group">
-                <label>Nama Pelanggan *</label>
-                <div style="color:var(--muted);font-size:.8125rem;padding:.4rem 0">← Isi form di panel kanan (desktop) atau gulir ke bawah menu (tablet)</div>
-            </div>
-        </div>
-        <button type="button" class="btn btn-gold btn-submit-order" id="btn-submit-mobile" onclick="submitFromMobile()" disabled style="margin-top:.5rem">
-            ✅ Lanjut Isi Data &amp; Pesan
-        </button>
-    </div>
-</div>
 
 <form id="pos-form" method="POST" action="{{ route('cashier.order.store') }}">
     @csrf
@@ -561,10 +477,7 @@
                         <span>Subtotal</span>
                         <span id="sum-subtotal">Rp 0</span>
                     </div>
-                    <div class="summary-row">
-                        <span>Pajak (11%)</span>
-                        <span id="sum-tax">Rp 0</span>
-                    </div>
+
                     <div class="summary-row total">
                         <span>TOTAL</span>
                         <span id="sum-total">Rp 0</span>
@@ -598,7 +511,7 @@
                     <div class="form-group">
                         <label>Jenis Pesanan *</label>
                         <div class="type-btns" id="type-btns">
-                            @foreach(['dine_in' => '🍽️ Makan', 'takeaway' => '📦 Bawa', 'delivery' => '🛵 Antar'] as $val => $label)
+                            @foreach(['dine_in' => '🍽️ Makan', 'takeaway' => '📦 Bawa'] as $val => $label)
                                 <button type="button"
                                         class="type-btn {{ old('type', 'dine_in') === $val ? 'active' : '' }}"
                                         data-value="{{ $val }}"
@@ -624,7 +537,7 @@
                     <div class="form-group">
                         <label>Metode Pembayaran *</label>
                         <div class="pay-btns" id="pay-btns">
-                            @foreach(['cash' => '💵 Tunai', 'qris' => '📱 QRIS', 'transfer' => '🏦 Transfer'] as $val => $label)
+                            @foreach(['cash' => '💵 Tunai', 'qris' => '📱 QRIS'] as $val => $label)
                                 <button type="button"
                                         class="type-btn {{ old('payment_method', 'cash') === $val ? 'active' : '' }}"
                                         data-value="{{ $val }}"
@@ -653,7 +566,7 @@
                         id="btn-submit"
                         class="btn btn-gold btn-submit-order"
                         disabled>
-                    ✅ Buat Pesanan
+                    Buat Pesanan
                 </button>
 
             </div>{{-- /order-panel-body --}}
@@ -726,23 +639,7 @@
         });
     }
 
-    /* ---- Mobile sheet helpers ---- */
-    function openMobileSheet() {
-        document.getElementById('mobile-sheet').classList.add('open');
-        document.getElementById('sheet-overlay').classList.add('open');
-        document.body.style.overflow = 'hidden';
-    }
-    function closeMobileSheet() {
-        document.getElementById('mobile-sheet').classList.remove('open');
-        document.getElementById('sheet-overlay').classList.remove('open');
-        document.body.style.overflow = '';
-    }
-    function submitFromMobile() {
-        closeMobileSheet();
-        // Scroll to customer form (which on ≤768px is below the menu)
-        document.getElementById('customer_name').scrollIntoView({ behavior: 'smooth', block: 'center' });
-        document.getElementById('customer_name').focus();
-    }
+
 
     /* ---- Render cart list & totals ---- */
     function renderCart() {
@@ -754,28 +651,9 @@
         document.getElementById('btn-clear-cart').style.display = isEmpty ? 'none' : '';
         document.getElementById('btn-submit').disabled = isEmpty;
 
-        // ── Mobile FAB & sheet sync ──
-        const totalQty = items.reduce((s, i) => s + i.qty, 0);
-        const el = document.getElementById('fab-count');
-        if (el) el.textContent = totalQty;
-        const mobileSubmit = document.getElementById('btn-submit-mobile');
-        if (mobileSubmit) mobileSubmit.disabled = isEmpty;
-        // FAB total label
-        const fabTotalEl = document.getElementById('fab-total');
-        if (fabTotalEl) {
-            if (!isEmpty) {
-                const sub = items.reduce((s,i) => s + i.price*i.qty, 0);
-                fabTotalEl.textContent = '· ' + formatRp(Math.round(sub * 1.11));
-            } else {
-                fabTotalEl.textContent = '';
-            }
-        }
-
-        // Build cart rows — both desktop panel & mobile sheet
-        const container   = document.getElementById('cart-items');
-        const containerM  = document.getElementById('cart-items-mobile');
+        // Build cart rows
+        const container = document.getElementById('cart-items');
         container.querySelectorAll('.cart-item').forEach(el => el.remove());
-        if (containerM) containerM.querySelectorAll('.cart-item').forEach(el => el.remove());
 
         let subtotal = 0;
 
@@ -795,36 +673,17 @@
                 </div>
             `;
 
-            [container, containerM].forEach(c => {
-                if (!c) return;
-                const div = document.createElement('div');
-                div.className = 'cart-item';
-                div.innerHTML = html;
-                c.appendChild(div);
-            });
+            const div = document.createElement('div');
+            div.className = 'cart-item';
+            div.innerHTML = html;
+            container.appendChild(div);
         });
 
-        // Totals — desktop
-        const tax   = Math.round(subtotal * 0.11);
-        const total = subtotal + tax;
+        // Totals
+        const total = subtotal;
 
         document.getElementById('sum-subtotal').textContent = formatRp(subtotal);
-        document.getElementById('sum-tax').textContent      = formatRp(tax);
         document.getElementById('sum-total').textContent    = formatRp(total);
-
-        // Totals — mobile sheet
-        const smEl = document.getElementById('sum-subtotal-m');
-        const stEl = document.getElementById('sum-tax-m');
-        const ttEl = document.getElementById('sum-total-m');
-        if (smEl) smEl.textContent = formatRp(subtotal);
-        if (stEl) stEl.textContent = formatRp(tax);
-        if (ttEl) ttEl.textContent = formatRp(total);
-
-        // Mobile sheet summary visibility
-        const mSummary = document.getElementById('order-summary-mobile');
-        const mEmpty   = document.getElementById('cart-empty-mobile');
-        if (mSummary) mSummary.style.display = isEmpty ? 'none' : 'block';
-        if (mEmpty)   mEmpty.style.display   = isEmpty ? 'block' : 'none';
 
         // Rebuild hidden inputs for form submission
         const hiddenContainer = document.getElementById('cart-hidden-inputs');

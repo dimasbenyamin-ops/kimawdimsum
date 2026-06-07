@@ -15,8 +15,8 @@ class CartController extends Controller
     {
         $cart       = $this->getCart();
         $subtotal   = collect($cart)->sum(fn ($item) => $item['unit_price'] * $item['quantity']);
-        $tax        = round($subtotal * 0.11, 2);
-        $grandTotal = round($subtotal + $tax, 2);
+        $tax        = 0;
+        $grandTotal = $subtotal;
         $qrisImage  = Setting::getValue('qris_image');
 
         return view('customer.cart.index', compact('cart', 'subtotal', 'tax', 'grandTotal', 'qrisImage'));
