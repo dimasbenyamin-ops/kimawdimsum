@@ -105,8 +105,7 @@ RUN composer install \
     --no-dev
 
 # Optimize Laravel for production
-RUN php artisan config:cache \
-    && php artisan route:cache \
+RUN php artisan route:cache \
     && php artisan view:cache
 
 # Set correct permissions (mkdir -p guards in case dirs are missing)
