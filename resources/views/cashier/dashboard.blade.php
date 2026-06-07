@@ -638,10 +638,13 @@
     /* ---- Auto-refresh countdown ---- */
     let secs = 30;
     const cd = document.getElementById('countdown');
-    setInterval(() => {
+    const interval = setInterval(() => {
         secs--;
         if (cd) cd.textContent = secs + 'd';
-        if (secs <= 0) location.reload();
+        if (secs <= 0) {
+            clearInterval(interval);
+            location.reload();
+        }
     }, 1000);
 
     /* ---- Invoice Modal Logic ---- */
