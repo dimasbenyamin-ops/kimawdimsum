@@ -85,7 +85,12 @@ class DatabaseSeeder extends Seeder
             ['name' => 'Pesan di Kasir', 'icon' => 'bi bi-cart-plus', 'sort_order' => 25]
         );
 
-        $this->command->info('✅ NavMenus seeded: Dashboard, Pengaturan, User, Role, Role Menu, Menu Makanan, Pesan di Kasir, Dashboard Kasir');
+        $navRevenueReport = NavMenu::updateOrCreate(
+            ['route_name' => 'admin.reports.revenue'],
+            ['name' => 'Rekap Pendapatan', 'icon' => 'bi bi-cash-coin', 'sort_order' => 35]
+        );
+
+        $this->command->info('✅ NavMenus seeded: Dashboard, Pengaturan, User, Role, Role Menu, Menu Makanan, Pesan di Kasir, Dashboard Kasir, Rekap Pendapatan');
 
         // ─────────────────────────────────────────────────────────────────
         // 3. ROLE-MENU ASSIGNMENTS
@@ -101,6 +106,7 @@ class DatabaseSeeder extends Seeder
             $navFoodMenu->id,
             $navPesanKasir->id,
             $navCashier->id,
+            $navRevenueReport->id,
         ]);
 
         $kasirRole->navMenus()->sync([
