@@ -152,7 +152,8 @@ class Order extends Model
 
     public function scopeToday(Builder $query): Builder
     {
-        return $query->whereDate('created_at', today());
+        return $query->where('created_at', '>=', today())
+                     ->where('created_at', '<', today()->addDay());
     }
 
     // -------------------------------------------------------
