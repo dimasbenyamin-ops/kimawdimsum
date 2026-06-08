@@ -52,7 +52,12 @@ Route::prefix('orders')->name('orders.')->group(function () {
     Route::get('/',        [OrderController::class, 'index'])->name('index');
     Route::post('/',       [OrderController::class, 'store'])->name('store');
     Route::get('/{order}', [OrderController::class, 'show'])->name('show');
+    Route::get('/{order}/snap-token', [\App\Http\Controllers\PaymentController::class, 'getSnapToken'])->name('snap_token');
+    Route::post('/check-status', [\App\Http\Controllers\PaymentController::class, 'checkStatus'])->name('check_status');
 });
+
+// Midtrans Webhook Notification Route
+Route::post('/api/midtrans/notification', [\App\Http\Controllers\PaymentController::class, 'notification'])->name('midtrans.notification');
 
 // ============================================================
 // BACKEND — Admin & Cashier Dashboard

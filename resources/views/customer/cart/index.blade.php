@@ -353,26 +353,6 @@
             </div>
         </div>
 
-        <!-- QRIS Modal -->
-        <div id="qrisModal" class="modal" tabindex="-1" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 1050; align-items: center; justify-content: center;">
-            <div class="modal-dialog" style="background: var(--surface); border: 1px solid var(--gold); border-radius: var(--radius-lg); padding: 1.5rem; max-width: 400px; width: 90%; text-align: center;">
-                <h4 style="color: var(--gold); margin-bottom: 1rem;">Scan QRIS untuk Bayar</h4>
-                
-                @if(isset($qrisImage) && $qrisImage)
-                    <img src="{{ Storage::url($qrisImage) }}" alt="QRIS" style="width: 100%; max-height: 350px; object-fit: contain; border-radius: 8px; margin-bottom: 1rem;">
-                @else
-                    <div style="padding: 2rem; background: var(--bg2); border-radius: 8px; margin-bottom: 1rem; color: var(--muted);">
-                        QRIS belum tersedia. Silakan bayar di kasir.
-                    </div>
-                @endif
-                
-                <p style="font-size: 0.9rem; color: var(--muted); margin-bottom: 1.5rem;">Total Tagihan: <strong>Rp {{ number_format($grandTotal, 0, ',', '.') }}</strong></p>
-                <div style="display: flex; gap: 1rem;">
-                    <button type="button" class="btn btn-secondary" onclick="closeQrisModal()" style="flex: 1;">Batal</button>
-                    <button type="button" class="btn btn-gold" onclick="submitForm()" style="flex: 1;">Saya Sudah Bayar</button>
-                </div>
-            </div>
-        </div>
     @endif
 @endsection
 
@@ -390,10 +370,9 @@
     typeInputs.forEach(i => i.addEventListener('change', toggleTableField));
     toggleTableField(); // initial
 
-    // QRIS logic
+    // QRIS logic removed because it is now handled by Midtrans on the next page
     const btnCheckout = document.getElementById('btn-checkout');
     const checkoutForm = document.getElementById('checkout-form');
-    const qrisModal = document.getElementById('qrisModal');
 
     btnCheckout.addEventListener('click', function() {
         // Run native form validation (required fields like Name)
@@ -401,20 +380,10 @@
             return;
         }
 
-        const paymentMethod = document.querySelector('input[name="payment_method"]:checked')?.value;
-        if (paymentMethod === 'qris') {
-            qrisModal.style.display = 'flex';
-        } else {
-            checkoutForm.submit();
-        }
-    });
-
-    function closeQrisModal() {
-        qrisModal.style.display = 'none';
-    }
-
-    function submitForm() {
+        // Disable button to prevent double submit
+        btnCheckout.disabled = true;
+        btnCheckout.innerHTML = 'Memproses...';
         checkoutForm.submit();
-    }
+    });
 </script>
 @endsection
