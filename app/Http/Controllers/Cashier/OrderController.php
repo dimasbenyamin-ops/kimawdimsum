@@ -50,7 +50,8 @@ class OrderController extends Controller
         ]);
 
         try {
-            DB::transaction(function () use ($validated) {
+            $order = null;
+            DB::transaction(function () use ($validated, &$order) {
                 // Fetch menu items to get price snapshots
                 $menuIds = collect($validated['items'])->pluck('menu_id')->unique();
                 $menus   = Menu::whereIn('id', $menuIds)->get()->keyBy('id');
@@ -85,20 +86,22 @@ class OrderController extends Controller
                 $tax   = 0;
                 $total = $subtotal;
 
-                // Cashier orders go straight to confirmed (payment collected at counter)
+                $isQris = $validated['payment_method'] === 'qris';
+
+                // Cashier orders go straight to confirmed if cash, pending_payment if qris
                 $order = Order::create([
                     'order_number'    => $this->generateOrderNumber(),
                     'user_id'         => null, // walk-in / cashier-created orders have no user account
                     'customer_name'   => $validated['customer_name'],
                     'phone_number'    => $validated['phone_number'] ?? null,
-                    'status'          => Order::STATUS_CONFIRMED,
+                    'status'          => $isQris ? Order::STATUS_PENDING_PAYMENT : Order::STATUS_CONFIRMED,
                     'type'            => $validated['type'],
                     'subtotal'        => $subtotal,
                     'discount_amount' => 0,
                     'tax_amount'      => $tax,
                     'total_amount'    => $total,
                     'payment_method'  => $validated['payment_method'],
-                    'paid_at'         => now(), // cashier takes payment immediately
+                    'paid_at'         => $isQris ? null : now(), // cashier takes payment immediately for cash
                     'table_number'    => $validated['table_number'] ?? null,
                     'customer_notes'  => $validated['customer_notes'] ?? null,
                     'processed_by'    => Auth::id(),
@@ -117,6 +120,12 @@ class OrderController extends Controller
             return back()
                 ->withInput()
                 ->withErrors(['order' => 'Gagal membuat pesanan: ' . e($e->getMessage())]);
+        }
+
+        if ($validated['payment_method'] === 'qris') {
+            return redirect()
+                ->route('orders.show', ['order' => $order->id, 'auto_pay' => 1])
+                ->with('success', 'Pesanan dibuat. Silakan arahkan customer untuk scan QRIS.');
         }
 
         return redirect()

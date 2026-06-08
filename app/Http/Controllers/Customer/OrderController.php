@@ -39,7 +39,7 @@ class OrderController extends Controller
         // - For authenticated users: must match user_id
         // - For guests: order must be in their session order_ids list
         if (Auth::check()) {
-            if ($order->user_id !== Auth::id()) {
+            if (!Auth::user()->isStaff() && $order->user_id !== Auth::id()) {
                 abort(403);
             }
         } else {
@@ -126,8 +126,10 @@ class OrderController extends Controller
                              ->withErrors(['order' => 'Gagal membuat pesanan. Silakan coba lagi.']);
         }
 
-        return redirect()->route('orders.show', $orderId)
-                         ->with('success', 'Pesanan berhasil dibuat! Silakan tunggu konfirmasi kasir.');
+        return redirect()->route('orders.show', [
+            'order' => $orderId, 
+            'auto_pay' => $validated['payment_method'] === 'qris' ? 1 : null
+        ])->with('success', 'Pesanan berhasil dibuat! Silakan tunggu konfirmasi kasir.');
     }
 
     private function generateOrderNumber(): string

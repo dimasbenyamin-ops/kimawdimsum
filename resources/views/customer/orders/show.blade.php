@@ -269,7 +269,186 @@
                         {{ strtoupper($order->payment_method) }} – {{ $order->paid_at->format('H:i') }}
                     </span>
                 </div>
+                <div style="margin-top: 1.5rem;">
+                    <button class="btn btn-secondary btn-block" onclick="printInvoice()" style="padding: 0.875rem; font-size: 1.05rem; background-color: var(--surface); color: var(--text); border: 1px solid var(--border);">
+                        🖨️ Struk
+                    </button>
+                </div>
+            @elseif($order->status === 'pending_payment' && $order->payment_method === 'qris')
+                <div style="margin-top: 1.5rem;">
+                    <button id="pay-button" class="btn btn-gold btn-block" style="padding: 0.875rem; font-size: 1.05rem;">
+                        💳 Bayar dengan QRIS
+                    </button>
+                </div>
+            @elseif($order->status === 'pending_payment' && $order->payment_method === 'cash')
+                <div class="alert alert-info" style="margin-top: 1.5rem; font-size: 0.85rem; padding: 0.75rem;">
+                    Silakan lakukan pembayaran di kasir.
+                </div>
             @endif
         </div>
     </div>
+@endsection
+
+@section('scripts')
+    @if(env('MIDTRANS_IS_PRODUCTION', false))
+        <script src="https://app.midtrans.com/snap/snap.js" data-client-key="{{ env('MIDTRANS_CLIENT_KEY') }}"></script>
+    @else
+        <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ env('MIDTRANS_CLIENT_KEY') }}"></script>
+    @endif
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const payButton = document.getElementById('pay-button');
+            if (payButton) {
+                payButton.addEventListener('click', async function () {
+                    try {
+                        payButton.disabled = true;
+                        payButton.innerHTML = '⏳ Memproses...';
+                        
+                        const response = await fetch('{{ route('orders.snap_token', $order->id) }}', {
+                            headers: {
+                                'Accept': 'application/json',
+                                'X-Requested-With': 'XMLHttpRequest'
+                            }
+                        });
+                        const data = await response.json();
+                        
+                        if (data.status === 'success' && data.snap_token) {
+                            window.snap.pay(data.snap_token, {
+                                onSuccess: async function(result){
+                                    // Beri tahu pengguna bahwa pembayaran berhasil diproses Midtrans
+                                    payButton.innerHTML = '⏳ Memverifikasi Pembayaran...';
+                                    
+                                    try {
+                                        // Panggil endpoint kita untuk mengecek status terbaru langsung ke Midtrans (Manual Sync)
+                                        await fetch('{{ route('orders.check_status') }}', {
+                                            method: 'POST',
+                                            headers: {
+                                                'Content-Type': 'application/json',
+                                                'Accept': 'application/json',
+                                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                                            },
+                                            body: JSON.stringify({
+                                                order_id: result.order_id
+                                            })
+                                        });
+                                    } catch (e) {
+                                        console.error('Gagal sinkronisasi status', e);
+                                    }
+
+                                    alert("Pembayaran berhasil!");
+                                    window.location.reload();
+                                },
+                                onPending: function(result){
+                                    alert("Menunggu pembayaran Anda!");
+                                    window.location.reload();
+                                },
+                                onError: function(result){
+                                    alert("Pembayaran gagal!");
+                                    payButton.disabled = false;
+                                    payButton.innerHTML = '💳 Bayar dengan QRIS';
+                                },
+                                onClose: function(){
+                                    payButton.disabled = false;
+                                    payButton.innerHTML = '💳 Bayar dengan QRIS';
+                                }
+                            });
+                        } else {
+                            alert(data.message || 'Gagal mendapatkan token pembayaran');
+                            payButton.disabled = false;
+                            payButton.innerHTML = '💳 Bayar dengan QRIS';
+                        }
+                    } catch (error) {
+                        alert('Terjadi kesalahan sistem di browser: ' + error.message);
+                        console.error('Fetch error:', error);
+                        payButton.disabled = false;
+                        payButton.innerHTML = '💳 Bayar dengan QRIS';
+                    }
+                });
+
+                @if(request()->query('auto_pay'))
+                    // Hapus auto_pay dari URL agar saat di-reload modal tidak terbuka lagi
+                    const url = new URL(window.location);
+                    url.searchParams.delete('auto_pay');
+                    window.history.replaceState({}, '', url);
+
+                    // Trigger otomatis ketika halaman baru saja dibuat (auto_pay=1)
+                    payButton.click();
+                @endif
+            }
+        });
+
+        function printInvoice() {
+            const invoiceHTML = `
+            <!DOCTYPE html>
+            <html lang="id">
+                <head>
+                <meta charset="UTF-8">
+                <title>Struk Pembayaran #{{ $order->order_number }}</title>
+                <style>
+                    @page { size: 80mm auto; margin: 0; }
+                    * { box-sizing: border-box; margin: 0; padding: 0; }
+                    body { background: #fff !important; color: #000 !important; font-family: monospace; font-size: 11px; width: 80mm; margin: 0 auto; padding: 15px; }
+                    .header { text-align: center; border-bottom: 1px dashed #000; padding-bottom: 10px; margin-bottom: 10px; }
+                    .brand { font-size: 16px; font-weight: bold; }
+                    .table { width: 100%; border-collapse: collapse; margin-bottom: 10px; }
+                    .table th, .table td { text-align: left; vertical-align: top; padding: 2px 0; }
+                    .table .right { text-align: right; }
+                    .totals { border-top: 1px dashed #000; padding-top: 5px; }
+                    .flex { display: flex; justify-content: space-between; margin-bottom: 3px; }
+                    .grand { font-weight: bold; font-size: 13px; border-top: 1px solid #000; margin-top: 5px; padding-top: 5px; }
+                    .center { text-align: center; }
+                </style>
+                </head>
+                <body>
+                    <div class="header">
+                        <div class="brand">KUMAW DIMSUM</div>
+                        <div style="font-size: 9px; margin-top: 3px;">Jl. Dimsum Enak No. 88</div>
+                        <div style="margin-top: 8px;">Order: {{ $order->order_number }}</div>
+                        <div>{{ $order->created_at->format('d/m/Y H:i') }}</div>
+                    </div>
+                    
+                    <div style="margin-bottom: 10px;">
+                        <div class="flex"><span>Pelanggan:</span> <span>{{ $order->customer_name ?? 'Guest' }}</span></div>
+                        <div class="flex"><span>Tipe:</span> <span>{{ match($order->type) { 'dine_in'=>'Makan di Tempat', 'takeaway'=>'Bawa Pulang', default=>ucfirst($order->type) } }}</span></div>
+                        @if($order->table_number)
+                        <div class="flex"><span>Meja:</span> <span>{{ $order->table_number }}</span></div>
+                        @endif
+                    </div>
+
+                    <table class="table">
+                        @foreach($order->items as $item)
+                        <tr>
+                            <td colspan="2">{{ $item->menu_name }}</td>
+                        </tr>
+                        <tr>
+                            <td style="padding-left: 10px;">{{ $item->quantity }} x {{ number_format($item->unit_price, 0, ',', '.') }}</td>
+                            <td class="right">{{ number_format($item->unit_price * $item->quantity, 0, ',', '.') }}</td>
+                        </tr>
+                        @endforeach
+                    </table>
+
+                    <div class="totals">
+                        <div class="flex"><span>Subtotal:</span> <span>Rp {{ number_format($order->subtotal, 0, ',', '.') }}</span></div>
+                        <div class="flex"><span>Pajak:</span> <span>Rp {{ number_format($order->tax_amount, 0, ',', '.') }}</span></div>
+                        <div class="flex grand"><span>TOTAL:</span> <span>{{ $order->formattedTotal }}</span></div>
+                        <br>
+                        <div class="flex"><span>Metode:</span> <span>{{ strtoupper($order->payment_method) }}</span></div>
+                        <div class="flex"><span>Status:</span> <span>LUNAS ({{ $order->paid_at ? $order->paid_at->format('H:i') : '' }})</span></div>
+                    </div>
+
+                    <div class="center" style="margin-top: 20px; font-size: 10px;">
+                        Terima kasih!<br>
+                        Struk ini adalah bukti pembayaran sah.
+                    </div>
+                </body>
+            </html>`;
+
+            const pw = window.open('', '_blank', 'width=350,height=600');
+            pw.document.write(invoiceHTML);
+            pw.document.close();
+            pw.onload = () => { pw.focus(); pw.print(); pw.close(); };
+            setTimeout(() => { try { pw.focus(); pw.print(); pw.close(); } catch(e) {} }, 800);
+        }
+    </script>
 @endsection

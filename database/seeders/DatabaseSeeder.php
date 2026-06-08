@@ -123,25 +123,25 @@ class DatabaseSeeder extends Seeder
         //    Customers / guests have NO user record.
         // ─────────────────────────────────────────────────────────────────
         User::updateOrCreate(
-            ['email' => 'admin@kumawdimsum.local'],
+            ['email' => 'dimasbenyamin@gmail.com'],
             [
                 'name'       => 'Admin Kumaw',
                 'username'   => 'admin',
                 'password'   => Hash::make('password'),
                 'role_id'    => $adminRole->id,
-                'phone'      => '081200000001',
+                'phone'      => '087722472311',
                 'expired_at' => null, // No expiry for default admin
             ]
         );
 
         User::updateOrCreate(
-            ['email' => 'kasir@kumawdimsum.local'],
+            ['email' => 'mutiarasabatina06@gmail.com'],
             [
                 'name'       => 'Kasir Kumaw',
                 'username'   => 'kasir',
                 'password'   => Hash::make('password'),
                 'role_id'    => $kasirRole->id,
-                'phone'      => '081200000002',
+                'phone'      => '082333216194',
                 'expired_at' => null,
             ]
         );

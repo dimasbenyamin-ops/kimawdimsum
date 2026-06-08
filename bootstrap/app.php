@@ -25,6 +25,11 @@ return Application::configure(basePath: dirname(__DIR__))
             // Dynamic Role-Menu authorization for backend routes
             'admin.access' => \App\Http\Middleware\EnsureAdminAccess::class,
         ]);
+
+        // Exclude Midtrans Webhook from CSRF Validation
+        $middleware->validateCsrfTokens(except: [
+            'api/midtrans/notification',
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
