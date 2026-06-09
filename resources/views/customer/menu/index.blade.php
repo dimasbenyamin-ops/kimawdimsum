@@ -257,8 +257,8 @@
                 <div class="menu-card">
                     {{-- Image --}}
                     @if($menu->image_path)
-                        <img
-                            src="{{ asset('storage/' . $menu->image_path) }}"
+                        <img 
+                            src="{{ Str::startsWith($menu->image_path, 'images/') ? asset($menu->image_path) : asset('storage/' . $menu->image_path) }}" 
                             alt="{{ e($menu->name) }}"
                             class="menu-card-img"
                             loading="lazy"
