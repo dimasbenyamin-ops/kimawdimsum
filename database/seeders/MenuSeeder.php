@@ -95,6 +95,27 @@ class MenuSeeder extends Seeder
             $slug = Str::slug($data['name']);
             $menu = Menu::withTrashed()->where('slug', $slug)->first();
             
+            $imagePath = null;
+            if (str_contains($data['name'], 'Mix')) {
+                $imagePath = 'images/mix.png';
+            } elseif ($data['category'] === 'original') {
+                $imagePath = 'images/original.png';
+            } elseif ($data['category'] === 'spicy_mayo') {
+                $imagePath = 'images/spicymayo.png';
+            } elseif ($data['category'] === 'goreng_keju') {
+                $imagePath = 'images/gorengkeju.png';
+            } elseif ($data['category'] === 'sharing_party') {
+                $imagePath = 'images/partysize.png';
+            } elseif ($data['category'] === 'add_on') {
+                $imagePath = 'images/sauce.png';
+            } elseif ($data['category'] === 'premium_sauce') {
+                $imagePath = 'images/sauce.png';
+            } elseif ($data['category'] === 'snacks') {
+                $imagePath = 'images/mixplatter.png';
+            } elseif ($data['category'] === 'minuman') {
+                $imagePath = 'images/drink.png';
+            }
+
             if ($menu) {
                 if ($menu->trashed()) {
                     $menu->restore();
@@ -104,6 +125,7 @@ class MenuSeeder extends Seeder
                     'description'  => $data['description'],
                     'category'     => $data['category'],
                     'price'        => $data['price'],
+                    'image_path'   => $imagePath,
                     'is_available' => true,
                     'sort_order'   => $sortOrder++,
                 ]);
@@ -114,7 +136,7 @@ class MenuSeeder extends Seeder
                     'description'  => $data['description'],
                     'category'     => $data['category'],
                     'price'        => $data['price'],
-                    'image_path'   => null,
+                    'image_path'   => $imagePath,
                     'is_available' => true,
                     'sort_order'   => $sortOrder++,
                     'created_by'   => null,
