@@ -142,7 +142,7 @@
                 <label>Foto Menu</label>
                 @if($menu->image_path)
                     <div class="current-image">
-                        <img src="{{ asset('storage/' . $menu->image_path) }}" alt="{{ e($menu->name) }}">
+                        <img src="{{ Str::startsWith($menu->image_path, 'images/') ? asset($menu->image_path) : asset('storage/' . $menu->image_path) }}" alt="{{ e($menu->name) }}">
                         <div>
                             <div style="font-size:0.875rem;font-weight:500;margin-bottom:0.25rem">Foto saat ini</div>
                             <div class="current-image-info">Upload foto baru untuk mengganti</div>
