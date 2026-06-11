@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Customer\CartController;
 use App\Http\Controllers\Customer\MenuController;
 use App\Http\Controllers\Customer\OrderController;
+use App\Http\Controllers\Customer\ReviewController;
 use App\Http\Controllers\Cashier\DashboardController;
 use App\Http\Controllers\Cashier\OrderController as CashierOrderController;
 use App\Http\Controllers\ProfileController;
@@ -43,8 +44,10 @@ Route::get('/menu', [MenuController::class, 'index'])->name('menu.index');
 Route::prefix('cart')->name('cart.')->group(function () {
     Route::get('/',          [CartController::class, 'index'])->name('index');
     Route::post('/add',      [CartController::class, 'add'])->name('add');
+    Route::put('/{menuId}',  [CartController::class, 'update'])->name('update');
     Route::delete('/{menuId}', [CartController::class, 'remove'])->name('remove');
     Route::post('/clear',    [CartController::class, 'clear'])->name('clear');
+    Route::post('/reorder/{order}', [CartController::class, 'reorder'])->name('reorder');
 });
 
 // Orders — guest checkout (user_id nullable on orders table)
@@ -54,6 +57,7 @@ Route::prefix('orders')->name('orders.')->group(function () {
     Route::get('/{order}', [OrderController::class, 'show'])->name('show');
     Route::get('/{order}/snap-token', [\App\Http\Controllers\PaymentController::class, 'getSnapToken'])->name('snap_token');
     Route::post('/check-status', [\App\Http\Controllers\PaymentController::class, 'checkStatus'])->name('check_status');
+    Route::post('/{order}/review', [ReviewController::class, 'store'])->name('review.store');
 });
 
 // Midtrans Webhook Notification Route

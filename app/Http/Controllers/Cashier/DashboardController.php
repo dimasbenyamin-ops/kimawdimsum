@@ -73,9 +73,18 @@ class DashboardController extends Controller
         }
 
         // Handle specific logic when confirming or completing
-        if ($newStatus === Order::STATUS_CONFIRMED && $currentStatus === Order::STATUS_PENDING_PAYMENT) {
-            $updateData['paid_at'] = now(); // Cashier confirmed payment is received
+        if ($newStatus === Order::STATUS_CONFIRMED && in_array($currentStatus, [Order::STATUS_PENDING, Order::STATUS_PENDING_PAYMENT])) {
+            // Set estimated time: 15 minutes base + 2 minutes per item
+            $order->loadMissing('items');
+            $itemCount = $order->items->sum('quantity'); // Or just count() if you want per unique item, but quantity makes more sense
+            $minutes = 15 + ($itemCount * 2);
+            $updateData['estimated_ready_at'] = now()->addMinutes($minutes);
+
+            if ($currentStatus === Order::STATUS_PENDING_PAYMENT) {
+                $updateData['paid_at'] = now(); // Cashier confirmed payment is received
+            }
         }
+        
         if ($newStatus === Order::STATUS_COMPLETED && !$order->isPaid()) {
             $updateData['paid_at'] = now();
         }

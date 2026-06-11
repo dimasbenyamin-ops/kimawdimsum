@@ -96,7 +96,19 @@ class MenuSeeder extends Seeder
             $menu = Menu::withTrashed()->where('slug', $slug)->first();
             
             $imagePath = null;
-            if (str_contains($data['name'], 'Mix')) {
+            if ($data['name'] === 'Dimsum Original 6 pcs') {
+                $imagePath = 'images/ori isi 6.png';
+            } elseif ($data['name'] === 'Dimsum Spicy Mayo 4 pcs') {
+                $imagePath = 'images/SM isi 4.png';
+            } elseif ($data['name'] === 'Dimsum Mix 6 pcs') {
+                $imagePath = 'images/mix isi 6 (2).png';
+            } elseif ($data['name'] === 'Trio Mix 4 pcs + 2 pcs') {
+                $imagePath = 'images/trio mix.png';
+            } elseif (str_contains($data['name'], 'Mix') && str_contains($data['name'], 'Party')) {
+                $imagePath = 'images/partysize.png';
+            } elseif (str_contains($data['name'], 'Mix') && $data['category'] === 'snacks') {
+                $imagePath = 'images/mixplatter.png';
+            } elseif (str_contains($data['name'], 'Mix')) {
                 $imagePath = 'images/mix.png';
             } elseif ($data['category'] === 'original') {
                 $imagePath = 'images/original.png';
@@ -106,9 +118,7 @@ class MenuSeeder extends Seeder
                 $imagePath = 'images/gorengkeju.png';
             } elseif ($data['category'] === 'sharing_party') {
                 $imagePath = 'images/partysize.png';
-            } elseif ($data['category'] === 'add_on') {
-                $imagePath = 'images/sauce.png';
-            } elseif ($data['category'] === 'premium_sauce') {
+            } elseif ($data['category'] === 'add_on' || $data['category'] === 'premium_sauce') {
                 $imagePath = 'images/sauce.png';
             } elseif ($data['category'] === 'snacks') {
                 $imagePath = 'images/mixplatter.png';

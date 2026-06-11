@@ -141,7 +141,7 @@
 
     {{-- Order list --}}
     @forelse($orders as $order)
-        <a href="{{ route('orders.show', $order) }}" class="order-card" id="order-{{ $order->id }}">
+        <div class="order-card" id="order-{{ $order->id }}">
             <div class="order-card-header">
                 <div>
                     <div class="order-number">#{{ $order->order_number }}</div>
@@ -161,17 +161,26 @@
             </div>
 
             <div class="order-card-footer">
-                <span class="order-type-badge">
-                    {{ match($order->type) {
-                        'dine_in'  => '🍽️ Makan di Tempat',
-                        'takeaway' => '📦 Bawa Pulang',
-                        'delivery' => '🛵 Delivery',
-                        default    => ucfirst($order->type),
-                    } }}
-                </span>
-                <span class="order-total">{{ $order->formattedTotal }}</span>
+                <div>
+                    <span class="order-type-badge">
+                        {{ match($order->type) {
+                            'dine_in'  => '🍽️ Makan di Tempat',
+                            'takeaway' => '📦 Bawa Pulang',
+                            'delivery' => '🛵 Delivery',
+                            default    => ucfirst($order->type),
+                        } }}
+                    </span>
+                    <span class="order-total" style="margin-left: 0.5rem;">{{ $order->formattedTotal }}</span>
+                </div>
+                <div style="display:flex; gap:0.5rem;">
+                    <a href="{{ route('orders.show', $order) }}" class="btn btn-ghost" style="padding: 0.25rem 0.75rem; font-size: 0.8125rem;">Detail</a>
+                    <form action="{{ route('cart.reorder', $order) }}" method="POST" style="margin:0;">
+                        @csrf
+                        <button type="submit" class="btn btn-gold" style="padding: 0.25rem 0.75rem; font-size: 0.8125rem;">🔄 Pesan Lagi</button>
+                    </form>
+                </div>
             </div>
-        </a>
+        </div>
     @empty
         <div class="empty-state">
             <div class="icon">🧾</div>

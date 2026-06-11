@@ -170,6 +170,16 @@
                 @endforeach
             </div>
         </div>
+
+        @if($order->estimated_ready_at && in_array($order->status, ['confirmed', 'preparing']))
+            <div class="alert alert-info" style="margin-bottom:1.5rem; display:flex; align-items:center; gap:0.75rem;">
+                <span style="font-size:1.5rem">⏳</span>
+                <div>
+                    <div style="font-weight:600; font-size:1rem;">Estimasi Waktu Tunggu</div>
+                    <div style="font-size:0.875rem; color:var(--muted)">Pesananmu sedang disiapkan. Estimasi siap: <strong>{{ $order->estimated_ready_at->diffForHumans() }}</strong> ({{ $order->estimated_ready_at->format('H:i') }})</div>
+                </div>
+            </div>
+        @endif
     @else
         <div class="alert alert-error" style="margin-bottom:1.5rem">
             ❌ Pesanan ini dibatalkan.
@@ -287,6 +297,41 @@
             @endif
         </div>
     </div>
+
+    {{-- Review Section --}}
+    @if($order->isCompleted() && !$order->review()->exists())
+        <div class="card" style="margin-top: 2rem; background: linear-gradient(to bottom right, var(--surface), rgba(245,158,11,0.05)); border: 1px solid rgba(245,158,11,0.3);">
+            <div style="text-align:center; margin-bottom: 1rem;">
+                <h3 style="color:var(--gold); font-size:1.25rem;">🌟 Bagaimana makanan Anda?</h3>
+                <p style="font-size:0.9rem; color:var(--muted);">Bantu kami menjadi lebih baik dengan memberikan ulasan singkat!</p>
+            </div>
+            <form action="{{ route('orders.review.store', $order) }}" method="POST">
+                @csrf
+                <div style="display:flex; justify-content:center; gap:0.5rem; margin-bottom: 1rem; flex-direction:row-reverse; font-size: 2rem;" class="star-rating">
+                    <input type="radio" id="star5" name="rating" value="5" required style="display:none"><label for="star5" style="cursor:pointer; color:#d1d5db;">★</label>
+                    <input type="radio" id="star4" name="rating" value="4" style="display:none"><label for="star4" style="cursor:pointer; color:#d1d5db;">★</label>
+                    <input type="radio" id="star3" name="rating" value="3" style="display:none"><label for="star3" style="cursor:pointer; color:#d1d5db;">★</label>
+                    <input type="radio" id="star2" name="rating" value="2" style="display:none"><label for="star2" style="cursor:pointer; color:#d1d5db;">★</label>
+                    <input type="radio" id="star1" name="rating" value="1" style="display:none"><label for="star1" style="cursor:pointer; color:#d1d5db;">★</label>
+                </div>
+                <div class="form-group">
+                    <textarea name="comment" rows="3" placeholder="Ceritakan pengalaman Anda (opsional)..." style="width:100%; padding:0.75rem; border-radius:var(--radius-md); border:1px solid var(--border); background:var(--bg2); color:var(--text); resize:vertical;"></textarea>
+                </div>
+                <button type="submit" class="btn btn-gold btn-block" style="margin-top: 1rem;">Kirim Ulasan</button>
+            </form>
+            <style>
+                .star-rating label:hover,
+                .star-rating label:hover ~ label,
+                .star-rating input:checked ~ label { color: var(--gold) !important; }
+            </style>
+        </div>
+    @elseif($order->isCompleted() && $order->review()->exists())
+        <div class="card" style="margin-top: 2rem; text-align: center;">
+            <div style="font-size: 2rem; margin-bottom: 0.5rem;">🙏</div>
+            <h3 style="font-size: 1.125rem;">Terima kasih atas ulasan Anda!</h3>
+            <p style="color:var(--muted); font-size:0.9rem;">Kami sangat menghargai feedback Anda.</p>
+        </div>
+    @endif
 @endsection
 
 @section('scripts')
@@ -450,5 +495,30 @@
             pw.onload = () => { pw.focus(); pw.print(); pw.close(); };
             setTimeout(() => { try { pw.focus(); pw.print(); pw.close(); } catch(e) {} }, 800);
         }
+
+        // Auto-refresh polling for status updates
+        @if(!in_array($order->status, ['completed', 'cancelled']))
+        document.addEventListener('DOMContentLoaded', function() {
+            let currentStatus = '{{ $order->status }}';
+            setInterval(async () => {
+                try {
+                    const res = await fetch('{{ route('orders.show', $order->id) }}', {
+                        headers: { 
+                            'Accept': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    });
+                    if (res.ok) {
+                        const data = await res.json();
+                        if (data.status && data.status !== currentStatus) {
+                            window.location.reload();
+                        }
+                    }
+                } catch (e) { 
+                    console.error('Failed to poll status', e); 
+                }
+            }, 10000); // Check every 10 seconds
+        });
+        @endif
     </script>
 @endsection

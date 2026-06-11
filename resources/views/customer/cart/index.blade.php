@@ -200,11 +200,21 @@
                         </div>
 
                         <div class="item-actions">
-                            <span class="qty-display">{{ $item['quantity'] }}</span>
-                            <form method="POST" action="{{ route('cart.remove', $item['menu_id']) }}">
+                            <form method="POST" action="{{ route('cart.update', $item['menu_id']) }}" class="update-form" style="display:flex; align-items:center; background:var(--bg2); border-radius:6px; overflow:hidden; border: 1px solid var(--border);">
+                                @csrf
+                                @method('PUT')
+                                @if($item['quantity'] > 1)
+                                    <button type="submit" name="quantity" value="{{ $item['quantity'] - 1 }}" style="padding:0.2rem 0.5rem; background:transparent; border:none; cursor:pointer; color:var(--gold); font-size:1.2rem; border-right: 1px solid var(--border); transition: background 0.2s;" onmouseover="this.style.background='rgba(245,158,11,0.1)'" onmouseout="this.style.background='transparent'">-</button>
+                                @else
+                                    <button type="submit" form="form-remove-{{ $item['menu_id'] }}" style="padding:0.2rem 0.5rem; background:transparent; border:none; cursor:pointer; color:var(--error); font-size:1rem; border-right: 1px solid var(--border); transition: background 0.2s;" onmouseover="this.style.background='rgba(248,113,113,0.1)'" onmouseout="this.style.background='transparent'">🗑️</button>
+                                @endif
+                                <span class="qty-display" style="min-width:32px; padding:0 0.5rem; background:transparent; display:inline-block; text-align:center; border-radius:0;">{{ $item['quantity'] }}</span>
+                                <button type="submit" name="quantity" value="{{ $item['quantity'] + 1 }}" style="padding:0.2rem 0.5rem; background:transparent; border:none; cursor:pointer; color:var(--gold); font-size:1.2rem; border-left: 1px solid var(--border); transition: background 0.2s;" onmouseover="this.style.background='rgba(245,158,11,0.1)'" onmouseout="this.style.background='transparent'">+</button>
+                            </form>
+                            <form method="POST" action="{{ route('cart.remove', $item['menu_id']) }}" id="form-remove-{{ $item['menu_id'] }}">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn-remove" title="Hapus item" id="remove-{{ $item['menu_id'] }}">✕</button>
+                                <button type="submit" class="btn-remove" title="Hapus item" style="margin-left:0.2rem">✕</button>
                             </form>
                         </div>
                     </div>

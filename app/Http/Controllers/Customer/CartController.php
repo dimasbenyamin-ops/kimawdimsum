@@ -22,7 +22,7 @@ class CartController extends Controller
         return view('customer.cart.index', compact('cart', 'subtotal', 'tax', 'grandTotal', 'qrisImage'));
     }
 
-    public function add(Request $request): RedirectResponse
+    public function add(Request $request): RedirectResponse|\Illuminate\Http\JsonResponse
     {
         $validated = $request->validate([
             'menu_id'  => ['required', 'integer', 'exists:menus,id'],
@@ -48,10 +48,43 @@ class CartController extends Controller
 
         session(['cart' => $cart]);
 
+        if ($request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => e($menu->name) . ' ditambahkan ke keranjang.',
+                'cart_count' => count($cart)
+            ]);
+        }
+
         return back()->with('success', e($menu->name) . ' ditambahkan ke keranjang.');
     }
 
-    public function remove(Request $request, int $menuId): RedirectResponse
+    public function update(Request $request, int $menuId): RedirectResponse|\Illuminate\Http\JsonResponse
+    {
+        $validated = $request->validate([
+            'quantity' => ['required', 'integer', 'min:1', 'max:99'],
+        ]);
+
+        $cart = $this->getCart();
+        $key = (string) $menuId;
+
+        if (isset($cart[$key])) {
+            $cart[$key]['quantity'] = $validated['quantity'];
+            session(['cart' => $cart]);
+        }
+
+        if ($request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'cart_count' => count($cart),
+                'quantity' => $validated['quantity']
+            ]);
+        }
+
+        return back();
+    }
+
+    public function remove(Request $request, int $menuId): RedirectResponse|\Illuminate\Http\JsonResponse
     {
         // Validate menuId is a positive integer (route model already handles this)
         if ($menuId <= 0) {
@@ -62,13 +95,61 @@ class CartController extends Controller
         unset($cart[(string) $menuId]);
         session(['cart' => $cart]);
 
-        return back()->with('success', 'Item dihapus dari keranjang.');
+        if ($request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'cart_count' => count($cart)
+            ]);
+        }
+
+        return back();
     }
 
     public function clear(): RedirectResponse
     {
         session()->forget('cart');
         return redirect()->route('menu.index')->with('success', 'Keranjang dikosongkan.');
+    }
+
+    public function reorder(\App\Models\Order $order): RedirectResponse
+    {
+        // Must own the order
+        if ($order->user_id !== auth()->id()) {
+            abort(403);
+        }
+
+        $cart = $this->getCart();
+        $added = 0;
+        $unavailable = 0;
+
+        foreach ($order->items as $item) {
+            $menu = Menu::find($item->menu_id);
+            if ($menu && $menu->is_available) {
+                $key = (string) $menu->id;
+                $newQty = ($cart[$key]['quantity'] ?? 0) + $item->quantity;
+
+                $cart[$key] = [
+                    'menu_id'       => $menu->id,
+                    'menu_name'     => $menu->name,
+                    'menu_category' => $menu->category,
+                    'unit_price'    => (float) $menu->price, // Refresh price
+                    'quantity'      => min(99, $newQty),
+                    'notes'         => $item->notes, // Carry over previous notes
+                ];
+                $added++;
+            } else {
+                $unavailable++;
+            }
+        }
+
+        session(['cart' => $cart]);
+
+        $message = "Berhasil menambahkan $added menu ke keranjang.";
+        if ($unavailable > 0) {
+            $message .= " ($unavailable menu sudah tidak tersedia).";
+        }
+
+        return redirect()->route('cart.index')->with('success', $message);
     }
 
     private function getCart(): array

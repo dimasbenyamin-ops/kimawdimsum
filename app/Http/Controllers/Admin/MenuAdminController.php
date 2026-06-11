@@ -66,6 +66,7 @@ class MenuAdminController extends Controller
             'image_path'   => $imagePath,
             'is_available' => $request->boolean('is_available'),
             'sort_order'   => (int) ($validated['sort_order'] ?? 100),
+            'badge'        => $validated['badge'] ?? null,
             'created_by'   => Auth::id(),
         ]);
 
@@ -93,6 +94,7 @@ class MenuAdminController extends Controller
             'price'        => $validated['price'],
             'is_available' => $request->boolean('is_available'),
             'sort_order'   => (int) ($validated['sort_order'] ?? 100),
+            'badge'        => $validated['badge'] ?? null,
         ];
 
         if ($request->hasFile('image')) {
@@ -137,6 +139,7 @@ class MenuAdminController extends Controller
             'price'       => ['required', 'numeric', 'min:0', 'max:9999999'],
             'description' => ['nullable', 'string', 'max:500'],
             'sort_order'  => ['nullable', 'integer', 'min:0', 'max:9999'],
+            'badge'       => ['nullable', 'string', 'max:50'],
             // Image required only on create; optional on update
             'image'       => [
                 $menu ? 'nullable' : 'nullable',
