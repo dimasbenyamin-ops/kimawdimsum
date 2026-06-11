@@ -60,6 +60,12 @@ Route::prefix('orders')->name('orders.')->group(function () {
     Route::post('/{order}/review', [ReviewController::class, 'store'])->name('review.store');
 });
 
+// Chatbot routes
+Route::prefix('chat')->name('chat.')->group(function () {
+    Route::post('/', [\App\Http\Controllers\Customer\ChatbotController::class, 'chat'])->name('send');
+    Route::post('/clear', [\App\Http\Controllers\Customer\ChatbotController::class, 'clearHistory'])->name('clear');
+});
+
 // Midtrans Webhook Notification Route
 Route::post('/api/midtrans/notification', [\App\Http\Controllers\PaymentController::class, 'notification'])->name('midtrans.notification');
 
