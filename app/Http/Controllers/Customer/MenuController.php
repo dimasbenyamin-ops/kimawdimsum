@@ -44,13 +44,15 @@ class MenuController extends Controller
             ? collect([($category) => $allMenus])
             : $allMenus->groupBy('category');
 
-        $cartCount = count(session('cart', []));
+        $cart = session('cart', []);
+        $cartCount = count($cart);
 
         return view('customer.menu.index', [
             'menus'          => $menus,
             'categoryLabels' => self::CATEGORY_LABELS,
             'activeCategory' => $category,
             'cartCount'      => $cartCount,
+            'cart'           => $cart,
         ]);
     }
 }

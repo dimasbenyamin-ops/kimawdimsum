@@ -44,6 +44,7 @@ class Menu extends Model
         'is_available',
         'sort_order',
         'created_by',
+        'badge',
     ];
 
     protected function casts(): array

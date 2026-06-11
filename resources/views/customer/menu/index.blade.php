@@ -107,11 +107,44 @@
         transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
         display: flex;
         flex-direction: column;
+        position: relative;
     }
     .menu-card:hover {
         transform: translateY(-4px);
         box-shadow: 0 12px 32px rgba(0,0,0,0.3);
         border-color: rgba(245,158,11,0.25);
+    }
+
+    /* ---- Ribbon Badge ---- */
+    .ribbon-badge {
+        position: absolute;
+        top: 12px;
+        right: -8px;
+        background: linear-gradient(135deg, #ef4444, #dc2626);
+        color: white;
+        padding: 4px 12px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        border-radius: 4px 0 0 4px;
+        box-shadow: 0 4px 12px rgba(220, 38, 38, 0.4);
+        z-index: 10;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    .ribbon-badge::after {
+        content: '';
+        position: absolute;
+        top: 100%;
+        right: 0;
+        border-top: 6px solid #991b1b;
+        border-right: 8px solid transparent;
+    }
+    .ribbon-badge.gold {
+        background: linear-gradient(135deg, var(--gold), #d97706);
+        box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
+    }
+    .ribbon-badge.gold::after {
+        border-top-color: #b45309;
     }
 
     .menu-card-img {
@@ -164,24 +197,45 @@
         padding: 0.75rem 1.125rem 1rem;
     }
 
-    /* ---- Add to cart form ---- */
+    /* ---- Add to cart form & Stepper ---- */
     .add-form {
         display: flex;
         gap: 0.5rem;
     }
-    .qty-input {
-        width: 60px;
-        padding: 0.5rem 0.625rem;
-        text-align: center;
-        font-size: 0.9rem;
+    .qty-stepper {
+        display: flex;
+        align-items: center;
         background: rgba(255,255,255,0.05);
         border: 1px solid var(--border);
         border-radius: 8px;
-        color: var(--text);
-        font-family: inherit;
-        outline: none;
+        overflow: hidden;
     }
-    .qty-input:focus { border-color: var(--gold); }
+    .qty-stepper button {
+        background: transparent;
+        border: none;
+        color: var(--gold);
+        font-size: 1.2rem;
+        width: 32px;
+        height: 100%;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+    .qty-stepper button:hover { background: rgba(245,158,11,0.1); }
+    .qty-stepper input {
+        width: 36px;
+        text-align: center;
+        background: transparent;
+        border: none;
+        color: var(--text);
+        font-size: 1rem;
+        font-weight: bold;
+        -moz-appearance: textfield;
+        padding: 0;
+        margin: 0;
+    }
+    .qty-stepper input::-webkit-outer-spin-button,
+    .qty-stepper input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    .qty-input:focus { outline: none; }
 
     .btn-add {
         flex: 1;
@@ -198,6 +252,36 @@
     }
     .btn-add:hover { opacity: 0.88; transform: translateY(-1px); }
     .btn-add:active { transform: translateY(0); }
+
+    /* ---- Floating Cart ---- */
+    .floating-cart {
+        position: fixed;
+        bottom: 2rem;
+        left: 50%;
+        transform: translateX(-50%);
+        background: linear-gradient(135deg, var(--gold), #d97706);
+        color: #1a0a00;
+        padding: 0.75rem 1.25rem;
+        border-radius: 999px;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        box-shadow: 0 10px 25px rgba(245,158,11,0.4);
+        text-decoration: none;
+        z-index: 50;
+        transition: transform 0.2s, box-shadow 0.2s;
+        width: max-content;
+        max-width: 90vw;
+    }
+    .floating-cart:hover {
+        transform: translateX(-50%) translateY(-2px);
+        box-shadow: 0 15px 30px rgba(245,158,11,0.5);
+    }
+    .fc-icon { font-size: 1.5rem; }
+    .fc-info { flex: 1; }
+    .fc-title { font-weight: 700; font-size: 0.9rem; }
+    .fc-count { font-size: 0.8rem; font-weight: 500; opacity: 0.9; }
+    .fc-action { font-weight: 700; font-size: 0.9rem; background: rgba(0,0,0,0.1); padding: 0.25rem 0.75rem; border-radius: 999px; }
 
     .btn-login-prompt {
         display: block;
@@ -255,6 +339,14 @@
         <div class="menu-grid">
             @foreach($items as $menu)
                 <div class="menu-card">
+                    @if($menu->badge)
+                        @php
+                            $isBestSeller = str_contains(strtolower($menu->badge), 'best') || str_contains(strtolower($menu->badge), 'rekomendasi');
+                            $badgeClass = $isBestSeller ? 'gold' : '';
+                        @endphp
+                        <div class="ribbon-badge {{ $badgeClass }}">{{ $menu->badge }}</div>
+                    @endif
+
                     {{-- Image --}}
                     @if($menu->image_path)
                         <img 
@@ -285,25 +377,25 @@
                         <div class="menu-card-price">{{ $menu->formattedPrice }}</div>
                     </div>
 
-                    <div class="menu-card-footer">
-                        {{-- Customers are guests now (not authenticated). Hide add-to-cart for staff --}}
+                    <div class="menu-card-footer" id="footer-{{ $menu->id }}">
                         @if(!Auth::check())
-                            <form method="POST" action="{{ route('cart.add') }}" class="add-form">
-                                @csrf
-                                <input type="hidden" name="menu_id" value="{{ $menu->id }}">
-                                <input
-                                    type="number"
-                                    name="quantity"
-                                    value="1"
-                                    min="1"
-                                    max="99"
-                                    class="qty-input"
-                                    aria-label="Jumlah"
-                                >
-                                <button type="submit" class="btn-add" id="add-{{ $menu->id }}">
+                            @php
+                                $inCartQty = isset($cart[$menu->id]) ? $cart[$menu->id]['quantity'] : 0;
+                            @endphp
+                            
+                            <!-- Add Button -->
+                            <div class="btn-group-add" style="{{ $inCartQty > 0 ? 'display:none;' : '' }}">
+                                <button type="button" class="btn-add btn-cart-add" data-id="{{ $menu->id }}" data-url="{{ route('cart.add') }}" style="width:100%">
                                     <i class="bi bi-cart-plus"></i> Tambah
                                 </button>
-                            </form>
+                            </div>
+
+                            <!-- Stepper inside Cart -->
+                            <div class="qty-stepper cart-stepper" style="width:100%; justify-content:space-between; padding: 0.15rem; border-color: var(--gold); {{ $inCartQty == 0 ? 'display:none;' : '' }}">
+                                <button type="button" class="btn-cart-minus" data-id="{{ $menu->id }}" data-url-update="{{ route('cart.update', $menu->id) }}" data-url-remove="{{ route('cart.remove', $menu->id) }}" style="width:40px; font-size:1.5rem;">-</button>
+                                <span class="cart-qty-display" id="qty-{{ $menu->id }}" style="font-weight:bold; color:var(--text); font-size:1.1rem; width:40px; text-align:center; display:inline-block;">{{ $inCartQty }}</span>
+                                <button type="button" class="btn-cart-plus" data-id="{{ $menu->id }}" data-url-update="{{ route('cart.update', $menu->id) }}" style="width:40px; font-size:1.2rem;">+</button>
+                            </div>
                         @else
                             <a href="{{ route('login') }}" class="btn-login-prompt">
                                 🔒 Masuk untuk memesan
@@ -321,4 +413,146 @@
             <a href="{{ route('menu.index') }}" class="btn btn-gold">Lihat Semua Menu</a>
         </div>
     @endforelse
+
+    @if(!Auth::check())
+        <a href="{{ route('cart.index') }}" class="floating-cart" id="floating-cart" style="display: {{ isset($cartCount) && $cartCount > 0 ? 'flex' : 'none' }};">
+            <div class="fc-icon">🛒</div>
+            <div class="fc-info">
+                <div class="fc-title">Keranjang Belanja</div>
+                <div class="fc-count"><span class="cart-badge-bottom">{{ $cartCount ?? 0 }}</span> Macam Menu</div>
+            </div>
+            <div class="fc-action">Lanjut ➔</div>
+        </a>
+    @endif
+@endsection
+
+@section('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const csrfToken = '{{ csrf_token() }}';
+
+    // Add to cart directly
+    document.querySelectorAll('.btn-cart-add').forEach(btn => {
+        btn.addEventListener('click', async () => {
+            const menuId = btn.dataset.id;
+            const url = btn.dataset.url;
+            
+            btn.innerHTML = '⏳...';
+            btn.disabled = true;
+
+            const formData = new FormData();
+            formData.append('_token', csrfToken);
+            formData.append('menu_id', menuId);
+            formData.append('quantity', 1);
+
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Accept': 'application/json'
+                    }
+                });
+                const data = await response.json();
+                if (data.success) {
+                    btn.closest('.btn-group-add').style.display = 'none';
+                    const footer = document.getElementById('footer-' + menuId);
+                    footer.querySelector('.cart-stepper').style.display = 'flex';
+                    footer.querySelector('.cart-qty-display').innerText = '1';
+                    
+                    updateCartBadge(data.cart_count);
+                }
+            } catch (err) {
+                console.error(err);
+            }
+            btn.innerHTML = '<i class="bi bi-cart-plus"></i> Tambah';
+            btn.disabled = false;
+        });
+    });
+
+    // Stepper Plus
+    document.querySelectorAll('.btn-cart-plus').forEach(btn => {
+        btn.addEventListener('click', async () => {
+            const menuId = btn.dataset.id;
+            const url = btn.dataset.urlUpdate;
+            const qtyDisplay = document.getElementById('qty-' + menuId);
+            let qty = parseInt(qtyDisplay.innerText) + 1;
+            if (qty > 99) return;
+            
+            qtyDisplay.innerText = '⏳';
+            await updateCart(url, qty, 'PUT');
+            qtyDisplay.innerText = qty;
+        });
+    });
+
+    // Stepper Minus
+    document.querySelectorAll('.btn-cart-minus').forEach(btn => {
+        btn.addEventListener('click', async () => {
+            const menuId = btn.dataset.id;
+            const urlUpdate = btn.dataset.urlUpdate;
+            const urlRemove = btn.dataset.urlRemove;
+            const qtyDisplay = document.getElementById('qty-' + menuId);
+            let qty = parseInt(qtyDisplay.innerText) - 1;
+            
+            qtyDisplay.innerText = '⏳';
+            
+            if (qty > 0) {
+                await updateCart(urlUpdate, qty, 'PUT');
+                qtyDisplay.innerText = qty;
+            } else {
+                const res = await updateCart(urlRemove, 0, 'DELETE');
+                if(res && res.success) {
+                    const footer = document.getElementById('footer-' + menuId);
+                    footer.querySelector('.cart-stepper').style.display = 'none';
+                    footer.querySelector('.btn-group-add').style.display = 'block';
+                }
+            }
+        });
+    });
+
+    async function updateCart(url, qty, method) {
+        const formData = new FormData();
+        formData.append('_token', csrfToken);
+        formData.append('_method', method);
+        if (qty > 0) formData.append('quantity', qty);
+
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json'
+                }
+            });
+            const data = await response.json();
+            if (data.success) {
+                updateCartBadge(data.cart_count);
+                return data;
+            }
+        } catch (err) {
+            console.error(err);
+        }
+        return null;
+    }
+
+    function updateCartBadge(count) {
+        // Update header badge
+        const cartBadge = document.querySelector('.cart-badge');
+        if (cartBadge && count !== undefined) {
+            cartBadge.innerText = count;
+            cartBadge.style.display = count > 0 ? 'flex' : 'none';
+        }
+        
+        // Update floating bottom cart
+        const floatingCart = document.getElementById('floating-cart');
+        if (floatingCart && count !== undefined) {
+            const bottomBadge = document.querySelector('.cart-badge-bottom');
+            if (bottomBadge) bottomBadge.innerText = count;
+            floatingCart.style.display = count > 0 ? 'flex' : 'none';
+        }
+    }
+});
+</script>
 @endsection

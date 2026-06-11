@@ -77,17 +77,19 @@ class Order extends Model
         'customer_notes',
         'cashier_notes',
         'processed_by',
+        'estimated_ready_at',
     ];
 
     protected function casts(): array
     {
         return [
-            'subtotal'        => 'decimal:2',
-            'discount_amount' => 'decimal:2',
-            'tax_amount'      => 'decimal:2',
-            'total_amount'    => 'decimal:2',
-            'paid_at'         => 'datetime',
-            'table_number'    => 'integer',
+            'subtotal'           => 'decimal:2',
+            'discount_amount'    => 'decimal:2',
+            'tax_amount'         => 'decimal:2',
+            'total_amount'       => 'decimal:2',
+            'paid_at'            => 'datetime',
+            'estimated_ready_at' => 'datetime',
+            'table_number'       => 'integer',
         ];
     }
 
@@ -117,6 +119,14 @@ class Order extends Model
     public function items(): HasMany
     {
         return $this->hasMany(OrderItem::class);
+    }
+
+    /**
+     * The review attached to this order, if any.
+     */
+    public function review()
+    {
+        return $this->hasOne(Review::class);
     }
 
     // -------------------------------------------------------

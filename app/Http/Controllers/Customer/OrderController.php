@@ -33,7 +33,7 @@ class OrderController extends Controller
         return view('customer.orders.index', compact('orders'));
     }
 
-    public function show(Order $order): View
+    public function show(Request $request, Order $order): View|\Illuminate\Http\JsonResponse
     {
         // Ownership check:
         // - For authenticated users: must match user_id
@@ -50,6 +50,13 @@ class OrderController extends Controller
         }
 
         $order->load('items');
+
+        if ($request->wantsJson()) {
+            return response()->json([
+                'status' => $order->status,
+                'statusLabel' => $order->statusLabel
+            ]);
+        }
 
         return view('customer.orders.show', compact('order'));
     }
