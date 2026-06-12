@@ -560,14 +560,14 @@
 
     <!-- Chatbot Widget -->
     @if(!Auth::check())
-    <div class="chatbot-btn" id="chatbot-toggle" title="Chat dengan Admin Kumaw (MinKu)">🤖</div>
+    <div class="chatbot-btn" id="chatbot-toggle" title="Chat dengan Admin Kumaw (MiMaw)">🤖</div>
     <div class="chatbot-window" id="chatbot-window">
         <div class="chat-header">
-            <div>🥟 Admin Kumaw (MinKu)</div>
+            <div>🥟 Admin Kumaw (MiMaw)</div>
             <div class="chat-header-close" id="chatbot-close">✖</div>
         </div>
         <div class="chat-body" id="chat-body">
-            <div class="chat-msg bot">Halo! Saya MinKu 🤖. Mau pesen apa hari ini Kak?</div>
+            <div class="chat-msg bot">Halo! Saya MiMaw 🤖. Mau pesen apa hari ini Kak?</div>
         </div>
         <div class="chat-footer">
             <input type="text" id="chat-input" class="chat-input" placeholder="Ketik pesanan di sini..." autocomplete="off">
