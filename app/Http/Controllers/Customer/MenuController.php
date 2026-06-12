@@ -10,9 +10,10 @@ use Illuminate\View\View;
 class MenuController extends Controller
 {
     // Allow-list of valid category values
-    private const VALID_CATEGORIES = ['original', 'spicy_mayo', 'goreng_keju', 'premium_sauce', 'sharing_party', 'snacks', 'minuman', 'add_on'];
+    private const VALID_CATEGORIES = ['bundling_hemat', 'original', 'spicy_mayo', 'goreng_keju', 'premium_sauce', 'sharing_party', 'snacks', 'minuman', 'add_on'];
 
     private const CATEGORY_LABELS = [
+        'bundling_hemat' => '🏷️ Bundling Hemat',
         'original'      => '🥟 Original',
         'spicy_mayo'    => '🌶️ Spicy Mayo',
         'goreng_keju'   => '🧀 Goreng Keju',

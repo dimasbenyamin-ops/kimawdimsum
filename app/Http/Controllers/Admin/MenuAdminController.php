@@ -14,9 +14,10 @@ use Illuminate\View\View;
 class MenuAdminController extends Controller
 {
     // Allow-list of valid category values
-    private const VALID_CATEGORIES = ['original', 'spicy_mayo', 'goreng_keju', 'premium_sauce', 'sharing_party', 'snacks', 'minuman', 'add_on'];
+    private const VALID_CATEGORIES = ['bundling_hemat', 'original', 'spicy_mayo', 'goreng_keju', 'premium_sauce', 'sharing_party', 'snacks', 'minuman', 'add_on'];
 
     private const CATEGORY_LABELS = [
+        'bundling_hemat' => '🏷️ Bundling Hemat',
         'original'      => '🥟 Original',
         'spicy_mayo'    => '🌶️ Spicy Mayo',
         'goreng_keju'   => '🧀 Goreng Keju',
@@ -53,8 +54,10 @@ class MenuAdminController extends Controller
 
         $imagePath = null;
         if ($request->hasFile('image')) {
-            // Store in public disk under menus/ directory
-            $imagePath = $request->file('image')->store('menus', 'public');
+            $file = $request->file('image');
+            $filename = Str::random(40) . '.' . $file->getClientOriginalExtension();
+            $file->move(public_path('images/menus'), $filename);
+            $imagePath = 'images/menus/' . $filename;
         }
 
         Menu::create([
@@ -100,9 +103,20 @@ class MenuAdminController extends Controller
         if ($request->hasFile('image')) {
             // Delete old image if it exists
             if ($menu->image_path) {
-                Storage::disk('public')->delete($menu->image_path);
+                if (Str::startsWith($menu->image_path, 'images/menus/')) {
+                    $oldPath = public_path($menu->image_path);
+                    if (file_exists($oldPath)) {
+                        unlink($oldPath);
+                    }
+                } elseif (Str::startsWith($menu->image_path, 'menus/')) {
+                    Storage::disk('public')->delete($menu->image_path);
+                }
             }
-            $updateData['image_path'] = $request->file('image')->store('menus', 'public');
+
+            $file = $request->file('image');
+            $filename = Str::random(40) . '.' . $file->getClientOriginalExtension();
+            $file->move(public_path('images/menus'), $filename);
+            $updateData['image_path'] = 'images/menus/' . $filename;
         }
 
         $menu->update($updateData);
@@ -120,7 +134,14 @@ class MenuAdminController extends Controller
 
         // Remove image file from storage
         if ($menu->image_path) {
-            Storage::disk('public')->delete($menu->image_path);
+            if (Str::startsWith($menu->image_path, 'images/menus/')) {
+                $path = public_path($menu->image_path);
+                if (file_exists($path)) {
+                    unlink($path);
+                }
+            } elseif (Str::startsWith($menu->image_path, 'menus/')) {
+                Storage::disk('public')->delete($menu->image_path);
+            }
         }
 
         return redirect()->route('admin.menus.index')
