@@ -314,8 +314,8 @@
 
     {{-- Category filter --}}
     <div class="category-bar">
-        <a href="{{ route('menu.index') }}"
-           class="cat-btn {{ $activeCategory === null ? 'active' : '' }}"
+        <a href="{{ route('menu.index', ['category' => 'all']) }}"
+           class="cat-btn {{ $activeCategory === 'all' ? 'active' : '' }}"
            id="cat-all">
             🍽️ Semua
         </a>
@@ -330,7 +330,7 @@
 
     {{-- Menu sections --}}
     @forelse($menus as $category => $items)
-        @if(!$activeCategory)
+        @if($activeCategory === 'all')
             <div class="section-heading">
                 <h2>{{ $categoryLabels[$category] ?? ucfirst($category) }}</h2>
             </div>

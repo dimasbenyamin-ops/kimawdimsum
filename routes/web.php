@@ -69,6 +69,9 @@ Route::prefix('chat')->name('chat.')->group(function () {
 // Midtrans Webhook Notification Route
 Route::post('/api/midtrans/notification', [\App\Http\Controllers\PaymentController::class, 'notification'])->name('midtrans.notification');
 
+// DOKU Webhook Notification Route
+Route::any('/api/doku/notification', [\App\Http\Controllers\PaymentController::class, 'dokuNotification'])->name('doku.notification');
+
 // ============================================================
 // BACKEND — Admin & Cashier Dashboard
 // All routes require:
@@ -101,11 +104,40 @@ Route::middleware(['auth', 'admin.access'])
          Route::get('/settings/qris',  [SettingController::class, 'qris'])->name('settings.qris');
          Route::post('/settings/qris', [SettingController::class, 'updateQris'])->name('settings.qris.update');
 
+         // ── Setup > Store Identity ────────────────────────────────────────────
+         Route::get('/settings/store-identity',  [SettingController::class, 'storeIdentity'])->name('settings.store_identity');
+         Route::post('/settings/store-identity', [SettingController::class, 'updateStoreIdentity'])->name('settings.store_identity.update');
+
          // ── Reports ───────────────────────────────────────────────────────────
          Route::get('/reports/revenue', [App\Http\Controllers\Admin\RevenueReportController::class, 'index'])->name('reports.revenue');
 
          // ── Menu Management (food items) ──────────────────────────────────────
-         Route::resource('menus', MenuAdminController::class);
+         Route::post('menus/{menu}/recipe', [\App\Http\Controllers\Admin\MenuAdminController::class, 'syncRecipe'])->name('menus.syncRecipe');
+         Route::resource('menus', \App\Http\Controllers\Admin\MenuAdminController::class);
+
+         // ── Inventory / Back-Office ─────────────────────────────────────────────
+         Route::resource('ingredients', \App\Http\Controllers\Admin\IngredientController::class)->except(['show']);
+         Route::resource('ingredient-units', \App\Http\Controllers\Admin\IngredientUnitController::class)->except(['show']);
+         Route::resource('suppliers', \App\Http\Controllers\Admin\SupplierController::class)->except(['show']);
+         
+         Route::resource('master-recipes', \App\Http\Controllers\Admin\MasterRecipeController::class)->except(['show']);
+
+         // ── Purchasing & Waste ────────────────────────────────────────────────
+         Route::patch('purchases/{purchase}/status', [\App\Http\Controllers\Admin\PurchaseController::class, 'updateStatus'])->name('purchases.status');
+         Route::resource('purchases', \App\Http\Controllers\Admin\PurchaseController::class)->only(['index', 'create', 'store', 'show']);
+         Route::resource('waste', \App\Http\Controllers\Admin\WasteLogController::class)->only(['index', 'create', 'store']);
+
+         // ── Stock Opname & Expenses ───────────────────────────────────────────
+         Route::patch('stock-opnames/{stockOpname}/status', [\App\Http\Controllers\Admin\StockOpnameController::class, 'updateStatus'])->name('stock-opnames.status');
+         Route::resource('stock-opnames', \App\Http\Controllers\Admin\StockOpnameController::class)->only(['index', 'create', 'store', 'show']);
+         Route::resource('expenses', \App\Http\Controllers\Admin\ExpenseController::class);
+
+         // ── Reports (Keuangan & Analisis) ─────────────────────────────────────
+         Route::get('reports/profit-loss', [\App\Http\Controllers\Admin\ReportController::class, 'profitLoss'])->name('reports.profit-loss');
+         Route::get('reports/cogs', [\App\Http\Controllers\Admin\ReportController::class, 'cogs'])->name('reports.cogs');
+         Route::get('reports/stock-audit', [\App\Http\Controllers\Admin\ReportController::class, 'stockAudit'])->name('reports.stock-audit');
+         Route::get('reports/sales-per-menu', [\App\Http\Controllers\Admin\ReportController::class, 'salesPerMenu'])->name('reports.sales-per-menu');
+         Route::get('reports/cash-flow', [\App\Http\Controllers\Admin\ReportController::class, 'cashFlow'])->name('reports.cash-flow');
      });
 
 // ============================================================

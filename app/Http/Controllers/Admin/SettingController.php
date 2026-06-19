@@ -33,4 +33,28 @@ class SettingController extends Controller
 
         return back()->with('success', 'Gambar QRIS berhasil diperbarui!');
     }
+
+    public function storeIdentity()
+    {
+        $storeName    = Setting::getValue('store_name', 'KUMAW DIMSUM');
+        $storeAddress = Setting::getValue('store_address', 'Jl. Contoh Alamat No. 123');
+        $storePhone   = Setting::getValue('store_phone', '081234567890');
+
+        return view('admin.settings.store_identity', compact('storeName', 'storeAddress', 'storePhone'));
+    }
+
+    public function updateStoreIdentity(Request $request)
+    {
+        $request->validate([
+            'store_name'    => ['required', 'string', 'max:255'],
+            'store_address' => ['required', 'string', 'max:500'],
+            'store_phone'   => ['required', 'string', 'max:50'],
+        ]);
+
+        Setting::updateOrCreate(['key' => 'store_name'], ['value' => $request->store_name, 'type' => 'string']);
+        Setting::updateOrCreate(['key' => 'store_address'], ['value' => $request->store_address, 'type' => 'string']);
+        Setting::updateOrCreate(['key' => 'store_phone'], ['value' => $request->store_phone, 'type' => 'string']);
+
+        return back()->with('success', 'Identitas toko berhasil diperbarui!');
+    }
 }

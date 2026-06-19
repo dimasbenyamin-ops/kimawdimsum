@@ -76,6 +76,16 @@ class Menu extends Model
         return $this->hasMany(OrderItem::class);
     }
 
+    /**
+     * Master Recipes that are linked to this menu.
+     */
+    public function masterRecipes(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(\App\Models\MasterRecipe::class, 'menu_master_recipes')
+                    ->withPivot('multiplier')
+                    ->withTimestamps();
+    }
+
     // -------------------------------------------------------
     // Query Scopes
     // -------------------------------------------------------

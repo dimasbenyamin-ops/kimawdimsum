@@ -16,7 +16,7 @@ class MenuAdminController extends Controller
     // Allow-list of valid category values
     private const VALID_CATEGORIES = ['bundling_hemat', 'original', 'spicy_mayo', 'goreng_keju', 'premium_sauce', 'sharing_party', 'snacks', 'minuman', 'add_on'];
 
-    private const CATEGORY_LABELS = [
+    public const CATEGORY_LABELS = [
         'bundling_hemat' => '🏷️ Bundling Hemat',
         'original'      => '🥟 Original',
         'spicy_mayo'    => '🌶️ Spicy Mayo',
@@ -79,8 +79,13 @@ class MenuAdminController extends Controller
 
     public function edit(Menu $menu): View
     {
+        $menu->load('masterRecipes');
+        
+        $masterRecipes = \App\Models\MasterRecipe::orderBy('name')->get();
+
         return view('admin.menus.edit', [
             'menu'           => $menu,
+            'masterRecipes'  => $masterRecipes,
             'categoryLabels' => self::CATEGORY_LABELS,
         ]);
     }
@@ -146,6 +151,30 @@ class MenuAdminController extends Controller
 
         return redirect()->route('admin.menus.index')
                          ->with('success', 'Menu "' . e($name) . '" berhasil dihapus.');
+    }
+
+    public function syncRecipe(Request $request, Menu $menu): RedirectResponse
+    {
+        $validated = $request->validate([
+            'master_recipes' => ['nullable', 'array'],
+            'master_recipes.*.id' => ['required', 'exists:master_recipes,id'],
+            'master_recipes.*.multiplier' => ['required', 'numeric', 'min:0.0001', 'max:999999'],
+        ]);
+
+        $syncData = [];
+        if (!empty($validated['master_recipes'])) {
+            foreach ($validated['master_recipes'] as $item) {
+                // Ensure unique master recipes
+                if (!isset($syncData[$item['id']])) {
+                    $syncData[$item['id']] = ['multiplier' => $item['multiplier']];
+                }
+            }
+        }
+
+        $menu->masterRecipes()->sync($syncData);
+
+        return redirect()->route('admin.menus.edit', $menu)
+                         ->with('success', 'Master Resep berhasil diperbarui untuk menu ini.');
     }
 
     // -------------------------------------------------------

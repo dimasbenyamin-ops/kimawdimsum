@@ -62,6 +62,7 @@ class Order extends Model
 
     protected $fillable = [
         'order_number',
+        'shift_id',
         'user_id',
         'status',
         'type',
@@ -111,6 +112,14 @@ class Order extends Model
     public function processor(): BelongsTo
     {
         return $this->belongsTo(User::class, 'processed_by');
+    }
+
+    /**
+     * The shift during which this order was created (if any).
+     */
+    public function shift(): BelongsTo
+    {
+        return $this->belongsTo(Shift::class, 'shift_id');
     }
 
     /**

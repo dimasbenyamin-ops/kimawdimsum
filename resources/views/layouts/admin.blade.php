@@ -80,7 +80,8 @@
         ================================================================ */
         .sidebar {
             width: var(--sidebar-w);
-            min-height: 100vh;
+            height: 100%; /* Fallback */
+            height: 100dvh; /* Modern mobile fix */
             background: var(--bg2);
             border-right: 1px solid var(--border);
             display: flex;
@@ -540,7 +541,23 @@
         /* ================================================================
            PAGINATION
         ================================================================ */
-        nav[role="navigation"] { display: flex; align-items: center; gap: 0.25rem; flex-wrap: wrap; }
+        nav[role="navigation"] { display: flex; align-items: center; gap: 0.25rem; flex-wrap: wrap; margin-top: 1rem; font-size: 0.875rem; }
+        nav[role="navigation"] svg { width: 1.25rem; height: 1.25rem; }
+        nav[role="navigation"] p { color: var(--muted); margin: 0; display: inline-block; margin-right: 1rem; }
+        nav[role="navigation"] a, nav[role="navigation"] span[aria-disabled] { 
+            display: inline-flex; align-items: center; justify-content: center;
+            padding: 0.5rem 0.75rem; border: 1px solid var(--border);
+            border-radius: var(--radius-sm); color: var(--text); background: var(--surface);
+            text-decoration: none; min-width: 32px;
+        }
+        nav[role="navigation"] a:hover { background: var(--surface-hover); }
+        nav[role="navigation"] span[aria-current="page"] {
+            display: inline-flex; align-items: center; justify-content: center;
+            padding: 0.5rem 0.75rem; border: 1px solid var(--gold);
+            border-radius: var(--radius-sm); background: var(--gold-dim); color: var(--gold);
+            font-weight: 600; min-width: 32px;
+        }
+        .hidden { display: none !important; }
 
         /* ================================================================
            OVERLAY (mobile sidebar)
@@ -616,6 +633,7 @@
     .btn-close:before { content: "×"; }
     .btn-close:hover { color: var(--text); }
     @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(52,211,153,0.7); } 70% { box-shadow: 0 0 0 6px rgba(52,211,153,0); } 100% { box-shadow: 0 0 0 0 rgba(52,211,153,0); } }
     </style>
     @yield('styles')
     <script>
@@ -694,7 +712,7 @@
                         @if($menu->icon)
                             <i class="{{ $menu->icon }}"></i>
                         @endif
-                        {{ e($menu->name) }}
+                        {{ $menu->name }}
                         <i class="bi bi-chevron-right chevron"></i>
                     </button>
                     <div class="nav-sub {{ $groupActive ? 'open' : '' }}" id="sub-{{ $menu->id }}">
@@ -706,7 +724,7 @@
                                     @if($child->icon)
                                         <i class="{{ $child->icon }}"></i>
                                     @endif
-                                    {{ e($child->name) }}
+                                    {{ $child->name }}
                                 </a>
                             </div>
                         @endforeach
@@ -721,7 +739,7 @@
                         @if($menu->icon)
                             <i class="{{ $menu->icon }}"></i>
                         @endif
-                        {{ e($menu->name) }}
+                        {{ $menu->name }}
                     </a>
                 </div>
             @endif
@@ -745,8 +763,8 @@
                         {{ strtoupper(substr(auth()->user()?->name ?? 'U', 0, 1)) }}
                     </div>
                     <div class="sidebar-user-info" style="text-align: left; margin: 0; padding: 0; line-height: 1.2;">
-                        <strong style="display: block; margin-bottom: 0.25rem;">{{ e(auth()->user()?->name ?? '') }}</strong>
-                        <span style="display: block;">{{ e(auth()->user()?->role?->name ?? '—') }}</span>
+                        <strong style="display: block; margin-bottom: 0.25rem;">{{ auth()->user()?->name ?? '' }}</strong>
+                        <span style="display: block;">{{ auth()->user()?->role?->name ?? '—' }}</span>
                     </div>
                 </div>
                 <i class="bi bi-chevron-up" id="sidebarUserChevron" style="font-size: 0.75rem; color: var(--muted); transition: transform 0.2s;"></i>
@@ -778,6 +796,18 @@
                 >
                     <i class="bi bi-key"></i> Ganti Password
                 </button>
+                @php
+                    $activeShift = \App\Models\Shift::where('user_id', auth()->id())->where('status', 'open')->first();
+                @endphp
+                @if($activeShift)
+                <a href="{{ route('cashier.shifts.summary') }}"
+                   style="display: flex; align-items: center; gap: 0.625rem; width: 100%; padding: 0.625rem 0.875rem; border-radius: var(--radius-sm); color: var(--gold); font-size: 0.875rem; background: none; border: none; cursor: pointer; font-family: inherit; text-align: left; transition: background 0.15s; text-decoration: none;"
+                   onmouseenter="this.style.background='var(--surface-hover)'"
+                   onmouseleave="this.style.background='none'"
+                >
+                    <i class="bi bi-stop-circle"></i> Tutup Shift
+                </a>
+                @endif
                 <hr style="border: none; border-top: 1px solid var(--border); margin: 0.375rem 0;">
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
@@ -808,6 +838,13 @@
     <span class="topbar-title">@yield('title', 'Dashboard')</span>
 
     <div class="topbar-spacer"></div>
+
+    @if(isset($activeShift) && $activeShift)
+        <div style="background: var(--gold-dim); border: 1px solid var(--gold-border); padding: 0.25rem 0.75rem; border-radius: var(--radius-sm); display: flex; align-items: center; gap: 0.5rem; margin-right: 1rem;">
+            <div style="width: 8px; height: 8px; background: var(--success); border-radius: 50%; box-shadow: 0 0 8px var(--success); animation: pulse 2s infinite;"></div>
+            <span style="font-size: 0.75rem; font-weight: 600; color: var(--gold); text-transform: uppercase; letter-spacing: 0.05em;">{{ auth()->user()->name }}</span>
+        </div>
+    @endif
 
     <button id="theme-toggle" style="background: transparent; border: none; color: var(--text); font-size: 1.25rem; margin-right: 1rem; cursor: pointer;" aria-label="Toggle theme">
         <span id="theme-icon">☀️</span>

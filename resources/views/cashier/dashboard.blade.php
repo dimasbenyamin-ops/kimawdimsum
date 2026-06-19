@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Dashboard Kasir – Kumaw Dimsum')
+@section('title', 'Dashboard Kasir')
 
 @section('styles')
 <style>

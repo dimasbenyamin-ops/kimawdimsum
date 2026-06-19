@@ -236,26 +236,6 @@
         </div>
     </div>
 
-    {{-- Flash messages --}}
-    @if(session('success'))
-        <div class="alert alert-success d-flex align-items-center mb-4 shadow-sm" role="alert" style="padding: 1rem 1.25rem; border-radius: 12px; border-left: 4px solid var(--success);">
-            <i class="bi bi-check-circle-fill me-2 fs-5"></i>
-            <div>{{ session('success') }}</div>
-        </div>
-    @endif
-    
-    @if($errors->any())
-        <div class="alert alert-danger d-flex align-items-start mb-4 shadow-sm" role="alert" style="padding: 1rem 1.25rem; border-radius: 12px; border-left: 4px solid var(--error); background: rgba(248,113,113,0.1); color: var(--error);">
-            <i class="bi bi-exclamation-triangle-fill me-2 mt-1"></i>
-            <div>
-                <ul class="mb-0 ps-3" style="margin: 0; padding-left: 1.25rem;">
-                    @foreach($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        </div>
-    @endif
 
     <div class="row">
         
