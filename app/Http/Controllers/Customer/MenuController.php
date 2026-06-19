@@ -26,22 +26,25 @@ class MenuController extends Controller
 
     public function index(Request $request): View
     {
-        // Validate category against allow-list (never trust user input for DB queries)
         $category = $request->query('category');
-        if ($category && ! in_array($category, self::VALID_CATEGORIES, true)) {
-            $category = null;
+
+        // Default to bundling_hemat if not specified
+        if ($category === null) {
+            $category = 'bundling_hemat';
+        } elseif ($category !== 'all' && ! in_array($category, self::VALID_CATEGORIES, true)) {
+            $category = 'bundling_hemat';
         }
 
         $query = Menu::available()->ordered();
 
-        if ($category) {
+        if ($category !== 'all') {
             $query->byCategory($category);
         }
 
         $allMenus = $query->get();
 
         // Group by category for section display
-        $menus = $category
+        $menus = $category !== 'all'
             ? collect([($category) => $allMenus])
             : $allMenus->groupBy('category');
 

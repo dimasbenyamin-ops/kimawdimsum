@@ -138,6 +138,10 @@ class User extends Authenticatable
             return true;
         }
 
+        if (str_starts_with($routeName, 'admin.settings.store_identity.') && $this->role->navMenus->contains('route_name', 'admin.settings.store_identity')) {
+            return true;
+        }
+
         return false;
     }
 

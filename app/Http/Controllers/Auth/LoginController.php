@@ -63,6 +63,7 @@ class LoginController extends Controller
         // ── Session fixation prevention ──────────────────────────────────────
         $request->session()->regenerate();
 
+
         return redirect()->intended(route('admin.dashboard'));
     }
 

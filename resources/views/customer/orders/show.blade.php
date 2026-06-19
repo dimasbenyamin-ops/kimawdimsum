@@ -358,46 +358,56 @@
                         });
                         const data = await response.json();
                         
-                        if (data.status === 'success' && data.snap_token) {
-                            window.snap.pay(data.snap_token, {
-                                onSuccess: async function(result){
-                                    // Beri tahu pengguna bahwa pembayaran berhasil diproses Midtrans
-                                    payButton.innerHTML = '⏳ Memverifikasi Pembayaran...';
-                                    
-                                    try {
-                                        // Panggil endpoint kita untuk mengecek status terbaru langsung ke Midtrans (Manual Sync)
-                                        await fetch('{{ route('orders.check_status') }}', {
-                                            method: 'POST',
-                                            headers: {
-                                                'Content-Type': 'application/json',
-                                                'Accept': 'application/json',
-                                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                                            },
-                                            body: JSON.stringify({
-                                                order_id: result.order_id
-                                            })
-                                        });
-                                    } catch (e) {
-                                        console.error('Gagal sinkronisasi status', e);
-                                    }
+                        if (data.status === 'success') {
+                            if (data.gateway === 'doku' && data.payment_url) {
+                                // Redirect to DOKU Checkout URL
+                                window.location.href = data.payment_url;
+                            } else if (data.gateway === 'midtrans' && data.snap_token) {
+                                // Fallback: Show Midtrans Snap Popup
+                                window.snap.pay(data.snap_token, {
+                                    onSuccess: async function(result){
+                                        // Beri tahu pengguna bahwa pembayaran berhasil diproses Midtrans
+                                        payButton.innerHTML = '⏳ Memverifikasi Pembayaran...';
+                                        
+                                        try {
+                                            // Panggil endpoint kita untuk mengecek status terbaru langsung ke Midtrans (Manual Sync)
+                                            await fetch('{{ route('orders.check_status') }}', {
+                                                method: 'POST',
+                                                headers: {
+                                                    'Content-Type': 'application/json',
+                                                    'Accept': 'application/json',
+                                                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                                                },
+                                                body: JSON.stringify({
+                                                    order_id: result.order_id
+                                                })
+                                            });
+                                        } catch (e) {
+                                            console.error('Gagal sinkronisasi status', e);
+                                        }
 
-                                    alert("Pembayaran berhasil!");
-                                    window.location.reload();
-                                },
-                                onPending: function(result){
-                                    alert("Menunggu pembayaran Anda!");
-                                    window.location.reload();
-                                },
-                                onError: function(result){
-                                    alert("Pembayaran gagal!");
-                                    payButton.disabled = false;
-                                    payButton.innerHTML = '💳 Bayar dengan QRIS';
-                                },
-                                onClose: function(){
-                                    payButton.disabled = false;
-                                    payButton.innerHTML = '💳 Bayar dengan QRIS';
-                                }
-                            });
+                                        alert("Pembayaran berhasil!");
+                                        window.location.reload();
+                                    },
+                                    onPending: function(result){
+                                        alert("Menunggu pembayaran Anda!");
+                                        window.location.reload();
+                                    },
+                                    onError: function(result){
+                                        alert("Pembayaran gagal!");
+                                        payButton.disabled = false;
+                                        payButton.innerHTML = '💳 Bayar dengan QRIS';
+                                    },
+                                    onClose: function(){
+                                        payButton.disabled = false;
+                                        payButton.innerHTML = '💳 Bayar dengan QRIS';
+                                    }
+                                });
+                            } else {
+                                alert('Format balasan dari server tidak valid.');
+                                payButton.disabled = false;
+                                payButton.innerHTML = '💳 Bayar dengan QRIS';
+                            }
                         } else {
                             alert(data.message || 'Gagal mendapatkan token pembayaran');
                             payButton.disabled = false;

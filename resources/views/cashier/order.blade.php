@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Pesan di Kasir – Kumaw Dimsum')
+@section('title', 'Pesan di Kasir')
 
 @section('styles')
 <style>
@@ -18,14 +18,10 @@
     .cat-tabs {
         display: flex;
         gap: 0.5rem;
-        overflow-x: auto;
-        flex-wrap: nowrap;
+        flex-wrap: wrap;
         margin-bottom: 1.25rem;
         padding-bottom: 0.25rem;
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: none;
     }
-    .cat-tabs::-webkit-scrollbar { display: none; }
 
     .cat-tab {
         padding: 0.4rem 1rem;
@@ -391,24 +387,24 @@
 
             {{-- Category tabs --}}
             <div class="cat-tabs" id="cat-tabs">
-                <button type="button" class="cat-tab active" data-cat="all" onclick="switchCat('all', this)">
+                <button type="button" class="cat-tab {{ !$menus->has('bundling_hemat') ? 'active' : '' }}" data-cat="all" onclick="switchCat('all', this)">
                     🍽️ Semua
                 </button>
                 @foreach($menus->keys() as $cat)
                     <button type="button"
-                            class="cat-tab"
+                            class="cat-tab {{ $cat === 'bundling_hemat' ? 'active' : '' }}"
                             data-cat="{{ $cat }}"
                             onclick="switchCat('{{ $cat }}', this)">
-                        {{ ucfirst($cat) }}
+                        {{ \App\Http\Controllers\Admin\MenuAdminController::CATEGORY_LABELS[$cat] ?? ucfirst(str_replace('_', ' ', $cat)) }}
                     </button>
                 @endforeach
             </div>
 
             {{-- "All" section --}}
-            <div class="menu-section active" id="section-all">
+            <div class="menu-section {{ !$menus->has('bundling_hemat') ? 'active' : '' }}" id="section-all">
                 @foreach($menus as $cat => $items)
                     <div class="menu-section-title">
-                        {{ ucfirst($cat) }}
+                        {{ \App\Http\Controllers\Admin\MenuAdminController::CATEGORY_LABELS[$cat] ?? ucfirst(str_replace('_', ' ', $cat)) }}
                     </div>
                     <div class="menu-cards">
                         @foreach($items as $menu)
@@ -427,8 +423,8 @@
 
             {{-- Per-category sections --}}
             @foreach($menus as $cat => $items)
-                <div class="menu-section" id="section-{{ $cat }}">
-                    <div class="menu-section-title">{{ ucfirst($cat) }}</div>
+                <div class="menu-section {{ $cat === 'bundling_hemat' ? 'active' : '' }}" id="section-{{ $cat }}">
+                    <div class="menu-section-title">{{ \App\Http\Controllers\Admin\MenuAdminController::CATEGORY_LABELS[$cat] ?? ucfirst(str_replace('_', ' ', $cat)) }}</div>
                     <div class="menu-cards">
                         @foreach($items as $menu)
                             <div class="menu-card"
@@ -476,6 +472,11 @@
                     <div class="summary-row">
                         <span>Subtotal</span>
                         <span id="sum-subtotal">Rp 0</span>
+                    </div>
+
+                    <div class="summary-row" id="discount-row" style="display:none; color: var(--error);">
+                        <span>Diskon</span>
+                        <span id="sum-discount">-Rp 0</span>
                     </div>
 
                     <div class="summary-row total">
@@ -557,6 +558,17 @@
                                placeholder="Misal: tidak pedas, no MSG…"
                                value="{{ old('customer_notes') }}"
                                maxlength="1000">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="discount_amount">Diskon (Rp)</label>
+                        <input type="number"
+                               id="discount_amount"
+                               name="discount_amount"
+                               placeholder="Nominal diskon (opsional)"
+                               value="{{ old('discount_amount') }}"
+                               min="0"
+                               oninput="renderCart()">
                     </div>
 
                 </div>
@@ -680,10 +692,21 @@
         });
 
         // Totals
-        const total = subtotal;
+        const discountInput = document.getElementById('discount_amount');
+        const discountAmount = discountInput ? (parseInt(discountInput.value) || 0) : 0;
+        const total = Math.max(0, subtotal - discountAmount);
 
         document.getElementById('sum-subtotal').textContent = formatRp(subtotal);
-        document.getElementById('sum-total').textContent    = formatRp(total);
+        
+        const discountRow = document.getElementById('discount-row');
+        if (discountAmount > 0) {
+            discountRow.style.display = 'flex';
+            document.getElementById('sum-discount').textContent = '-' + formatRp(discountAmount);
+        } else {
+            discountRow.style.display = 'none';
+        }
+
+        document.getElementById('sum-total').textContent = formatRp(total);
 
         // Rebuild hidden inputs for form submission
         const hiddenContainer = document.getElementById('cart-hidden-inputs');

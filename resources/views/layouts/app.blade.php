@@ -503,9 +503,7 @@
                         @php
                             $cartQty = collect(session('cart', []))->sum('quantity');
                         @endphp
-                        @if($cartQty > 0)
-                            <div class="cart-badge">{{ $cartQty }}</div>
-                        @endif
+                        <div class="cart-badge" style="display: {{ $cartQty > 0 ? 'flex' : 'none' }};">{{ $cartQty }}</div>
                     </a>
                 @endif
 
@@ -702,9 +700,10 @@
                         if (newBadge) {
                             if (oldBadge) {
                                 oldBadge.textContent = newBadge.textContent;
+                                oldBadge.style.display = newBadge.style.display;
                             } else {
                                 const cartBtn = document.querySelector('.cart-btn');
-                                if(cartBtn) cartBtn.insertAdjacentHTML('beforeend', `<div class="cart-badge">${newBadge.textContent}</div>`);
+                                if(cartBtn) cartBtn.insertAdjacentHTML('beforeend', `<div class="cart-badge" style="display: flex;">${newBadge.textContent}</div>`);
                             }
                         }
                         
