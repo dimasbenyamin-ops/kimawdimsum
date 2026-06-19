@@ -133,12 +133,11 @@ class User extends Authenticatable
             return true;
         }
 
-        // If the route starts with admin.settings.qris and admin.settings.qris is allowed
-        if (str_starts_with($routeName, 'admin.settings.qris.') && $this->role->navMenus->contains('route_name', 'admin.settings.qris')) {
+        if (str_starts_with($routeName, 'admin.settings.store_identity.') && $this->role->navMenus->contains('route_name', 'admin.settings.store_identity')) {
             return true;
         }
 
-        if (str_starts_with($routeName, 'admin.settings.store_identity.') && $this->role->navMenus->contains('route_name', 'admin.settings.store_identity')) {
+        if (str_starts_with($routeName, 'admin.role-menu.') && $this->role->navMenus->contains('route_name', 'admin.roles.index')) {
             return true;
         }
 

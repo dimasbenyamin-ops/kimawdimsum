@@ -114,6 +114,14 @@
         box-shadow: 0 4px 12px rgba(96, 165, 250, 0.15);
     }
     
+    .action-btn.manage:hover {
+        background: rgba(16, 185, 129, 0.15);
+        color: #10b981 !important;
+        border-color: rgba(16, 185, 129, 0.4);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.15);
+    }
+    
     .action-btn.delete {
         cursor: pointer;
         background: transparent;
@@ -252,6 +260,9 @@
                                     </td>
                                     <td class="text-center align-middle actions-cell">
                                         <div class="d-flex gap-2 justify-content-center align-items-center">
+                                            <a href="{{ route('admin.role-menu.index', $role) }}" class="action-btn manage" title="Atur Hak Akses Menu">
+                                                <i class="bi bi-card-checklist"></i>
+                                            </a>
                                             <a href="{{ route('admin.roles.edit', $role) }}" class="action-btn edit" title="Edit Role">
                                                 <i class="bi bi-pencil-square"></i>
                                             </a>

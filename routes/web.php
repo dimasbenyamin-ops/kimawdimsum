@@ -100,9 +100,6 @@ Route::middleware(['auth', 'admin.access'])
          Route::get('/role-menu/{role}',  [RoleMenuController::class, 'index'])->name('role-menu.index');
          Route::post('/role-menu/{role}', [RoleMenuController::class, 'sync'])->name('role-menu.sync');
 
-         // ── Setup > QRIS ──────────────────────────────────────────────────────
-         Route::get('/settings/qris',  [SettingController::class, 'qris'])->name('settings.qris');
-         Route::post('/settings/qris', [SettingController::class, 'updateQris'])->name('settings.qris.update');
 
          // ── Setup > Store Identity ────────────────────────────────────────────
          Route::get('/settings/store-identity',  [SettingController::class, 'storeIdentity'])->name('settings.store_identity');

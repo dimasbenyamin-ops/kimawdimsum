@@ -57,11 +57,6 @@ class DatabaseSeeder extends Seeder
             ['name' => 'Role', 'icon' => 'bi bi-shield-check', 'sort_order' => 12, 'parent_id' => $navSetup->id]
         );
 
-        $navQris = NavMenu::updateOrCreate(
-            ['route_name' => 'admin.settings.qris'],
-            ['name' => 'Pengaturan QRIS', 'icon' => 'bi bi-qr-code', 'sort_order' => 14, 'parent_id' => $navSetup->id]
-        );
-
         // NOTE: role-menu requires a {role} parameter so it cannot be linked bare
         // from the sidebar. We point this nav item to admin.roles.index instead,
         // which is the page where admins click "Role Menu" for each specific role.
@@ -104,8 +99,6 @@ class DatabaseSeeder extends Seeder
             $navRoles->id,
             $navRoleMenu->id,
             $navFoodMenu->id,
-            $navPesanKasir->id,
-            $navCashier->id,
             $navRevenueReport->id,
         ]);
 
