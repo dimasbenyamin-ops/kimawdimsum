@@ -11,6 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
+        \Illuminate\Support\Facades\Schema::disableForeignKeyConstraints();
+        \Illuminate\Support\Facades\Schema::dropIfExists('waste_logs');
+        \Illuminate\Support\Facades\Schema::enableForeignKeyConstraints();
+
         Schema::create('waste_logs', function (Blueprint $table) {
             $table->id();
             $table->foreignId('ingredient_id')->constrained('ingredients')->restrictOnDelete();
@@ -30,6 +34,5 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('waste_logs');
     }
 };
