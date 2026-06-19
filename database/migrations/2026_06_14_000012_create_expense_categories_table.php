@@ -11,6 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
+        \Illuminate\Support\Facades\Schema::disableForeignKeyConstraints();
+        \Illuminate\Support\Facades\Schema::dropIfExists('expense_categories');
+        \Illuminate\Support\Facades\Schema::enableForeignKeyConstraints();
+
         Schema::create('expense_categories', function (Blueprint $table) {
             $table->id();
             $table->string('name')->unique();
@@ -23,6 +27,5 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('expense_categories');
     }
 };

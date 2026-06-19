@@ -11,6 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
+        \Illuminate\Support\Facades\Schema::disableForeignKeyConstraints();
+        \Illuminate\Support\Facades\Schema::dropIfExists('stock_opnames');
+        \Illuminate\Support\Facades\Schema::enableForeignKeyConstraints();
+
         Schema::create('stock_opnames', function (Blueprint $table) {
             $table->id();
             $table->string('opname_number')->unique();
@@ -27,6 +31,5 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('stock_opnames');
     }
 };
