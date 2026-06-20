@@ -140,7 +140,7 @@ class DatabaseSeeder extends Seeder
         );
 
         $this->command->info('✅ Default users seeded: admin (Administrator), kasir (Kasir)');
-        $this->command->warn('   ⚠️  Default password is "password" — change it after first login!');
+        $this->command->warn('⚠️ Default password is "password" — change it after first login!');
 
         // ─────────────────────────────────────────────────────────────────
         // 5. FOOD MENU ITEMS
