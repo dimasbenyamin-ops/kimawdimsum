@@ -99,7 +99,7 @@
 
         @if($wasteLogs->hasPages())
             <div style="padding: 1.5rem; border-top: 1px solid var(--border)">
-                {{ $wasteLogs->links('pagination::bootstrap-5') }}
+                {{ $wasteLogs->links() }}
             </div>
         @endif
     </div>

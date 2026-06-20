@@ -30,24 +30,6 @@
         transform: translateX(-3px);
     }
     
-    .btn-gradient-primary {
-        background: linear-gradient(135deg, #2563eb, #0ea5e9);
-        color: white;
-        border: none;
-        transition: transform 0.2s, box-shadow 0.2s;
-        padding: 0.75rem 1.5rem;
-        border-radius: 0.75rem;
-        font-weight: 600;
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-    }
-    
-    .btn-gradient-primary:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 15px rgba(37, 99, 235, 0.3);
-        color: white;
-    }
     
     .btn-outline-modern {
         border: 1px solid var(--border);
@@ -211,7 +193,7 @@
                 <a href="{{ route('admin.roles.index') }}" class="btn-outline-modern">
                     <i class="bi bi-x-circle"></i> Batal
                 </a>
-                <button type="submit" id="btn-simpan-rolemenu" class="btn-gradient-primary">
+                <button type="submit" id="btn-simpan-rolemenu" class="btn btn-gold">
                     <i class="bi bi-shield-check"></i> Simpan Hak Akses
                 </button>
             </div>

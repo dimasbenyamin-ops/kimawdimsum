@@ -36,6 +36,7 @@
                         <th style="text-align:center">Kategori</th>
                         <th style="text-align:right">Terjual (Porsi)</th>
                         <th style="text-align:right">Total Revenue (Rp)</th>
+                        <th style="text-align:center">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -60,10 +61,21 @@
                             <td style="text-align:right; font-family:monospace; color:var(--success)">
                                 {{ number_format($item->total_revenue, 2, ',', '.') }}
                             </td>
+                            <td style="text-align:center">
+                                <form action="{{ route('admin.reports.sales-per-menu.destroy', $item->menu_id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus SEMUA data penjualan untuk menu ini pada rentang tanggal tersebut? (Tindakan ini tidak bisa dibatalkan)');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <input type="hidden" name="start_date" value="{{ $startDate }}">
+                                    <input type="hidden" name="end_date" value="{{ $endDate }}">
+                                    <button type="submit" class="btn btn-sm btn-ghost" title="Hapus Data Penjualan">
+                                        <i class="bi bi-trash3" style="color:var(--danger)"></i>
+                                    </button>
+                                </form>
+                            </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" style="text-align:center; padding: 3rem; color:var(--muted)">
+                            <td colspan="6" style="text-align:center; padding: 3rem; color:var(--muted)">
                                 Belum ada data penjualan pada periode ini.
                             </td>
                         </tr>

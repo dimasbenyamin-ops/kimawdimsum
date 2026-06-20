@@ -121,8 +121,15 @@ class User extends Authenticatable
         $parts = explode('.', $routeName);
         if (count($parts) > 1) {
             array_pop($parts); // remove the action (store, create, edit, update, destroy, etc.)
-            $baseRoute = implode('.', $parts) . '.index';
-            if ($this->role->navMenus->contains('route_name', $baseRoute)) {
+            
+            $baseRouteIndex = implode('.', $parts) . '.index';
+            if ($this->role->navMenus->contains('route_name', $baseRouteIndex)) {
+                return true;
+            }
+
+            // Fallback for non-resource parent routes (e.g., admin.reports.sales-per-menu.destroy -> admin.reports.sales-per-menu)
+            $baseRouteExact = implode('.', $parts);
+            if ($this->role->navMenus->contains('route_name', $baseRouteExact)) {
                 return true;
             }
         }

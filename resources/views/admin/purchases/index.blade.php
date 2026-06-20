@@ -87,7 +87,7 @@
 
         @if($purchases->hasPages())
             <div style="padding: 1.5rem; border-top: 1px solid var(--border)">
-                {{ $purchases->links('pagination::bootstrap-5') }}
+                {{ $purchases->links() }}
             </div>
         @endif
     </div>

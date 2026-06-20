@@ -54,7 +54,7 @@
 
         @if($categories->hasPages())
             <div style="padding: 1.5rem; border-top: 1px solid var(--border)">
-                {{ $categories->links('pagination::bootstrap-5') }}
+                {{ $categories->links() }}
             </div>
         @endif
     </div>

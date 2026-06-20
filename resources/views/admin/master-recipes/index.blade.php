@@ -77,7 +77,7 @@
 
         @if($masterRecipes->hasPages())
             <div style="padding: 1.5rem; border-top: 1px solid var(--border)">
-                {{ $masterRecipes->links('pagination::bootstrap-5') }}
+                {{ $masterRecipes->links() }}
             </div>
         @endif
     </div>

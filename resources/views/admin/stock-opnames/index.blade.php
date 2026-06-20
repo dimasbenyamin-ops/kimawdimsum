@@ -84,7 +84,7 @@
 
         @if($opnames->hasPages())
             <div style="padding: 1.5rem; border-top: 1px solid var(--border)">
-                {{ $opnames->links('pagination::bootstrap-5') }}
+                {{ $opnames->links() }}
             </div>
         @endif
     </div>
