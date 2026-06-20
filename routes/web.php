@@ -100,6 +100,9 @@ Route::middleware(['auth', 'admin.access'])
          Route::get('/role-menu/{role}',  [RoleMenuController::class, 'index'])->name('role-menu.index');
          Route::post('/role-menu/{role}', [RoleMenuController::class, 'sync'])->name('role-menu.sync');
 
+         // ── Setup > Nav Menus ─────────────────────────────────────────────────
+         Route::resource('nav-menus', \App\Http\Controllers\Admin\NavMenuController::class)->except(['show']);
+
 
          // ── Setup > Store Identity ────────────────────────────────────────────
          Route::get('/settings/store-identity',  [SettingController::class, 'storeIdentity'])->name('settings.store_identity');
@@ -135,6 +138,7 @@ Route::middleware(['auth', 'admin.access'])
          Route::get('reports/cogs', [\App\Http\Controllers\Admin\ReportController::class, 'cogs'])->name('reports.cogs');
          Route::get('reports/stock-audit', [\App\Http\Controllers\Admin\ReportController::class, 'stockAudit'])->name('reports.stock-audit');
          Route::get('reports/sales-per-menu', [\App\Http\Controllers\Admin\ReportController::class, 'salesPerMenu'])->name('reports.sales-per-menu');
+         Route::delete('reports/sales-per-menu/{menuId}', [\App\Http\Controllers\Admin\ReportController::class, 'destroySalesPerMenu'])->name('reports.sales-per-menu.destroy');
          Route::get('reports/cash-flow', [\App\Http\Controllers\Admin\ReportController::class, 'cashFlow'])->name('reports.cash-flow');
      });
 

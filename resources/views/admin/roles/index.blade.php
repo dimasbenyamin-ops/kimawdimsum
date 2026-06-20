@@ -41,18 +41,7 @@
         background: transparent;
     }
     
-    .btn-gradient-primary {
-        background: linear-gradient(135deg, #2563eb, #0ea5e9);
-        color: white;
-        border: none;
-        transition: transform 0.2s, box-shadow 0.2s;
-    }
-    .btn-gradient-primary:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 15px rgba(37, 99, 235, 0.3);
-        color: white;
-    }
-    
+
     .table-container {
         border: 1px solid var(--border);
         border-radius: var(--radius-lg);
@@ -312,7 +301,7 @@
                         </div>
 
                         {{-- Submit Button --}}
-                        <button type="submit" class="btn btn-gradient-primary w-100 py-3 fw-bold rounded-4 shadow-sm d-flex justify-content-center align-items-center gap-2" style="font-size: 1rem;">
+                        <button type="submit" class="btn btn-gold w-100 py-3 fw-bold rounded-4 shadow-sm d-flex justify-content-center align-items-center gap-2" style="font-size: 1rem;">
                             <i class="bi bi-save2 fs-5"></i> Simpan Role Baru
                         </button>
                     </form>

@@ -145,6 +145,41 @@ class ReportController extends Controller
         return view('admin.reports.sales-per-menu', compact('sales', 'startDate', 'endDate'));
     }
 
+    public function destroySalesPerMenu(Request $request, $menuId)
+    {
+        [$startDate, $endDate] = $this->getDateRange($request);
+
+        // Find all order items for this menu within the date range
+        $orderItems = OrderItem::where('menu_id', $menuId)
+            ->whereHas('order', function ($q) use ($startDate, $endDate) {
+                $q->whereBetween('created_at', [$startDate . ' 00:00:00', $endDate . ' 23:59:59']);
+            })->get();
+
+        if ($orderItems->isEmpty()) {
+            return back()->with('error', 'Tidak ada data penjualan untuk menu ini pada periode yang dipilih.');
+        }
+
+        $orderIds = $orderItems->pluck('order_id')->unique();
+
+        // Delete the order items
+        OrderItem::whereIn('id', $orderItems->pluck('id'))->delete();
+
+        // Check the affected orders and either recalculate their totals or delete them if empty
+        foreach ($orderIds as $orderId) {
+            $order = Order::find($orderId);
+            if ($order) {
+                if ($order->items()->count() === 0) {
+                    $order->delete();
+                } else {
+                    $newTotal = $order->items()->sum('subtotal');
+                    $order->update(['total_amount' => $newTotal]);
+                }
+            }
+        }
+
+        return back()->with('success', 'Data penjualan testing untuk menu tersebut berhasil dihapus dari database.');
+    }
+
     public function cashFlow(Request $request): View
     {
         [$startDate, $endDate] = $this->getDateRange($request);

@@ -30,18 +30,6 @@
         background: transparent;
     }
     
-    .btn-gradient-primary {
-        background: linear-gradient(135deg, #2563eb, #0ea5e9);
-        color: white;
-        border: none;
-        transition: transform 0.2s, box-shadow 0.2s;
-    }
-    .btn-gradient-primary:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 15px rgba(37, 99, 235, 0.3);
-        color: white;
-    }
-
     /* Form floating Fallback */
     .form-floating { position: relative; }
     .form-floating > .form-control { height: calc(3.5rem + 2px); padding: 1rem 0.75rem; }
@@ -151,7 +139,7 @@
                             <a href="{{ route('admin.roles.index') }}" class="btn btn-outline-secondary rounded-4 px-4 py-2 shadow-sm d-flex align-items-center" style="color: var(--text); border-color: var(--border);">
                                 Batal
                             </a>
-                            <button type="submit" id="btn-update-role" class="btn btn-gradient-primary px-5 py-2 fw-bold rounded-4 shadow-sm d-flex align-items-center gap-2">
+                            <button type="submit" id="btn-update-role" class="btn btn-gold px-5 py-2 fw-bold rounded-4 shadow-sm d-flex align-items-center gap-2">
                                 <i class="bi bi-save2"></i> Simpan Perubahan
                             </button>
                         </div>
