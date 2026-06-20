@@ -127,6 +127,7 @@ Route::middleware(['auth', 'admin.access'])
          // ── Stock Opname & Expenses ───────────────────────────────────────────
          Route::patch('stock-opnames/{stockOpname}/status', [\App\Http\Controllers\Admin\StockOpnameController::class, 'updateStatus'])->name('stock-opnames.status');
          Route::resource('stock-opnames', \App\Http\Controllers\Admin\StockOpnameController::class)->only(['index', 'create', 'store', 'show']);
+         Route::resource('expense-categories', \App\Http\Controllers\Admin\ExpenseCategoryController::class)->except(['show']);
          Route::resource('expenses', \App\Http\Controllers\Admin\ExpenseController::class);
 
          // ── Reports (Keuangan & Analisis) ─────────────────────────────────────
