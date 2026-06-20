@@ -121,6 +121,7 @@ Route::middleware(['auth', 'admin.access'])
          Route::resource('suppliers', \App\Http\Controllers\Admin\SupplierController::class)->except(['show']);
          
          Route::resource('master-recipes', \App\Http\Controllers\Admin\MasterRecipeController::class)->except(['show']);
+         Route::resource('assets', \App\Http\Controllers\Admin\AssetController::class)->except(['show']);
 
          // ── Purchasing & Waste ────────────────────────────────────────────────
          Route::patch('purchases/{purchase}/status', [\App\Http\Controllers\Admin\PurchaseController::class, 'updateStatus'])->name('purchases.status');
