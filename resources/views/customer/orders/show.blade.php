@@ -137,7 +137,6 @@
             <h1>🧾 Detail Pesanan</h1>
             <p style="font-family:monospace;color:var(--gold);">#{{ $order->order_number }}</p>
         </div>
-        <a href="{{ route('orders.index') }}" class="btn btn-ghost">← Semua Pesanan</a>
     </div>
 
     {{-- Status timeline --}}

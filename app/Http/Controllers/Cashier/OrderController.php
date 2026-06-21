@@ -94,25 +94,24 @@ class OrderController extends Controller
                 $tax   = 0;
                 $total = max(0, $subtotal - $discount + $tax);
 
-                $isQris = $validated['payment_method'] === 'qris';
-
                 $activeShift = Shift::where('user_id', Auth::id())->where('status', 'open')->first();
 
-                // Cashier orders go straight to confirmed if cash, pending_payment if qris
+                // Cashier orders (Cash/QRIS EDC) go straight to confirmed & paid
                 $order = Order::create([
                     'order_number'    => $this->generateOrderNumber(),
                     'shift_id'        => $activeShift?->id,
                     'user_id'         => null, // walk-in / cashier-created orders have no user account
                     'customer_name'   => $validated['customer_name'],
                     'phone_number'    => $validated['phone_number'] ?? null,
-                    'status'          => $isQris ? Order::STATUS_PENDING_PAYMENT : Order::STATUS_CONFIRMED,
+                    'status'          => Order::STATUS_CONFIRMED,
                     'type'            => $validated['type'],
                     'subtotal'        => $subtotal,
                     'discount_amount' => $discount,
                     'tax_amount'      => $tax,
                     'total_amount'    => $total,
                     'payment_method'  => $validated['payment_method'],
-                    'paid_at'         => $isQris ? null : now(), // cashier takes payment immediately for cash
+                    'paid_at'         => now(), // cashier verifies payment immediately
+
                     'table_number'    => $validated['table_number'] ?? null,
                     'customer_notes'  => $validated['customer_notes'] ?? null,
                     'processed_by'    => Auth::id(),
@@ -133,16 +132,10 @@ class OrderController extends Controller
                 ->withErrors(['order' => 'Gagal membuat pesanan: ' . e($e->getMessage())]);
         }
 
-        if ($validated['payment_method'] === 'qris') {
-            return redirect()
-                ->route('orders.show', ['order' => $order->id, 'auto_pay' => 1])
-                ->with('success', 'Pesanan dibuat. Silakan arahkan customer untuk scan QRIS.');
-        }
-
-        // For Cash, instead of going to dashboard, go to the receipt printing page first
+        // Both Cash and EDC QRIS go directly to receipt printing
         return redirect()
             ->route('cashier.orders.receipt', ['order' => $order->id])
-            ->with('success', 'Pesanan berhasil dibuat! Silakan cetak struk.');
+            ->with('success', 'Pesanan Lunas! Silakan cetak struk.');
     }
 
     /**

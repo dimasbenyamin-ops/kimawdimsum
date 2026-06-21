@@ -159,6 +159,7 @@ Route::middleware(['auth', 'admin.access'])
          // ── Pesan di Kasir (cashier-initiated POS order) ──────────────────
          Route::get('/order/create', [CashierOrderController::class, 'create'])->name('order.create');
          Route::post('/order',       [CashierOrderController::class, 'store'])->name('order.store');
+         Route::get('/orders/{order}/receipt', [CashierOrderController::class, 'receipt'])->name('orders.receipt');
 
          // ── Shift Management ──────────────────
          Route::get('/shifts/create', [ShiftController::class, 'create'])->name('shifts.create');
