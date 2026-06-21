@@ -13,6 +13,7 @@ use App\Http\Controllers\Customer\OrderController;
 use App\Http\Controllers\Customer\ReviewController;
 use App\Http\Controllers\Cashier\DashboardController;
 use App\Http\Controllers\Cashier\OrderController as CashierOrderController;
+use App\Http\Controllers\Cashier\ShiftController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -158,4 +159,10 @@ Route::middleware(['auth', 'admin.access'])
          // ── Pesan di Kasir (cashier-initiated POS order) ──────────────────
          Route::get('/order/create', [CashierOrderController::class, 'create'])->name('order.create');
          Route::post('/order',       [CashierOrderController::class, 'store'])->name('order.store');
+
+         // ── Shift Management ──────────────────
+         Route::get('/shifts/create', [ShiftController::class, 'create'])->name('shifts.create');
+         Route::post('/shifts', [ShiftController::class, 'store'])->name('shifts.store');
+         Route::get('/shifts/summary', [ShiftController::class, 'summary'])->name('shifts.summary');
+         Route::post('/shifts/close', [ShiftController::class, 'close'])->name('shifts.close');
      });

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Cashier;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use App\Models\Shift;
 use App\Services\WhatsAppNotificationService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -24,8 +25,13 @@ class DashboardController extends Controller
         Order::STATUS_READY     => [Order::STATUS_COMPLETED],
     ];
 
-    public function index(): View
+    public function index()
     {
+        // ponytail: check active shift directly in controller, no extra middleware needed yet
+        if (!Shift::where('user_id', Auth::id())->where('status', 'open')->exists()) {
+            return redirect()->route('cashier.shifts.create')->with('error', 'Silakan mulai shift terlebih dahulu.');
+        }
+
         $activeOrders = Order::with(['customer', 'items'])
             ->active()
             ->today()

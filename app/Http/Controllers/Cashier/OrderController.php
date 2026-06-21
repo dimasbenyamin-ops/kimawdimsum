@@ -18,8 +18,13 @@ class OrderController extends Controller
     /**
      * Show the cashier POS order form with all available menu items.
      */
-    public function create(): View
+    public function create()
     {
+        // ponytail: check active shift
+        if (!Shift::where('user_id', Auth::id())->where('status', 'open')->exists()) {
+            return redirect()->route('cashier.shifts.create')->with('error', 'Silakan mulai shift terlebih dahulu.');
+        }
+
         $menus = Menu::available()
             ->ordered()
             ->get()
