@@ -468,25 +468,12 @@
     <!-- Navbar -->
     <nav class="navbar">
         <div class="navbar-inner">
-            <a href="{{ route('menu.index') }}" class="navbar-brand">
+            <a href="{{ (Auth::check() && Auth::user()->isStaff()) ? route('cashier.dashboard') : route('menu.index') }}" class="navbar-brand">
                 <img src="{{ asset('images/dimsum-logo.png') }}" alt="Kumaw Dimsum" width="36" height="36" style="border-radius: 50%; object-fit: contain;">
                 <span>Kumaw Dimsum</span>
             </a>
 
-            <div class="navbar-nav">
-                <a href="{{ route('menu.index') }}"
-                   class="nav-link {{ request()->routeIs('menu.index') ? 'active' : '' }}">
-                    Menu
-                </a>
-                @auth
-                    @if(Auth::user()->isStaff())
-                        <a href="{{ route('admin.dashboard') }}"
-                           class="nav-link {{ request()->routeIs('admin.*') ? 'active' : '' }}">
-                            Dashboard
-                        </a>
-                    @endif
-                @endauth
-            </div>
+
 
             <div class="navbar-actions">
                 <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle theme">
