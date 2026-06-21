@@ -468,7 +468,13 @@
     <!-- Navbar -->
     <nav class="navbar">
         <div class="navbar-inner">
-            <a href="{{ (Auth::check() && Auth::user()->isStaff()) ? route('cashier.dashboard') : route('menu.index') }}" class="navbar-brand">
+            @php
+                $homeRoute = route('menu.index');
+                if (Auth::check() && Auth::user()->isStaff()) {
+                    $homeRoute = Auth::user()->hasNavMenuAccess('admin.dashboard') ? route('admin.dashboard') : route('cashier.dashboard');
+                }
+            @endphp
+            <a href="{{ $homeRoute }}" class="navbar-brand">
                 <img src="{{ asset('images/dimsum-logo.png') }}" alt="Kumaw Dimsum" width="36" height="36" style="border-radius: 50%; object-fit: contain;">
                 <span>Kumaw Dimsum</span>
             </a>
