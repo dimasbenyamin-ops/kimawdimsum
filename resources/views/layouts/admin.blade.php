@@ -653,7 +653,9 @@
 
     {{-- Brand --}}
     <a href="{{ route('admin.dashboard') }}" class="sidebar-brand">
-        <div class="sidebar-brand-icon">🥟</div>
+        <div class="sidebar-brand-icon" style="background: transparent; box-shadow: none;">
+            <img src="{{ asset('images/dimsum-logo.png') }}" alt="Logo" style="height: 36px; object-fit: contain;">
+        </div>
         <div class="sidebar-brand-text">
             <h2>Kumaw Dimsum</h2>
             <span>Panel Admin</span>
@@ -1039,5 +1041,12 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 @yield('scripts')
+    {{-- Auto-redirect to login before session expires to prevent 419 errors --}}
+    <script>
+        // ponytail: simple JS timer over complex ping/heartbeat systems
+        setTimeout(function() {
+            window.location.href = "{{ route('login') }}";
+        }, {{ (config('session.lifetime') - 1) * 60 * 1000 }});
+    </script>
 </body>
 </html>
