@@ -300,6 +300,19 @@
 
     @media (max-width: 640px) {
         .menu-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+        .floating-cart {
+            left: 1rem;
+            transform: none;
+            bottom: 1.5rem;
+            padding: 0.5rem 0.75rem;
+            gap: 0.5rem;
+            max-width: calc(100vw - 100px); /* prevents hitting the 60px chatbot */
+        }
+        .floating-cart:hover { transform: translateY(-2px); }
+        .fc-icon { font-size: 1.2rem; }
+        .fc-title { font-size: 0.8rem; }
+        .fc-count { font-size: 0.75rem; }
+        .fc-action { font-size: 0.75rem; padding: 0.2rem 0.5rem; }
     }
 </style>
 @endsection
@@ -430,6 +443,15 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const csrfToken = '{{ csrf_token() }}';
+
+    // Auto-scroll category bar to active category
+    const activeCat = document.querySelector('.cat-btn.active');
+    const catBar = document.querySelector('.category-bar');
+    if (activeCat && catBar) {
+        // Scroll to center the active category button
+        const scrollLeft = activeCat.offsetLeft - (catBar.offsetWidth / 2) + (activeCat.offsetWidth / 2);
+        catBar.scrollLeft = scrollLeft;
+    }
 
     // Add to cart directly
     document.querySelectorAll('.btn-cart-add').forEach(btn => {

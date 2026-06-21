@@ -300,12 +300,11 @@
 <div class="quick-grid">
     @php
         $quickLinks = [
-            ['label' => 'Dashboard Kasir', 'sub' => 'Kelola pesanan real-time', 'icon' => 'bi-receipt-cutoff', 'color' => 'gold',   'route' => 'cashier.dashboard'],
             ['label' => 'Rekap Pendapatan','sub' => 'Laporan omzet & transaksi','icon' => 'bi-bar-chart-fill','color' => 'green',  'route' => 'admin.reports.revenue'],
+            ['label' => 'Arus Kas',       'sub' => 'Laporan kas masuk & keluar','icon' => 'bi-wallet-fill',   'color' => 'indigo', 'route' => 'admin.reports.cash-flow'],
             ['label' => 'Manajemen User', 'sub' => 'Akun & hak akses staf',   'icon' => 'bi-people-fill',    'color' => 'blue',   'route' => 'admin.users.index'],
             ['label' => 'Manajemen Role', 'sub' => 'Klasifikasi role sistem',  'icon' => 'bi-shield-lock-fill','color' => 'purple','route' => 'admin.roles.index'],
             ['label' => 'Menu Makanan',   'sub' => 'Produk & katalog dimsum',  'icon' => 'bi-basket-fill',    'color' => 'red',    'route' => 'admin.menus.index'],
-            ['label' => 'Pengaturan',     'sub' => 'Konfigurasi sistem',       'icon' => 'bi-gear-fill',      'color' => 'indigo', 'route' => 'admin.settings.index'],
         ];
     @endphp
     @foreach($quickLinks as $link)
@@ -364,10 +363,6 @@
     {{-- Tips --}}
     <div class="info-card">
         <div class="info-card-title"><i class="bi bi-lightbulb-fill"></i> Panduan Cepat</div>
-        <div class="tip-item">
-            <div class="tip-icon" style="background: rgba(245,158,11,0.1); color: var(--gold);"><i class="bi bi-receipt-cutoff"></i></div>
-            <span>Gunakan <strong style="color:var(--text);">Dashboard Kasir</strong> untuk melihat dan memproses pesanan masuk secara real-time.</span>
-        </div>
         <div class="tip-item">
             <div class="tip-icon" style="background: rgba(52,211,153,0.1); color: var(--success);"><i class="bi bi-bar-chart-fill"></i></div>
             <span>Cek <strong style="color:var(--text);">Rekap Pendapatan</strong> untuk melihat laporan omzet harian & bulanan.</span>

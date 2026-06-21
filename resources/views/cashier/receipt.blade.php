@@ -233,7 +233,8 @@
             </div>
 
             {{-- Items table --}}
-            <table class="invoice-items-table">
+            <div class="table-wrapper">
+<table class="invoice-items-table">
                 <thead>
                     <tr>
                         <th>Item</th>
@@ -253,6 +254,7 @@
                     @endforeach
                 </tbody>
             </table>
+</div>
 
             {{-- Totals --}}
             <div class="invoice-totals">

@@ -66,7 +66,8 @@
             </div>
         @else
             <div class="menu-table-wrap">
-                <table>
+                <div class="table-wrapper">
+<table>
                     <thead>
                         <tr>
                             <th>#</th>
@@ -125,6 +126,7 @@
                         @endforeach
                     </tbody>
                 </table>
+</div>
             </div>
         @endif
     </div>

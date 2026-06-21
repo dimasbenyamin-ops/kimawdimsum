@@ -48,7 +48,7 @@
             <h2 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem;">Daftar Bahan Baku</h2>
             <p style="color:var(--muted); margin-bottom:1.5rem; font-size:0.9rem">Isi "Stok Fisik" sesuai dengan perhitungan di lapangan. Kosongkan jika tidak ingin mengaudit bahan tersebut.</p>
 
-            <div class="table-responsive">
+            <div class="table-wrapper">
                 <table>
                     <thead>
                         <tr>

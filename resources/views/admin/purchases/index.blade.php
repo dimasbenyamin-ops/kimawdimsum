@@ -15,7 +15,7 @@
 
     <div class="card">
         <div style="padding:1.5rem; border-bottom:1px solid var(--border)">
-            <form method="GET" action="{{ route('admin.purchases.index') }}" style="display:flex; gap:1rem; align-items:center;">
+            <form method="GET" action="{{ route('admin.purchases.index') }}" style="display:flex; gap:1rem; align-items:center; flex-wrap:wrap;">
                 <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari No. PO..." class="form-control" style="max-width:250px">
                 
                 <select name="status" class="form-control" style="max-width:150px" onchange="this.form.submit()">
@@ -32,7 +32,7 @@
             </form>
         </div>
 
-        <div class="table-responsive">
+        <div class="table-wrapper">
             <table>
                 <thead>
                     <tr>
