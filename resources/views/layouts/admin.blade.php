@@ -652,7 +652,10 @@
 <aside class="sidebar" id="sidebar" aria-label="Navigasi Admin">
 
     {{-- Brand --}}
-    <a href="{{ route('admin.dashboard') }}" class="sidebar-brand">
+    @php
+        $dashRoute = Auth::user()->hasNavMenuAccess('admin.dashboard') ? route('admin.dashboard') : route('cashier.dashboard');
+    @endphp
+    <a href="{{ $dashRoute }}" class="sidebar-brand">
         <div class="sidebar-brand-icon" style="background: transparent; box-shadow: none;">
             <img src="{{ asset('images/dimsum-logo.png') }}" alt="Logo" style="height: 36px; width: 36px; border-radius: 50%; object-fit: cover;">
         </div>
