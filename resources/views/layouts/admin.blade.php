@@ -665,16 +665,6 @@
     {{-- Navigation — dynamically rendered from role_menu --}}
     <nav class="sidebar-nav">
 
-        {{-- Dashboard is always shown to all authenticated, non-expired staff --}}
-        <div class="nav-item">
-            <a href="{{ route('admin.dashboard') }}"
-               id="nav-dashboard"
-               class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
-                <i class="bi bi-speedometer2"></i>
-                Dashboard
-            </a>
-        </div>
-
         @php
             /*
              * Load the logged-in user's accessible nav menus from the role_menu pivot.
@@ -687,9 +677,8 @@
             $user?->loadMissing('role.navMenus');
             $assignedMenus = $user?->role?->navMenus ?? collect();
 
-            // Separate top-level (non-dashboard) and group-parent menus
+            // Separate top-level and group-parent menus
             $topLevel  = $assignedMenus->whereNull('parent_id')
-                                        ->where('route_name', '!=', 'admin.dashboard')
                                         ->sortBy('sort_order');
 
             $childIds  = $assignedMenus->whereNotNull('parent_id')->pluck('parent_id')->unique();
