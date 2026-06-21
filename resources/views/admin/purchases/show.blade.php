@@ -117,7 +117,7 @@
     <div class="info-card">
         <h2 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1.5rem;">Daftar Barang Diterima</h2>
 
-        <div class="table-responsive">
+        <div class="table-wrapper">
             <table>
                 <thead>
                     <tr>

@@ -15,7 +15,7 @@
 
     <div class="card">
         <div style="padding:1.5rem; border-bottom:1px solid var(--border)">
-            <form method="GET" action="{{ route('admin.nav-menus.index') }}" style="display:flex; gap:1rem; align-items:center;">
+            <form method="GET" action="{{ route('admin.nav-menus.index') }}" style="display:flex; gap:1rem; align-items:center; flex-wrap:wrap;">
                 <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari Nama Menu atau Route..." class="form-control" style="max-width:300px">
                 <button type="submit" class="btn btn-ghost" style="padding:0.5rem 1rem">Cari</button>
                 @if(request('search'))
@@ -23,7 +23,7 @@
                 @endif
             </form>
         </div>
-        <div class="table-responsive">
+        <div class="table-wrapper">
             <table>
                 <thead>
                     <tr>

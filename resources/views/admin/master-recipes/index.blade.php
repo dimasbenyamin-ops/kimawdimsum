@@ -21,7 +21,7 @@
             </form>
         </div>
 
-        <div class="table-responsive">
+        <div class="table-wrapper">
             <table>
                 <thead>
                     <tr>

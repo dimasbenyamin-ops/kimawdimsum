@@ -79,7 +79,7 @@
                 </div>
             </div>
 
-            <div class="table-responsive" style="margin-bottom:1rem">
+            <div class="table-wrapper" style="margin-bottom:1rem">
                 <table style="min-width: 800px">
                     <thead>
                         <tr>

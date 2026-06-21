@@ -471,7 +471,8 @@
                         @endif
                     </div>
 
-                    <table class="table">
+                    <div class="table-wrapper">
+<table class="table">
                         @foreach($order->items as $item)
                         <tr>
                             <td colspan="2">{{ $item->menu_name }}</td>
@@ -482,6 +483,7 @@
                         </tr>
                         @endforeach
                     </table>
+</div>
 
                     <div class="totals">
                         <div class="flex"><span>Subtotal:</span> <span>Rp {{ number_format($order->subtotal, 0, ',', '.') }}</span></div>
