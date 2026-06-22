@@ -286,7 +286,7 @@
             @elseif($order->status === 'pending_payment' && $order->payment_method === 'qris')
                 <div style="margin-top: 1.5rem;">
                     <button id="pay-button" class="btn btn-gold btn-block" style="padding: 0.875rem; font-size: 1.05rem;">
-                        💳 Bayar dengan QRIS
+                        💳 Bayar Non-Tunai
                     </button>
                 </div>
             @elseif($order->status === 'pending_payment' && $order->payment_method === 'cash')
@@ -395,28 +395,28 @@
                                     onError: function(result){
                                         alert("Pembayaran gagal!");
                                         payButton.disabled = false;
-                                        payButton.innerHTML = '💳 Bayar dengan QRIS';
+                                        payButton.innerHTML = '💳 Bayar Non-Tunai';
                                     },
                                     onClose: function(){
                                         payButton.disabled = false;
-                                        payButton.innerHTML = '💳 Bayar dengan QRIS';
+                                        payButton.innerHTML = '💳 Bayar Non-Tunai';
                                     }
                                 });
                             } else {
                                 alert('Format balasan dari server tidak valid.');
                                 payButton.disabled = false;
-                                payButton.innerHTML = '💳 Bayar dengan QRIS';
+                                payButton.innerHTML = '💳 Bayar Non-Tunai';
                             }
                         } else {
                             alert(data.message || 'Gagal mendapatkan token pembayaran');
                             payButton.disabled = false;
-                            payButton.innerHTML = '💳 Bayar dengan QRIS';
+                            payButton.innerHTML = '💳 Bayar Non-Tunai';
                         }
                     } catch (error) {
                         alert('Terjadi kesalahan sistem di browser: ' + error.message);
                         console.error('Fetch error:', error);
                         payButton.disabled = false;
-                        payButton.innerHTML = '💳 Bayar dengan QRIS';
+                        payButton.innerHTML = '💳 Bayar Non-Tunai';
                     }
                 });
 

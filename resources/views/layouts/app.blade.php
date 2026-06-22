@@ -669,7 +669,16 @@
             function showTyping() {
                 const typing = document.createElement('div');
                 typing.className = 'chat-msg bot';
-                typing.innerHTML = `<div class="typing-indicator"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>`;
+                typing.innerHTML = `
+                    <div style="font-size: 0.8rem; color: var(--gold); margin-bottom: 0.4rem; font-style: italic;">
+                        MiMaw sedang berpikir...
+                    </div>
+                    <div class="typing-indicator" style="padding: 0;">
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                    </div>
+                `;
                 typing.id = 'typing-indicator';
                 chatBody.appendChild(typing);
                 chatBody.scrollTop = chatBody.scrollHeight;

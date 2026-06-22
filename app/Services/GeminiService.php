@@ -98,7 +98,7 @@ class GeminiService
 
             $response = Http::withHeaders([
                 'Content-Type' => 'application/json',
-            ])->timeout(30)->post($url, $payload);
+            ])->connectTimeout(30)->timeout(60)->post($url, $payload);
 
             if ($response->failed()) {
                 Log::error('Gemini API Error', ['response' => $response->json()]);
