@@ -348,7 +348,7 @@
                                     class="radio-hidden"
                                     {{ old('payment_method') === 'qris' ? 'checked' : '' }}
                                 >
-                                <span class="type-tab">📱 QRIS</span>
+                                <span class="type-tab">📱 Non-Tunai</span>
                             </label>
                         </div>
                         @error('payment_method')
