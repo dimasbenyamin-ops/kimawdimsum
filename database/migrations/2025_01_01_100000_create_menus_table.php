@@ -26,15 +26,7 @@ return new class extends Migration
 
             $table->text('description')->nullable()->comment('Detailed menu description');
 
-            $table->enum('category', [
-                'siomay',
-                'hakau',
-                'lumpia',
-                'bao',
-                'shumai',
-                'minuman',
-                'lainnya',
-            ])->default('lainnya')->index()->comment('Dimsum category');
+            $table->string('category')->default('lainnya')->index()->comment('Dimsum category');
 
             $table->decimal('price', 10, 2)->comment('Price in IDR (e.g., 15000.00)');
 
