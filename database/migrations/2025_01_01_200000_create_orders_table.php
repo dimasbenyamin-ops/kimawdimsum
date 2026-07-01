@@ -42,13 +42,14 @@ return new class extends Migration
 
             // Order lifecycle status
             $table->enum('status', [
+                'pending_payment',
                 'pending',
                 'confirmed',
                 'preparing',
                 'ready',
                 'completed',
                 'cancelled',
-            ])->default('pending')
+            ])->default('pending_payment')
               ->index()
               ->comment('Lifecycle stage of the order');
 
