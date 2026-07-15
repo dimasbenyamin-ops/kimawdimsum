@@ -9,47 +9,54 @@ use Illuminate\View\View;
 
 class MenuController extends Controller
 {
-    // Allow-list of valid category values (matches DB enum)
-    private const VALID_CATEGORIES = ['siomay', 'hakau', 'lumpia', 'bao', 'shumai', 'minuman', 'lainnya'];
+    // Allow-list of valid category values
+    private const VALID_CATEGORIES = ['bundling_hemat', 'original', 'spicy_mayo', 'goreng_keju', 'premium_sauce', 'sharing_party', 'snacks', 'minuman', 'add_on'];
 
     private const CATEGORY_LABELS = [
-        'siomay'  => '🥟 Siomay',
-        'hakau'   => '🦐 Hakau',
-        'lumpia'  => '🌯 Lumpia',
-        'bao'     => '🫓 Bao',
-        'shumai'  => '🍢 Shumai',
-        'minuman' => '🍵 Minuman',
-        'lainnya' => '✨ Lainnya',
+        'bundling_hemat' => '🏷️ Bundling Hemat',
+        'original'      => '🥟 Original',
+        'spicy_mayo'    => '🌶️ Spicy Mayo',
+        'goreng_keju'   => '🧀 Goreng Keju',
+        'premium_sauce' => '🍯 Premium Sauce',
+        'sharing_party' => '🎉 Sharing Party',
+        'snacks'        => '🍟 Snacks',
+        'minuman'       => '🍵 Minuman',
+        'add_on'        => '➕ Add On',
     ];
 
     public function index(Request $request): View
     {
-        // Validate category against allow-list (never trust user input for DB queries)
         $category = $request->query('category');
-        if ($category && ! in_array($category, self::VALID_CATEGORIES, true)) {
-            $category = null;
+
+        // Default to bundling_hemat if not specified
+        if ($category === null) {
+            $category = 'bundling_hemat';
+        } elseif ($category !== 'all' && ! in_array($category, self::VALID_CATEGORIES, true)) {
+            $category = 'bundling_hemat';
         }
 
         $query = Menu::available()->ordered();
 
-        if ($category) {
+        if ($category !== 'all') {
             $query->byCategory($category);
         }
 
         $allMenus = $query->get();
 
         // Group by category for section display
-        $menus = $category
+        $menus = $category !== 'all'
             ? collect([($category) => $allMenus])
             : $allMenus->groupBy('category');
 
-        $cartCount = count(session('cart', []));
+        $cart = session('cart', []);
+        $cartCount = count($cart);
 
         return view('customer.menu.index', [
             'menus'          => $menus,
             'categoryLabels' => self::CATEGORY_LABELS,
             'activeCategory' => $category,
             'cartCount'      => $cartCount,
+            'cart'           => $cart,
         ]);
     }
 }

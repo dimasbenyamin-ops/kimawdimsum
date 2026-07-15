@@ -61,18 +61,7 @@
         border-radius: 8px 0 0 8px;
     }
     
-    .btn-gradient-primary {
-        background: linear-gradient(135deg, #2563eb, #0ea5e9);
-        color: white;
-        border: none;
-        transition: transform 0.2s, box-shadow 0.2s;
-    }
-    .btn-gradient-primary:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 15px rgba(37, 99, 235, 0.3);
-        color: white;
-    }
-    
+
     /* Refined Badges */
     .role-badge {
         background-color: rgba(96, 165, 250, 0.15);
@@ -236,26 +225,6 @@
         </div>
     </div>
 
-    {{-- Flash messages --}}
-    @if(session('success'))
-        <div class="alert alert-success d-flex align-items-center mb-4 shadow-sm" role="alert" style="padding: 1rem 1.25rem; border-radius: 12px; border-left: 4px solid var(--success);">
-            <i class="bi bi-check-circle-fill me-2 fs-5"></i>
-            <div>{{ session('success') }}</div>
-        </div>
-    @endif
-    
-    @if($errors->any())
-        <div class="alert alert-danger d-flex align-items-start mb-4 shadow-sm" role="alert" style="padding: 1rem 1.25rem; border-radius: 12px; border-left: 4px solid var(--error); background: rgba(248,113,113,0.1); color: var(--error);">
-            <i class="bi bi-exclamation-triangle-fill me-2 mt-1"></i>
-            <div>
-                <ul class="mb-0 ps-3" style="margin: 0; padding-left: 1.25rem;">
-                    @foreach($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        </div>
-    @endif
 
     <div class="row">
         
@@ -409,7 +378,7 @@
                         </div>
 
                         {{-- Submit Button --}}
-                        <button type="submit" class="btn btn-gradient-primary w-100 py-3 fw-bold rounded-4 shadow-sm d-flex justify-content-center align-items-center gap-2" style="font-size: 1rem;">
+                        <button type="submit" class="btn btn-gold w-100 py-3 fw-bold rounded-4 shadow-sm d-flex justify-content-center align-items-center gap-2" style="font-size: 1rem;">
                             <i class="bi bi-person-check-fill fs-5"></i> Simpan User Baru
                         </button>
                     </form>

@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Dashboard Kasir – Kumaw Dimsum')
+@section('title', 'Dashboard Kasir')
 
 @section('styles')
 <style>
@@ -412,7 +412,7 @@
                                 <div class="ticket-time">{{ $order->created_at->format('H:i') }} · {{ $order->created_at->diffForHumans() }}</div>
                             </div>
                             <span class="ticket-type">
-                                {{ match($order->type) { 'dine_in'=>'🍽️ Makan', 'takeaway'=>'📦 Bawa', 'delivery'=>'🛵 Antar', default=>$order->type } }}
+                                {{ match($order->type) { 'dine_in'=>'🍽️ Makan', 'takeaway'=>'📦 Bawa', default=>$order->type } }}
                                 @if($order->table_number) #{{ $order->table_number }} @endif
                             </span>
                         </div>
@@ -472,7 +472,7 @@
                                             'orderNumber'  => $order->order_number,
                                             'customerName' => $order->customer_name ?? 'Guest',
                                             'phone'        => $order->phone_number,
-                                            'type'         => match($order->type){ 'dine_in'=>'Makan di Tempat', 'takeaway'=>'Bawa Pulang', 'delivery'=>'Delivery', default=>$order->type },
+                                            'type'         => match($order->type){ 'dine_in'=>'Makan di Tempat', 'takeaway'=>'Bawa Pulang', default=>$order->type },
                                             'tableNumber'  => $order->table_number,
                                             'notes'        => $order->customer_notes,
                                             'paymentMethod'=> $order->payment_method,
@@ -501,7 +501,6 @@
                                         @if($btn['status'] === 'completed' && !$order->isPaid())
                                             <select name="payment_method" style="margin-bottom:0.5rem">
                                                 <option value="cash" {{ $order->payment_method === 'cash' ? 'selected' : '' }}>💵 Tunai</option>
-                                                <option value="transfer" {{ $order->payment_method === 'transfer' ? 'selected' : '' }}>🏦 Transfer</option>
                                                 <option value="qris" {{ $order->payment_method === 'qris' ? 'selected' : '' }}>📱 QRIS</option>
                                             </select>
                                         @endif
@@ -569,7 +568,8 @@
                 </div>
 
                 {{-- Items table --}}
-                <table class="invoice-items-table">
+                <div class="table-wrapper">
+<table class="invoice-items-table">
                     <thead>
                         <tr>
                             <th>Item</th>
@@ -582,6 +582,7 @@
                         {{-- Populated by JS --}}
                     </tbody>
                 </table>
+</div>
 
                 {{-- Totals --}}
                 <div class="invoice-totals">
@@ -589,10 +590,7 @@
                         <span>Subtotal</span>
                         <span id="inv-subtotal">—</span>
                     </div>
-                    <div class="invoice-total-row">
-                        <span>Pajak (11%)</span>
-                        <span id="inv-tax">—</span>
-                    </div>
+
                     <div class="invoice-total-row grand">
                         <span>TOTAL</span>
                         <span id="inv-total">—</span>
@@ -638,10 +636,13 @@
     /* ---- Auto-refresh countdown ---- */
     let secs = 30;
     const cd = document.getElementById('countdown');
-    setInterval(() => {
+    const interval = setInterval(() => {
         secs--;
         if (cd) cd.textContent = secs + 'd';
-        if (secs <= 0) location.reload();
+        if (secs <= 0) {
+            clearInterval(interval);
+            location.reload();
+        }
     }, 1000);
 
     /* ---- Invoice Modal Logic ---- */
@@ -694,11 +695,11 @@
 
         // Populate totals
         document.getElementById('inv-subtotal').textContent = formatRp(data.subtotal);
-        document.getElementById('inv-tax').textContent      = formatRp(data.tax);
+
         document.getElementById('inv-total').textContent    = formatRp(data.total);
 
         // Payment method label
-        const pmLabels = { cash: '💵 Tunai', qris: '📱 QRIS', transfer: '🏦 Transfer', unpaid: '—' };
+        const pmLabels = { cash: '💵 Tunai', qris: '📱 QRIS', unpaid: '—' };
         document.getElementById('inv-payment').textContent = pmLabels[data.paymentMethod] ?? data.paymentMethod;
 
         // Set hidden form target

@@ -25,7 +25,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property float       $discount_amount
  * @property float       $tax_amount
  * @property float       $total_amount
- * @property string      $payment_method cash|transfer|qris|unpaid
+ * @property string      $payment_method cash|qris|unpaid
  * @property \Carbon\Carbon|null $paid_at
  * @property int|null    $table_number
  * @property string|null $customer_notes
@@ -53,7 +53,6 @@ class Order extends Model
     const TYPE_DELIVERY = 'delivery';
 
     const PAYMENT_CASH     = 'cash';
-    const PAYMENT_TRANSFER = 'transfer';
     const PAYMENT_QRIS     = 'qris';
     const PAYMENT_UNPAID   = 'unpaid';
 
@@ -63,6 +62,7 @@ class Order extends Model
 
     protected $fillable = [
         'order_number',
+        'shift_id',
         'user_id',
         'status',
         'type',
@@ -78,17 +78,19 @@ class Order extends Model
         'customer_notes',
         'cashier_notes',
         'processed_by',
+        'estimated_ready_at',
     ];
 
     protected function casts(): array
     {
         return [
-            'subtotal'        => 'decimal:2',
-            'discount_amount' => 'decimal:2',
-            'tax_amount'      => 'decimal:2',
-            'total_amount'    => 'decimal:2',
-            'paid_at'         => 'datetime',
-            'table_number'    => 'integer',
+            'subtotal'           => 'decimal:2',
+            'discount_amount'    => 'decimal:2',
+            'tax_amount'         => 'decimal:2',
+            'total_amount'       => 'decimal:2',
+            'paid_at'            => 'datetime',
+            'estimated_ready_at' => 'datetime',
+            'table_number'       => 'integer',
         ];
     }
 
@@ -113,11 +115,27 @@ class Order extends Model
     }
 
     /**
+     * The shift during which this order was created (if any).
+     */
+    public function shift(): BelongsTo
+    {
+        return $this->belongsTo(Shift::class, 'shift_id');
+    }
+
+    /**
      * All line items belonging to this order.
      */
     public function items(): HasMany
     {
         return $this->hasMany(OrderItem::class);
+    }
+
+    /**
+     * The review attached to this order, if any.
+     */
+    public function review()
+    {
+        return $this->hasOne(Review::class);
     }
 
     // -------------------------------------------------------
@@ -152,7 +170,8 @@ class Order extends Model
 
     public function scopeToday(Builder $query): Builder
     {
-        return $query->whereDate('created_at', today());
+        return $query->where('created_at', '>=', today())
+                     ->where('created_at', '<', today()->addDay());
     }
 
     // -------------------------------------------------------

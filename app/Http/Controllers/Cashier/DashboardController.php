@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Cashier;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use App\Models\Shift;
 use App\Services\WhatsAppNotificationService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -24,8 +25,13 @@ class DashboardController extends Controller
         Order::STATUS_READY     => [Order::STATUS_COMPLETED],
     ];
 
-    public function index(): View
+    public function index()
     {
+        // ponytail: check active shift directly in controller, no extra middleware needed yet
+        if (!Shift::where('user_id', Auth::id())->where('status', 'open')->exists()) {
+            return redirect()->route('cashier.shifts.create')->with('error', 'Silakan mulai shift terlebih dahulu.');
+        }
+
         $activeOrders = Order::with(['customer', 'items'])
             ->active()
             ->today()
@@ -51,7 +57,7 @@ class DashboardController extends Controller
         $validated = $request->validate([
             'status'         => ['required', 'string', 'in:confirmed,preparing,ready,completed,cancelled'],
             'cashier_notes'  => ['nullable', 'string', 'max:500'],
-            'payment_method' => ['nullable', 'in:cash,transfer,qris'],
+            'payment_method' => ['nullable', 'in:cash,qris'],
         ]);
 
         $newStatus     = $validated['status'];
@@ -73,9 +79,18 @@ class DashboardController extends Controller
         }
 
         // Handle specific logic when confirming or completing
-        if ($newStatus === Order::STATUS_CONFIRMED && $currentStatus === Order::STATUS_PENDING_PAYMENT) {
-            $updateData['paid_at'] = now(); // Cashier confirmed payment is received
+        if ($newStatus === Order::STATUS_CONFIRMED && in_array($currentStatus, [Order::STATUS_PENDING, Order::STATUS_PENDING_PAYMENT])) {
+            // Set estimated time: 15 minutes base + 2 minutes per item
+            $order->loadMissing('items');
+            $itemCount = $order->items->sum('quantity'); // Or just count() if you want per unique item, but quantity makes more sense
+            $minutes = 15 + ($itemCount * 2);
+            $updateData['estimated_ready_at'] = now()->addMinutes($minutes);
+
+            if ($currentStatus === Order::STATUS_PENDING_PAYMENT) {
+                $updateData['paid_at'] = now(); // Cashier confirmed payment is received
+            }
         }
+        
         if ($newStatus === Order::STATUS_COMPLETED && !$order->isPaid()) {
             $updateData['paid_at'] = now();
         }

@@ -57,11 +57,6 @@ class DatabaseSeeder extends Seeder
             ['name' => 'Role', 'icon' => 'bi bi-shield-check', 'sort_order' => 12, 'parent_id' => $navSetup->id]
         );
 
-        $navQris = NavMenu::updateOrCreate(
-            ['route_name' => 'admin.settings.qris'],
-            ['name' => 'Pengaturan QRIS', 'icon' => 'bi bi-qr-code', 'sort_order' => 14, 'parent_id' => $navSetup->id]
-        );
-
         // NOTE: role-menu requires a {role} parameter so it cannot be linked bare
         // from the sidebar. We point this nav item to admin.roles.index instead,
         // which is the page where admins click "Role Menu" for each specific role.
@@ -85,7 +80,12 @@ class DatabaseSeeder extends Seeder
             ['name' => 'Pesan di Kasir', 'icon' => 'bi bi-cart-plus', 'sort_order' => 25]
         );
 
-        $this->command->info('✅ NavMenus seeded: Dashboard, Pengaturan, User, Role, Role Menu, Menu Makanan, Pesan di Kasir, Dashboard Kasir');
+        $navRevenueReport = NavMenu::updateOrCreate(
+            ['route_name' => 'admin.reports.revenue'],
+            ['name' => 'Rekap Pendapatan', 'icon' => 'bi bi-cash-coin', 'sort_order' => 35]
+        );
+
+        $this->command->info('✅ NavMenus seeded: Dashboard, Pengaturan, User, Role, Role Menu, Menu Makanan, Pesan di Kasir, Dashboard Kasir, Rekap Pendapatan');
 
         // ─────────────────────────────────────────────────────────────────
         // 3. ROLE-MENU ASSIGNMENTS
@@ -99,8 +99,7 @@ class DatabaseSeeder extends Seeder
             $navRoles->id,
             $navRoleMenu->id,
             $navFoodMenu->id,
-            $navPesanKasir->id,
-            $navCashier->id,
+            $navRevenueReport->id,
         ]);
 
         $kasirRole->navMenus()->sync([
@@ -117,31 +116,31 @@ class DatabaseSeeder extends Seeder
         //    Customers / guests have NO user record.
         // ─────────────────────────────────────────────────────────────────
         User::updateOrCreate(
-            ['email' => 'admin@kumawdimsum.local'],
+            ['email' => 'dimasbenyamin@gmail.com'],
             [
                 'name'       => 'Admin Kumaw',
                 'username'   => 'admin',
                 'password'   => Hash::make('password'),
                 'role_id'    => $adminRole->id,
-                'phone'      => '081200000001',
+                'phone'      => '087722472311',
                 'expired_at' => null, // No expiry for default admin
             ]
         );
 
         User::updateOrCreate(
-            ['email' => 'kasir@kumawdimsum.local'],
+            ['email' => 'mutiarasabatina06@gmail.com'],
             [
                 'name'       => 'Kasir Kumaw',
                 'username'   => 'kasir',
                 'password'   => Hash::make('password'),
                 'role_id'    => $kasirRole->id,
-                'phone'      => '081200000002',
+                'phone'      => '082333216194',
                 'expired_at' => null,
             ]
         );
 
         $this->command->info('✅ Default users seeded: admin (Administrator), kasir (Kasir)');
-        $this->command->warn('   ⚠️  Default password is "password" — change it after first login!');
+        $this->command->warn('⚠️ Default password is "password" — change it after first login!');
 
         // ─────────────────────────────────────────────────────────────────
         // 5. FOOD MENU ITEMS

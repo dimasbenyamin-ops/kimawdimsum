@@ -78,7 +78,7 @@
                                 <td>{{ $order->paid_at ? $order->paid_at->format('d M Y, H:i') : '-' }}</td>
                                 <td>
                                     @php
-                                        $pmLabels = ['cash' => 'Tunai', 'qris' => 'QRIS', 'transfer' => 'Transfer', 'unpaid' => 'Belum Bayar'];
+                                        $pmLabels = ['cash' => 'Tunai', 'qris' => 'QRIS', 'unpaid' => 'Belum Bayar'];
                                     @endphp
                                     <span class="badge badge-muted">{{ $pmLabels[$order->payment_method] ?? $order->payment_method }}</span>
                                 </td>

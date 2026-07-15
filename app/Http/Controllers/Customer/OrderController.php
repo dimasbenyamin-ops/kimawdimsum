@@ -33,13 +33,13 @@ class OrderController extends Controller
         return view('customer.orders.index', compact('orders'));
     }
 
-    public function show(Order $order): View
+    public function show(Request $request, Order $order): View|\Illuminate\Http\JsonResponse
     {
         // Ownership check:
         // - For authenticated users: must match user_id
         // - For guests: order must be in their session order_ids list
         if (Auth::check()) {
-            if ($order->user_id !== Auth::id()) {
+            if (!Auth::user()->isStaff() && $order->user_id !== Auth::id()) {
                 abort(403);
             }
         } else {
@@ -51,6 +51,13 @@ class OrderController extends Controller
 
         $order->load('items');
 
+        if ($request->wantsJson()) {
+            return response()->json([
+                'status' => $order->status,
+                'statusLabel' => $order->statusLabel
+            ]);
+        }
+
         return view('customer.orders.show', compact('order'));
     }
 
@@ -59,7 +66,7 @@ class OrderController extends Controller
         $validated = $request->validate([
             'customer_name'  => ['required', 'string', 'max:100'],
             'phone_number'   => ['required', 'string', 'min:10', 'max:20'],
-            'type'           => ['required', 'in:dine_in,takeaway,delivery'],
+            'type'           => ['required', 'in:dine_in,takeaway'],
             'payment_method' => ['required', 'in:cash,qris'],
             'table_number'   => ['nullable', 'integer', 'min:1', 'max:999'],
             'customer_notes' => ['nullable', 'string', 'max:1000'],
@@ -76,8 +83,8 @@ class OrderController extends Controller
         try {
             DB::transaction(function () use ($cart, $validated, &$orderId) {
                 $subtotal = collect($cart)->sum(fn ($i) => $i['unit_price'] * $i['quantity']);
-                $tax      = round($subtotal * 0.11, 2);
-                $total    = round($subtotal + $tax, 2);
+                $tax      = 0;
+                $total    = $subtotal;
 
                 $order = Order::create([
                     'order_number'    => $this->generateOrderNumber(),
@@ -126,8 +133,10 @@ class OrderController extends Controller
                              ->withErrors(['order' => 'Gagal membuat pesanan. Silakan coba lagi.']);
         }
 
-        return redirect()->route('orders.show', $orderId)
-                         ->with('success', 'Pesanan berhasil dibuat! Silakan tunggu konfirmasi kasir.');
+        return redirect()->route('orders.show', [
+            'order' => $orderId, 
+            'auto_pay' => $validated['payment_method'] === 'qris' ? 1 : null
+        ])->with('success', 'Pesanan berhasil dibuat! Silakan tunggu konfirmasi kasir.');
     }
 
     private function generateOrderNumber(): string

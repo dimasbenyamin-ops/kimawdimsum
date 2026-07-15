@@ -42,13 +42,14 @@ return new class extends Migration
 
             // Order lifecycle status
             $table->enum('status', [
+                'pending_payment',
                 'pending',
                 'confirmed',
                 'preparing',
                 'ready',
                 'completed',
                 'cancelled',
-            ])->default('pending')
+            ])->default('pending_payment')
               ->index()
               ->comment('Lifecycle stage of the order');
 
@@ -75,7 +76,7 @@ return new class extends Migration
                   ->comment('subtotal - discount + tax');
 
             // Payment
-            $table->enum('payment_method', ['cash', 'transfer', 'qris', 'unpaid'])
+            $table->enum('payment_method', ['cash', 'qris', 'unpaid'])
                   ->default('unpaid');
 
             $table->timestamp('paid_at')

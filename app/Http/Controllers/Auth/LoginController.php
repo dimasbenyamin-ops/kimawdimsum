@@ -63,7 +63,13 @@ class LoginController extends Controller
         // ── Session fixation prevention ──────────────────────────────────────
         $request->session()->regenerate();
 
-        return redirect()->intended(route('admin.dashboard'));
+        // ── Redirect to first assigned menu or fallback ──────────────────────
+        $user->loadMissing('role.navMenus');
+        $firstMenu = $user->role?->navMenus->sortBy('sort_order')->first();
+        
+        $fallbackRoute = $firstMenu ? route($firstMenu->route_name) : route('admin.dashboard');
+
+        return redirect()->intended($fallbackRoute);
     }
 
     public function destroy(Request $request): RedirectResponse

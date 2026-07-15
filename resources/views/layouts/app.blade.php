@@ -17,33 +17,33 @@
         /* Initialize Theme Before Render to Prevent Flash */
         html[data-theme="dark"] {
             /* Dark mode overrides */
-            --bg:           #090910;
-            --bg2:          #111120;
-            --surface:      rgba(255,255,255,0.04);
-            --surface-hover:rgba(255,255,255,0.08);
+            --bg:           #3a0606;
+            --bg2:          #4a0a0a;
+            --surface:      rgba(255,255,255,0.05);
+            --surface-hover:rgba(255,255,255,0.09);
             --gold:         #f59e0b;
             --gold-light:   #fcd34d;
             --gold-dim:     rgba(245,158,11,0.15);
-            --text:         #e2e8f0;
-            --muted:        #94a3b8;
-            --border:       rgba(255,255,255,0.08);
-            --nav-bg:       rgba(9, 9, 16, 0.85);
-            --nav-border:   rgba(255,255,255,0.08);
+            --text:         #ffe4e4;
+            --muted:        #fca5a5;
+            --border:       rgba(255,255,255,0.1);
+            --nav-bg:       rgba(58, 6, 6, 0.85);
+            --nav-border:   rgba(255,255,255,0.1);
             --shadow:       none;
         }
 
         :root {
             /* Default Light Mode Colors */
-            --bg:           #f8fafc;
-            --bg2:          #ffffff;
+            --bg:           #fdf5e6;
+            --bg2:          #fbf0df;
             --surface:      #ffffff;
-            --surface-hover:#f1f5f9;
+            --surface-hover:#fdf5e6;
             --gold:         #d97706; /* slightly darker gold for better contrast on white */
             --gold-light:   #f59e0b;
             --gold-dim:     rgba(245,158,11,0.15);
-            --text:         #0f172a;
-            --muted:        #64748b;
-            --border:       #e2e8f0;
+            --text:         #4a0a0a;
+            --muted:        #995c5c;
+            --border:       #e6d5b8;
             --radius-sm:    8px;
             --radius:       12px;
             --radius-lg:    18px;
@@ -51,8 +51,8 @@
             --success:      #10b981;
             --warning:      #f59e0b;
             --info:         #3b82f6;
-            --nav-bg:       rgba(255, 255, 255, 0.9);
-            --nav-border:   #e2e8f0;
+            --nav-bg:       rgba(253, 245, 230, 0.9);
+            --nav-border:   #e6d5b8;
             --shadow:       0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
         }
 
@@ -434,6 +434,27 @@
         .btn-close:before { content: "×"; }
         .btn-close:hover { color: var(--text); }
         @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* ---- CHATBOT WIDGET ---- */
+        .chatbot-btn { position: fixed; bottom: 1.5rem; right: 1.5rem; width: 60px; height: 60px; background: linear-gradient(135deg, var(--gold), #d97706); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #1a0a00; font-size: 1.75rem; box-shadow: 0 10px 25px rgba(217, 119, 6, 0.4); cursor: pointer; z-index: 9999; transition: transform 0.2s, box-shadow 0.2s; }
+        .chatbot-btn:hover { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(217, 119, 6, 0.5); }
+        .chatbot-window { position: fixed; bottom: 5.5rem; right: 1.5rem; width: 350px; height: 500px; background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-lg); box-shadow: 0 20px 40px rgba(0,0,0,0.5); display: flex; flex-direction: column; z-index: 9998; overflow: hidden; transform: translateY(20px); opacity: 0; pointer-events: none; transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); }
+        .chatbot-window.open { transform: translateY(0); opacity: 1; pointer-events: auto; }
+        .chat-header { background: linear-gradient(135deg, var(--gold), #d97706); color: #1a0a00; padding: 1rem 1.25rem; font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
+        .chat-header-close { cursor: pointer; font-size: 1.2rem; }
+        .chat-body { flex: 1; padding: 1rem; overflow-y: auto; display: flex; flex-direction: column; gap: 0.75rem; background: var(--bg); scroll-behavior: smooth; }
+        .chat-msg { max-width: 85%; padding: 0.6rem 0.8rem; border-radius: var(--radius); font-size: 0.9rem; line-height: 1.4; word-wrap: break-word; }
+        .chat-msg.bot { background: var(--bg2); border: 1px solid var(--border); align-self: flex-start; border-bottom-left-radius: 4px; }
+        .chat-msg.user { background: var(--gold-dim); color: var(--text); border: 1px solid rgba(245,158,11,0.3); align-self: flex-end; border-bottom-right-radius: 4px; }
+        .chat-footer { padding: 1rem; background: var(--bg2); border-top: 1px solid var(--border); display: flex; gap: 0.5rem; }
+        .chat-input { flex: 1; padding: 0.5rem 0.75rem; border: 1px solid var(--border); border-radius: 20px; background: var(--bg); color: var(--text); outline: none; font-family: inherit; }
+        .chat-send-btn { background: var(--gold); border: none; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #1a0a00; }
+        .typing-indicator { display: flex; gap: 3px; padding: 0.5rem; align-items: center; }
+        .typing-dot { width: 6px; height: 6px; background: var(--muted); border-radius: 50%; animation: typing 1.4s infinite ease-in-out both; }
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+        @keyframes typing { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
+        @media (max-width: 480px) { .chatbot-window { width: calc(100% - 2rem); right: 1rem; bottom: 5rem; height: 60vh; } }
     </style>
     @yield('styles')
     
@@ -447,25 +468,18 @@
     <!-- Navbar -->
     <nav class="navbar">
         <div class="navbar-inner">
-            <a href="{{ route('menu.index') }}" class="navbar-brand">
-                <img src="{{ asset('images/dimsum-logo.png') }}" alt="Kumaw Dimsum" width="36" height="36" style="border-radius: 10px; object-fit: cover;">
+            @php
+                $homeRoute = route('menu.index');
+                if (Auth::check() && Auth::user()->isStaff()) {
+                    $homeRoute = Auth::user()->hasNavMenuAccess('admin.dashboard') ? route('admin.dashboard') : route('cashier.dashboard');
+                }
+            @endphp
+            <a href="{{ $homeRoute }}" class="navbar-brand">
+                <img src="{{ asset('images/dimsum-logo.png') }}" alt="Kumaw Dimsum" width="36" height="36" style="border-radius: 50%; object-fit: contain;">
                 <span>Kumaw Dimsum</span>
             </a>
 
-            <div class="navbar-nav">
-                <a href="{{ route('menu.index') }}"
-                   class="nav-link {{ request()->routeIs('menu.index') ? 'active' : '' }}">
-                    Menu
-                </a>
-                @auth
-                    @if(Auth::user()->isStaff())
-                        <a href="{{ route('admin.dashboard') }}"
-                           class="nav-link {{ request()->routeIs('admin.*') ? 'active' : '' }}">
-                            Dashboard
-                        </a>
-                    @endif
-                @endauth
-            </div>
+
 
             <div class="navbar-actions">
                 <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle theme">
@@ -482,9 +496,7 @@
                         @php
                             $cartQty = collect(session('cart', []))->sum('quantity');
                         @endphp
-                        @if($cartQty > 0)
-                            <div class="cart-badge">{{ $cartQty }}</div>
-                        @endif
+                        <div class="cart-badge" style="display: {{ $cartQty > 0 ? 'flex' : 'none' }};">{{ $cartQty }}</div>
                     </a>
                 @endif
 
@@ -537,6 +549,24 @@
         @yield('content')
     </main>
 
+    <!-- Chatbot Widget -->
+    @if(!Auth::check())
+    <div class="chatbot-btn" id="chatbot-toggle" title="Chat dengan Admin Kumaw (MiMaw)">🤖</div>
+    <div class="chatbot-window" id="chatbot-window">
+        <div class="chat-header">
+            <div>🥟 Admin Kumaw (MiMaw)</div>
+            <div class="chat-header-close" id="chatbot-close">✖</div>
+        </div>
+        <div class="chat-body" id="chat-body">
+            <div class="chat-msg bot">Halo! Saya MiMaw 🤖. Mau pesen apa hari ini Kak?</div>
+        </div>
+        <div class="chat-footer">
+            <input type="text" id="chat-input" class="chat-input" placeholder="Ketik pesanan di sini..." autocomplete="off">
+            <button class="chat-send-btn" id="chat-send">➤</button>
+        </div>
+    </div>
+    @endif
+
     <!-- Change Password Modal -->
     <div class="modal fade" id="changePasswordModal" tabindex="-1" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -582,20 +612,142 @@
             const currentTheme = document.documentElement.getAttribute('data-theme');
             updateThemeIcon(currentTheme);
 
-            themeToggleBtn.addEventListener('click', () => {
-                let theme = document.documentElement.getAttribute('data-theme');
-                let newTheme = theme === 'dark' ? 'light' : 'dark';
-                
-                document.documentElement.setAttribute('data-theme', newTheme);
-                localStorage.setItem('kumaw-theme', newTheme);
-                updateThemeIcon(newTheme);
-            });
+            if (themeToggleBtn) {
+                themeToggleBtn.addEventListener('click', () => {
+                    let theme = document.documentElement.getAttribute('data-theme');
+                    let newTheme = theme === 'dark' ? 'light' : 'dark';
+                    
+                    document.documentElement.setAttribute('data-theme', newTheme);
+                    localStorage.setItem('kumaw-theme', newTheme);
+                    updateThemeIcon(newTheme);
+                });
+            }
 
             function updateThemeIcon(theme) {
+                if(!themeIcon) return;
                 if (theme === 'dark') {
                     themeIcon.textContent = '🌙'; 
                 } else {
                     themeIcon.textContent = '☀️'; 
+                }
+            }
+
+            // Chatbot Logic
+            const chatToggle = document.getElementById('chatbot-toggle');
+            const chatWindow = document.getElementById('chatbot-window');
+            const chatClose = document.getElementById('chatbot-close');
+            const chatInput = document.getElementById('chat-input');
+            const chatSend = document.getElementById('chat-send');
+            const chatBody = document.getElementById('chat-body');
+
+            if(chatToggle) {
+                chatToggle.addEventListener('click', () => {
+                    if (chatWindow.classList.contains('open')) {
+                        chatWindow.classList.remove('open');
+                    } else {
+                        chatWindow.classList.add('open');
+                    }
+                });
+                chatClose.addEventListener('click', () => {
+                    chatWindow.classList.remove('open');
+                });
+
+                chatInput.addEventListener('keypress', function (e) {
+                    if (e.key === 'Enter') sendChatMessage();
+                });
+                chatSend.addEventListener('click', sendChatMessage);
+            }
+
+            function appendMessage(sender, text) {
+                const msg = document.createElement('div');
+                msg.className = 'chat-msg ' + sender;
+                msg.innerHTML = text.replace(/\n/g, '<br>');
+                chatBody.appendChild(msg);
+                chatBody.scrollTop = chatBody.scrollHeight;
+            }
+
+            function showTyping() {
+                const typing = document.createElement('div');
+                typing.className = 'chat-msg bot';
+                typing.innerHTML = `
+                    <div style="font-size: 0.8rem; color: var(--gold); margin-bottom: 0.4rem; font-style: italic;">
+                        MiMaw sedang berpikir...
+                    </div>
+                    <div class="typing-indicator" style="padding: 0;">
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                    </div>
+                `;
+                typing.id = 'typing-indicator';
+                chatBody.appendChild(typing);
+                chatBody.scrollTop = chatBody.scrollHeight;
+            }
+
+            function removeTyping() {
+                const el = document.getElementById('typing-indicator');
+                if (el) el.remove();
+            }
+
+            function updateCartBadge() {
+                fetch('{{ route('cart.index') }}', { headers: { 'Accept': 'text/html' } })
+                    .then(res => res.text())
+                    .then(html => {
+                        const parser = new DOMParser();
+                        const doc = parser.parseFromString(html, 'text/html');
+                        const newBadge = doc.querySelector('.cart-badge');
+                        const oldBadge = document.querySelector('.cart-badge');
+                        
+                        if (newBadge) {
+                            if (oldBadge) {
+                                oldBadge.textContent = newBadge.textContent;
+                                oldBadge.style.display = newBadge.style.display;
+                            } else {
+                                const cartBtn = document.querySelector('.cart-btn');
+                                if(cartBtn) cartBtn.insertAdjacentHTML('beforeend', `<div class="cart-badge" style="display: flex;">${newBadge.textContent}</div>`);
+                            }
+                        }
+                        
+                        // If we are on the cart page, reload it to show new items
+                        if (window.location.pathname.includes('/cart')) {
+                            window.location.reload();
+                        }
+                    });
+            }
+
+            async function sendChatMessage() {
+                const text = chatInput.value.trim();
+                if (!text) return;
+
+                appendMessage('user', text);
+                chatInput.value = '';
+                showTyping();
+
+                try {
+                    const res = await fetch('{{ route('chat.send') }}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify({ message: text })
+                    });
+                    
+                    const data = await res.json();
+                    removeTyping();
+                    
+                    if (res.ok && data.reply) {
+                        appendMessage('bot', data.reply);
+                        if (data.cart_updated) {
+                            updateCartBadge();
+                        }
+                    } else {
+                        appendMessage('bot', data.reply || 'Maaf, terjadi kesalahan server.');
+                    }
+                } catch (e) {
+                    removeTyping();
+                    appendMessage('bot', 'Gagal terhubung ke server.');
                 }
             }
         });

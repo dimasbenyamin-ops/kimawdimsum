@@ -116,15 +116,11 @@ class User extends Authenticatable
             return true;
         }
 
-        // 2. Resource route fallback (e.g., admin.users.store -> admin.users.index)
-        // Check if removing the last segment and appending '.index' matches an allowed route
-        $parts = explode('.', $routeName);
-        if (count($parts) > 1) {
-            array_pop($parts); // remove the action (store, create, edit, update, destroy, etc.)
-            $baseRoute = implode('.', $parts) . '.index';
-            if ($this->role->navMenus->contains('route_name', $baseRoute)) {
-                return true;
-            }
+        // 2. Resource route fallback
+        $allowedRoutes = $this->role->navMenus->pluck('route_name')->toArray();
+        $base = preg_replace('/\.[^.]+$/', '', $routeName);
+        if (in_array($base, $allowedRoutes) || in_array("$base.index", $allowedRoutes)) {
+            return true;
         }
 
         // 3. Custom prefix fallbacks
@@ -133,8 +129,11 @@ class User extends Authenticatable
             return true;
         }
 
-        // If the route starts with admin.settings.qris and admin.settings.qris is allowed
-        if (str_starts_with($routeName, 'admin.settings.qris.') && $this->role->navMenus->contains('route_name', 'admin.settings.qris')) {
+        if (str_starts_with($routeName, 'admin.settings.store_identity.') && $this->role->navMenus->contains('route_name', 'admin.settings.store_identity')) {
+            return true;
+        }
+
+        if (str_starts_with($routeName, 'admin.role-menu.') && $this->role->navMenus->contains('route_name', 'admin.roles.index')) {
             return true;
         }
 

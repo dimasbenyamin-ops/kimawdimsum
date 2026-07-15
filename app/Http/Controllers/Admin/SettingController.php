@@ -9,28 +9,28 @@ use Illuminate\Support\Facades\Storage;
 
 class SettingController extends Controller
 {
-    public function qris()
+
+    public function storeIdentity()
     {
-        $qrisImage = Setting::getValue('qris_image');
-        return view('admin.settings.qris', compact('qrisImage'));
+        $storeName    = Setting::getValue('store_name', 'KUMAW DIMSUM');
+        $storeAddress = Setting::getValue('store_address', 'Jl. Contoh Alamat No. 123');
+        $storePhone   = Setting::getValue('store_phone', '081234567890');
+
+        return view('admin.settings.store_identity', compact('storeName', 'storeAddress', 'storePhone'));
     }
 
-    public function updateQris(Request $request)
+    public function updateStoreIdentity(Request $request)
     {
         $request->validate([
-            'qris_image' => ['required', 'image', 'mimes:jpeg,png,jpg', 'max:2048'],
+            'store_name'    => ['required', 'string', 'max:255'],
+            'store_address' => ['required', 'string', 'max:500'],
+            'store_phone'   => ['required', 'string', 'max:50'],
         ]);
 
-        $setting = Setting::firstOrCreate(['key' => 'qris_image'], ['type' => 'image']);
+        Setting::updateOrCreate(['key' => 'store_name'], ['value' => $request->store_name, 'type' => 'string']);
+        Setting::updateOrCreate(['key' => 'store_address'], ['value' => $request->store_address, 'type' => 'string']);
+        Setting::updateOrCreate(['key' => 'store_phone'], ['value' => $request->store_phone, 'type' => 'string']);
 
-        // Delete old image if exists
-        if ($setting->value && Storage::disk('public')->exists($setting->value)) {
-            Storage::disk('public')->delete($setting->value);
-        }
-
-        $path = $request->file('qris_image')->store('qris', 'public');
-        $setting->update(['value' => $path]);
-
-        return back()->with('success', 'Gambar QRIS berhasil diperbarui!');
+        return back()->with('success', 'Identitas toko berhasil diperbarui!');
     }
 }

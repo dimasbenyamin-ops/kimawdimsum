@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Cashier;
 use App\Http\Controllers\Controller;
 use App\Models\Menu;
 use App\Models\Order;
+use App\Models\Shift;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,8 +18,13 @@ class OrderController extends Controller
     /**
      * Show the cashier POS order form with all available menu items.
      */
-    public function create(): View
+    public function create()
     {
+        // ponytail: check active shift
+        if (!Shift::where('user_id', Auth::id())->where('status', 'open')->exists()) {
+            return redirect()->route('cashier.shifts.create')->with('error', 'Silakan mulai shift terlebih dahulu.');
+        }
+
         $menus = Menu::available()
             ->ordered()
             ->get()
@@ -35,14 +41,15 @@ class OrderController extends Controller
         $validated = $request->validate([
             'customer_name'  => ['required', 'string', 'max:100'],
             'phone_number'   => ['nullable', 'string', 'min:8', 'max:20'],
-            'type'           => ['required', 'in:dine_in,takeaway,delivery'],
-            'payment_method' => ['required', 'in:cash,transfer,qris'],
+            'type'           => ['required', 'in:dine_in,takeaway'],
+            'payment_method' => ['required', 'in:cash,qris'],
             'table_number'   => ['nullable', 'integer', 'min:1', 'max:999'],
             'customer_notes' => ['nullable', 'string', 'max:1000'],
             'items'          => ['required', 'array', 'min:1'],
             'items.*.menu_id'  => ['required', 'integer', 'exists:menus,id'],
             'items.*.quantity' => ['required', 'integer', 'min:1', 'max:99'],
             'items.*.notes'    => ['nullable', 'string', 'max:255'],
+            'discount_amount'  => ['nullable', 'integer', 'min:0'],
         ], [
             'items.required'        => 'Pilih minimal satu menu.',
             'items.min'             => 'Pilih minimal satu menu.',
@@ -50,7 +57,8 @@ class OrderController extends Controller
         ]);
 
         try {
-            DB::transaction(function () use ($validated) {
+            $order = null;
+            DB::transaction(function () use ($validated, &$order) {
                 // Fetch menu items to get price snapshots
                 $menuIds = collect($validated['items'])->pluck('menu_id')->unique();
                 $menus   = Menu::whereIn('id', $menuIds)->get()->keyBy('id');
@@ -82,23 +90,28 @@ class OrderController extends Controller
                     throw new \RuntimeException('Tidak ada item yang valid dipilih.');
                 }
 
-                $tax   = round($subtotal * 0.11, 2);
-                $total = round($subtotal + $tax, 2);
+                $discount = (float) ($validated['discount_amount'] ?? 0);
+                $tax   = 0;
+                $total = max(0, $subtotal - $discount + $tax);
 
-                // Cashier orders go straight to confirmed (payment collected at counter)
+                $activeShift = Shift::where('user_id', Auth::id())->where('status', 'open')->first();
+
+                // Cashier orders (Cash/QRIS EDC) go straight to confirmed & paid
                 $order = Order::create([
                     'order_number'    => $this->generateOrderNumber(),
+                    'shift_id'        => $activeShift?->id,
                     'user_id'         => null, // walk-in / cashier-created orders have no user account
                     'customer_name'   => $validated['customer_name'],
                     'phone_number'    => $validated['phone_number'] ?? null,
                     'status'          => Order::STATUS_CONFIRMED,
                     'type'            => $validated['type'],
                     'subtotal'        => $subtotal,
-                    'discount_amount' => 0,
+                    'discount_amount' => $discount,
                     'tax_amount'      => $tax,
                     'total_amount'    => $total,
                     'payment_method'  => $validated['payment_method'],
-                    'paid_at'         => now(), // cashier takes payment immediately
+                    'paid_at'         => now(), // cashier verifies payment immediately
+
                     'table_number'    => $validated['table_number'] ?? null,
                     'customer_notes'  => $validated['customer_notes'] ?? null,
                     'processed_by'    => Auth::id(),
@@ -119,9 +132,10 @@ class OrderController extends Controller
                 ->withErrors(['order' => 'Gagal membuat pesanan: ' . e($e->getMessage())]);
         }
 
+        // Both Cash and EDC QRIS go directly to receipt printing
         return redirect()
-            ->route('cashier.dashboard')
-            ->with('success', 'Pesanan berhasil dibuat dan langsung dikonfirmasi! 🎉');
+            ->route('cashier.orders.receipt', ['order' => $order->id])
+            ->with('success', 'Pesanan Lunas! Silakan cetak struk.');
     }
 
     /**
@@ -133,5 +147,14 @@ class OrderController extends Controller
         $count  = Order::whereDate('created_at', today())->lockForUpdate()->count() + 1;
 
         return $prefix . '-' . str_pad($count, 4, '0', STR_PAD_LEFT);
+    }
+
+    /**
+     * Show the receipt for printing.
+     */
+    public function receipt(Order $order): View
+    {
+        $order->load(['items', 'processor']);
+        return view('cashier.receipt', compact('order'));
     }
 }

@@ -44,6 +44,7 @@ class Menu extends Model
         'is_available',
         'sort_order',
         'created_by',
+        'badge',
     ];
 
     protected function casts(): array
@@ -73,6 +74,16 @@ class Menu extends Model
     public function orderItems(): HasMany
     {
         return $this->hasMany(OrderItem::class);
+    }
+
+    /**
+     * Master Recipes that are linked to this menu.
+     */
+    public function masterRecipes(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(\App\Models\MasterRecipe::class, 'menu_master_recipes')
+                    ->withPivot('multiplier')
+                    ->withTimestamps();
     }
 
     // -------------------------------------------------------

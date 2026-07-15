@@ -15,20 +15,21 @@
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-        :root {
-            --bg:           #090910;
-            --bg2:          #111120;
+        /* Initialize Theme Before Render to Prevent Flash */
+        html[data-theme="dark"] {
+            --bg:           #3a0606;
+            --bg2:          #4a0a0a;
             --sidebar-w:    260px;
             --topbar-h:     60px;
             --gold:         #f59e0b;
             --gold-light:   #fcd34d;
             --gold-dim:     rgba(245,158,11,0.12);
             --gold-border:  rgba(245,158,11,0.25);
-            --text:         #e2e8f0;
-            --muted:        #94a3b8;
-            --border:       rgba(255,255,255,0.07);
-            --surface:      rgba(255,255,255,0.04);
-            --surface-hover:rgba(255,255,255,0.08);
+            --text:         #ffe4e4;
+            --muted:        #fca5a5;
+            --border:       rgba(255,255,255,0.1);
+            --surface:      rgba(255,255,255,0.05);
+            --surface-hover:rgba(255,255,255,0.09);
             --radius-sm:    8px;
             --radius:       12px;
             --radius-lg:    16px;
@@ -36,6 +37,31 @@
             --success:      #34d399;
             --warning:      #fbbf24;
             --info:         #60a5fa;
+            --nav-bg:       rgba(58, 6, 6, 0.85);
+        }
+
+        :root {
+            --bg:           #fdf5e6;
+            --bg2:          #fbf0df;
+            --sidebar-w:    260px;
+            --topbar-h:     60px;
+            --gold:         #d97706;
+            --gold-light:   #f59e0b;
+            --gold-dim:     rgba(245,158,11,0.15);
+            --gold-border:  #e6d5b8;
+            --text:         #4a0a0a;
+            --muted:        #995c5c;
+            --border:       #e6d5b8;
+            --surface:      #ffffff;
+            --surface-hover:#fdf5e6;
+            --radius-sm:    8px;
+            --radius:       12px;
+            --radius-lg:    16px;
+            --error:        #ef4444;
+            --success:      #10b981;
+            --warning:      #f59e0b;
+            --info:         #3b82f6;
+            --nav-bg:       rgba(253, 245, 230, 0.9);
         }
 
         html { scroll-behavior: smooth; }
@@ -54,7 +80,8 @@
         ================================================================ */
         .sidebar {
             width: var(--sidebar-w);
-            min-height: 100vh;
+            height: 100%; /* Fallback */
+            height: 100dvh; /* Modern mobile fix */
             background: var(--bg2);
             border-right: 1px solid var(--border);
             display: flex;
@@ -287,8 +314,8 @@
             left: var(--sidebar-w);
             right: 0;
             height: var(--topbar-h);
-            background: rgba(9,9,16,0.85);
-            backdrop-filter: blur(20px);
+            background: var(--nav-bg);
+            backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--border);
             display: flex;
@@ -514,7 +541,23 @@
         /* ================================================================
            PAGINATION
         ================================================================ */
-        nav[role="navigation"] { display: flex; align-items: center; gap: 0.25rem; flex-wrap: wrap; }
+        nav[role="navigation"] { display: flex; align-items: center; gap: 0.25rem; flex-wrap: wrap; margin-top: 1rem; font-size: 0.875rem; }
+        nav[role="navigation"] svg { width: 1.25rem; height: 1.25rem; }
+        nav[role="navigation"] p { color: var(--muted); margin: 0; display: inline-block; margin-right: 1rem; }
+        nav[role="navigation"] a, nav[role="navigation"] span[aria-disabled] { 
+            display: inline-flex; align-items: center; justify-content: center;
+            padding: 0.5rem 0.75rem; border: 1px solid var(--border);
+            border-radius: var(--radius-sm); color: var(--text); background: var(--surface);
+            text-decoration: none; min-width: 32px;
+        }
+        nav[role="navigation"] a:hover { background: var(--surface-hover); }
+        nav[role="navigation"] span[aria-current="page"] {
+            display: inline-flex; align-items: center; justify-content: center;
+            padding: 0.5rem 0.75rem; border: 1px solid var(--gold);
+            border-radius: var(--radius-sm); background: var(--gold-dim); color: var(--gold);
+            font-weight: 600; min-width: 32px;
+        }
+        .hidden { display: none !important; }
 
         /* ================================================================
            OVERLAY (mobile sidebar)
@@ -590,8 +633,13 @@
     .btn-close:before { content: "×"; }
     .btn-close:hover { color: var(--text); }
     @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(52,211,153,0.7); } 70% { box-shadow: 0 0 0 6px rgba(52,211,153,0); } 100% { box-shadow: 0 0 0 0 rgba(52,211,153,0); } }
     </style>
     @yield('styles')
+    <script>
+        const savedTheme = localStorage.getItem('kumaw-theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+    </script>
 </head>
 <body>
 
@@ -604,8 +652,13 @@
 <aside class="sidebar" id="sidebar" aria-label="Navigasi Admin">
 
     {{-- Brand --}}
-    <a href="{{ route('admin.dashboard') }}" class="sidebar-brand">
-        <div class="sidebar-brand-icon">🥟</div>
+    @php
+        $dashRoute = Auth::user()->hasNavMenuAccess('admin.dashboard') ? route('admin.dashboard') : route('cashier.dashboard');
+    @endphp
+    <a href="{{ $dashRoute }}" class="sidebar-brand">
+        <div class="sidebar-brand-icon" style="background: transparent; box-shadow: none;">
+            <img src="{{ asset('images/dimsum-logo.png') }}" alt="Logo" style="height: 36px; width: 36px; border-radius: 50%; object-fit: cover;">
+        </div>
         <div class="sidebar-brand-text">
             <h2>Kumaw Dimsum</h2>
             <span>Panel Admin</span>
@@ -614,16 +667,6 @@
 
     {{-- Navigation — dynamically rendered from role_menu --}}
     <nav class="sidebar-nav">
-
-        {{-- Dashboard is always shown to all authenticated, non-expired staff --}}
-        <div class="nav-item">
-            <a href="{{ route('admin.dashboard') }}"
-               id="nav-dashboard"
-               class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
-                <i class="bi bi-speedometer2"></i>
-                Dashboard
-            </a>
-        </div>
 
         @php
             /*
@@ -637,9 +680,8 @@
             $user?->loadMissing('role.navMenus');
             $assignedMenus = $user?->role?->navMenus ?? collect();
 
-            // Separate top-level (non-dashboard) and group-parent menus
+            // Separate top-level and group-parent menus
             $topLevel  = $assignedMenus->whereNull('parent_id')
-                                        ->where('route_name', '!=', 'admin.dashboard')
                                         ->sortBy('sort_order');
 
             $childIds  = $assignedMenus->whereNotNull('parent_id')->pluck('parent_id')->unique();
@@ -664,7 +706,7 @@
                         @if($menu->icon)
                             <i class="{{ $menu->icon }}"></i>
                         @endif
-                        {{ e($menu->name) }}
+                        {{ $menu->name }}
                         <i class="bi bi-chevron-right chevron"></i>
                     </button>
                     <div class="nav-sub {{ $groupActive ? 'open' : '' }}" id="sub-{{ $menu->id }}">
@@ -676,7 +718,7 @@
                                     @if($child->icon)
                                         <i class="{{ $child->icon }}"></i>
                                     @endif
-                                    {{ e($child->name) }}
+                                    {{ $child->name }}
                                 </a>
                             </div>
                         @endforeach
@@ -691,7 +733,7 @@
                         @if($menu->icon)
                             <i class="{{ $menu->icon }}"></i>
                         @endif
-                        {{ e($menu->name) }}
+                        {{ $menu->name }}
                     </a>
                 </div>
             @endif
@@ -715,8 +757,8 @@
                         {{ strtoupper(substr(auth()->user()?->name ?? 'U', 0, 1)) }}
                     </div>
                     <div class="sidebar-user-info" style="text-align: left; margin: 0; padding: 0; line-height: 1.2;">
-                        <strong style="display: block; margin-bottom: 0.25rem;">{{ e(auth()->user()?->name ?? '') }}</strong>
-                        <span style="display: block;">{{ e(auth()->user()?->role?->name ?? '—') }}</span>
+                        <strong style="display: block; margin-bottom: 0.25rem;">{{ auth()->user()?->name ?? '' }}</strong>
+                        <span style="display: block;">{{ auth()->user()?->role?->name ?? '—' }}</span>
                     </div>
                 </div>
                 <i class="bi bi-chevron-up" id="sidebarUserChevron" style="font-size: 0.75rem; color: var(--muted); transition: transform 0.2s;"></i>
@@ -748,6 +790,18 @@
                 >
                     <i class="bi bi-key"></i> Ganti Password
                 </button>
+                @php
+                    $activeShift = \App\Models\Shift::where('user_id', auth()->id())->where('status', 'open')->first();
+                @endphp
+                @if($activeShift)
+                <a href="{{ route('cashier.shifts.summary') }}"
+                   style="display: flex; align-items: center; gap: 0.625rem; width: 100%; padding: 0.625rem 0.875rem; border-radius: var(--radius-sm); color: var(--gold); font-size: 0.875rem; background: none; border: none; cursor: pointer; font-family: inherit; text-align: left; transition: background 0.15s; text-decoration: none;"
+                   onmouseenter="this.style.background='var(--surface-hover)'"
+                   onmouseleave="this.style.background='none'"
+                >
+                    <i class="bi bi-stop-circle"></i> Tutup Shift
+                </a>
+                @endif
                 <hr style="border: none; border-top: 1px solid var(--border); margin: 0.375rem 0;">
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
@@ -778,6 +832,17 @@
     <span class="topbar-title">@yield('title', 'Dashboard')</span>
 
     <div class="topbar-spacer"></div>
+
+    @if(isset($activeShift) && $activeShift)
+        <div style="background: var(--gold-dim); border: 1px solid var(--gold-border); padding: 0.25rem 0.75rem; border-radius: var(--radius-sm); display: flex; align-items: center; gap: 0.5rem; margin-right: 1rem;">
+            <div style="width: 8px; height: 8px; background: var(--success); border-radius: 50%; box-shadow: 0 0 8px var(--success); animation: pulse 2s infinite;"></div>
+            <span style="font-size: 0.75rem; font-weight: 600; color: var(--gold); text-transform: uppercase; letter-spacing: 0.05em;">{{ auth()->user()->name }}</span>
+        </div>
+    @endif
+
+    <button id="theme-toggle" style="background: transparent; border: none; color: var(--text); font-size: 1.25rem; margin-right: 1rem; cursor: pointer;" aria-label="Toggle theme">
+        <span id="theme-icon">☀️</span>
+    </button>
 
     {{-- Expiry warning --}}
     @if(auth()->user()?->expired_at && auth()->user()->expired_at->diffInDays(now()) <= 7 && !auth()->user()->isExpired())
@@ -848,6 +913,32 @@
         document.getElementById('sidebar').classList.remove('open');
         this.classList.remove('open');
         document.getElementById('hamburgerBtn').setAttribute('aria-expanded', 'false');
+    });
+
+    // ── Theme Toggle Logic ─────────────────────────────────────────────
+    document.addEventListener('DOMContentLoaded', () => {
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const themeIcon = document.getElementById('theme-icon');
+        
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        updateThemeIcon(currentTheme);
+
+        themeToggleBtn.addEventListener('click', () => {
+            let theme = document.documentElement.getAttribute('data-theme');
+            let newTheme = theme === 'dark' ? 'light' : 'dark';
+            
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('kumaw-theme', newTheme);
+            updateThemeIcon(newTheme);
+        });
+
+        function updateThemeIcon(theme) {
+            if (theme === 'dark') {
+                themeIcon.textContent = '🌙'; 
+            } else {
+                themeIcon.textContent = '☀️'; 
+            }
+        }
     });
 
     // ── Collapsible nav groups ──────────────────────────────────────────────
@@ -942,5 +1033,12 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 @yield('scripts')
+    {{-- Auto-redirect to login before session expires to prevent 419 errors --}}
+    <script>
+        // ponytail: simple JS timer over complex ping/heartbeat systems
+        setTimeout(function() {
+            window.location.href = "{{ route('login') }}";
+        }, {{ (config('session.lifetime') - 1) * 60 * 1000 }});
+    </script>
 </body>
 </html>

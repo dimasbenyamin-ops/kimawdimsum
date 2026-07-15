@@ -109,7 +109,7 @@
 
     .type-tabs {
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(2, 1fr);
         gap: 0.375rem;
         margin-bottom: 1rem;
     }
@@ -200,11 +200,21 @@
                         </div>
 
                         <div class="item-actions">
-                            <span class="qty-display">{{ $item['quantity'] }}</span>
-                            <form method="POST" action="{{ route('cart.remove', $item['menu_id']) }}">
+                            <form method="POST" action="{{ route('cart.update', $item['menu_id']) }}" class="update-form" style="display:flex; align-items:center; background:var(--bg2); border-radius:6px; overflow:hidden; border: 1px solid var(--border);">
+                                @csrf
+                                @method('PUT')
+                                @if($item['quantity'] > 1)
+                                    <button type="submit" name="quantity" value="{{ $item['quantity'] - 1 }}" style="padding:0.2rem 0.5rem; background:transparent; border:none; cursor:pointer; color:var(--gold); font-size:1.2rem; border-right: 1px solid var(--border); transition: background 0.2s;" onmouseover="this.style.background='rgba(245,158,11,0.1)'" onmouseout="this.style.background='transparent'">-</button>
+                                @else
+                                    <button type="submit" form="form-remove-{{ $item['menu_id'] }}" style="padding:0.2rem 0.5rem; background:transparent; border:none; cursor:pointer; color:var(--error); font-size:1rem; border-right: 1px solid var(--border); transition: background 0.2s;" onmouseover="this.style.background='rgba(248,113,113,0.1)'" onmouseout="this.style.background='transparent'">🗑️</button>
+                                @endif
+                                <span class="qty-display" style="min-width:32px; padding:0 0.5rem; background:transparent; display:inline-block; text-align:center; border-radius:0;">{{ $item['quantity'] }}</span>
+                                <button type="submit" name="quantity" value="{{ $item['quantity'] + 1 }}" style="padding:0.2rem 0.5rem; background:transparent; border:none; cursor:pointer; color:var(--gold); font-size:1.2rem; border-left: 1px solid var(--border); transition: background 0.2s;" onmouseover="this.style.background='rgba(245,158,11,0.1)'" onmouseout="this.style.background='transparent'">+</button>
+                            </form>
+                            <form method="POST" action="{{ route('cart.remove', $item['menu_id']) }}" id="form-remove-{{ $item['menu_id'] }}">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn-remove" title="Hapus item" id="remove-{{ $item['menu_id'] }}">✕</button>
+                                <button type="submit" class="btn-remove" title="Hapus item" style="margin-left:0.2rem">✕</button>
                             </form>
                         </div>
                     </div>
@@ -219,10 +229,7 @@
                     <span>Subtotal</span>
                     <span>Rp {{ number_format($subtotal, 0, ',', '.') }}</span>
                 </div>
-                <div class="summary-row">
-                    <span>Pajak (11%)</span>
-                    <span>Rp {{ number_format($tax, 0, ',', '.') }}</span>
-                </div>
+
                 <div class="summary-row total">
                     <span>Total</span>
                     <span>Rp {{ number_format($grandTotal, 0, ',', '.') }}</span>
@@ -268,7 +275,7 @@
                             @foreach([
                                 'dine_in'  => ['label' => '🍽️ Makan', 'id' => 'type-dine'],
                                 'takeaway' => ['label' => '📦 Bawa', 'id' => 'type-take'],
-                                'delivery' => ['label' => '🛵 Antar', 'id' => 'type-delivery'],
+
                             ] as $value => $opt)
                                 <label for="{{ $opt['id'] }}" style="margin:0;display:contents">
                                     <input
@@ -341,7 +348,7 @@
                                     class="radio-hidden"
                                     {{ old('payment_method') === 'qris' ? 'checked' : '' }}
                                 >
-                                <span class="type-tab">📱 QRIS</span>
+                                <span class="type-tab">📱 Non-Tunai</span>
                             </label>
                         </div>
                         @error('payment_method')
@@ -350,32 +357,12 @@
                     </div>
 
                     <button type="button" class="btn btn-gold btn-block btn-lg" id="btn-checkout">
-                        ✅ Pesan Sekarang
+                        Pesan Sekarang
                     </button>
                 </form>
             </div>
         </div>
 
-        <!-- QRIS Modal -->
-        <div id="qrisModal" class="modal" tabindex="-1" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 1050; align-items: center; justify-content: center;">
-            <div class="modal-dialog" style="background: var(--surface); border: 1px solid var(--gold); border-radius: var(--radius-lg); padding: 1.5rem; max-width: 400px; width: 90%; text-align: center;">
-                <h4 style="color: var(--gold); margin-bottom: 1rem;">Scan QRIS untuk Bayar</h4>
-                
-                @if(isset($qrisImage) && $qrisImage)
-                    <img src="{{ Storage::url($qrisImage) }}" alt="QRIS" style="width: 100%; max-height: 350px; object-fit: contain; border-radius: 8px; margin-bottom: 1rem;">
-                @else
-                    <div style="padding: 2rem; background: var(--bg2); border-radius: 8px; margin-bottom: 1rem; color: var(--muted);">
-                        QRIS belum tersedia. Silakan bayar di kasir.
-                    </div>
-                @endif
-                
-                <p style="font-size: 0.9rem; color: var(--muted); margin-bottom: 1.5rem;">Total Tagihan: <strong>Rp {{ number_format($grandTotal, 0, ',', '.') }}</strong></p>
-                <div style="display: flex; gap: 1rem;">
-                    <button type="button" class="btn btn-secondary" onclick="closeQrisModal()" style="flex: 1;">Batal</button>
-                    <button type="button" class="btn btn-gold" onclick="submitForm()" style="flex: 1;">Saya Sudah Bayar</button>
-                </div>
-            </div>
-        </div>
     @endif
 @endsection
 
@@ -393,10 +380,9 @@
     typeInputs.forEach(i => i.addEventListener('change', toggleTableField));
     toggleTableField(); // initial
 
-    // QRIS logic
+    // QRIS logic removed because it is now handled by Midtrans on the next page
     const btnCheckout = document.getElementById('btn-checkout');
     const checkoutForm = document.getElementById('checkout-form');
-    const qrisModal = document.getElementById('qrisModal');
 
     btnCheckout.addEventListener('click', function() {
         // Run native form validation (required fields like Name)
@@ -404,20 +390,10 @@
             return;
         }
 
-        const paymentMethod = document.querySelector('input[name="payment_method"]:checked')?.value;
-        if (paymentMethod === 'qris') {
-            qrisModal.style.display = 'flex';
-        } else {
-            checkoutForm.submit();
-        }
-    });
-
-    function closeQrisModal() {
-        qrisModal.style.display = 'none';
-    }
-
-    function submitForm() {
+        // Disable button to prevent double submit
+        btnCheckout.disabled = true;
+        btnCheckout.innerHTML = 'Memproses...';
         checkoutForm.submit();
-    }
+    });
 </script>
 @endsection

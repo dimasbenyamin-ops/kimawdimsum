@@ -95,6 +95,9 @@ ENV APP_ENV=production
 ENV APP_DEBUG=false
 ENV COMPOSER_ALLOW_SUPERUSER=1
 
+# Install nginx
+RUN apk add --no-cache nginx
+
 COPY . .
 
 # Production Composer install (no dev deps)
@@ -103,11 +106,6 @@ RUN composer install \
     --prefer-dist \
     --optimize-autoloader \
     --no-dev
-
-# Optimize Laravel for production
-RUN php artisan config:cache \
-    && php artisan route:cache \
-    && php artisan view:cache
 
 # Set correct permissions (mkdir -p guards in case dirs are missing)
 RUN mkdir -p /var/www/html/storage/logs \
@@ -119,6 +117,15 @@ RUN mkdir -p /var/www/html/storage/logs \
     && chmod -R 755 /var/www/html/storage \
     && chmod -R 755 /var/www/html/bootstrap/cache
 
-EXPOSE 9000
+# Copy Nginx, Supervisor configs and start script
+COPY .docker/nginx/production.conf /etc/nginx/http.d/default.conf
+RUN mkdir -p /etc/supervisor/conf.d
+COPY .docker/supervisor/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY .docker/start.sh /usr/local/bin/start.sh
+RUN chmod +x /usr/local/bin/start.sh
 
-CMD ["php-fpm"]
+EXPOSE 8080
+
+# Railway expects an HTTP server to respond to health checks.
+# We run supervisor to manage both Nginx and PHP-FPM
+CMD ["/usr/local/bin/start.sh"]

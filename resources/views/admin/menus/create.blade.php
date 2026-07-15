@@ -129,6 +129,17 @@
             </div>
 
             <div class="form-group">
+                <label for="badge">Badge/Label (Opsional)</label>
+                <input type="text" id="badge" name="badge" value="{{ old('badge') }}"
+                       placeholder="Contoh: Best Seller, Pedas 🔥, Rekomendasi" maxlength="50"
+                       class="{{ $errors->has('badge') ? 'is-invalid' : '' }}">
+                <div style="font-size:0.8rem;color:var(--muted);margin-top:0.375rem">
+                    Teks ini akan muncul sebagai pita/label di foto menu untuk menarik perhatian.
+                </div>
+                @error('badge') <div class="invalid-feedback">{{ $message }}</div> @enderror
+            </div>
+
+            <div class="form-group">
                 <label for="sort_order">Urutan Tampil</label>
                 <input type="number" id="sort_order" name="sort_order" value="{{ old('sort_order', 100) }}"
                        min="0" max="9999"

@@ -19,8 +19,8 @@
             </style>
         @endif
     </head>
-    <body class="font-sans antialiased dark:bg-black dark:text-white/50">
-        <div class="bg-gray-50 text-black/50 dark:bg-black dark:text-white/50">
+    <body class="font-sans antialiased dark:bg-[#3a0606] dark:text-[#ffe4e4]">
+        <div class="bg-[#fdf5e6] text-[#4a0a0a] dark:bg-[#3a0606] dark:text-[#ffe4e4]">
             <img id="background" class="absolute -left-20 top-0 max-w-[877px]" src="https://laravel.com/assets/img/welcome/background.svg" alt="Laravel background" />
             <div class="relative min-h-screen flex flex-col items-center justify-center selection:bg-[#FF2D20] selection:text-white">
                 <div class="relative w-full max-w-2xl px-6 lg:max-w-7xl">
@@ -33,7 +33,7 @@
                                 @auth
                                     <a
                                         href="{{ url('/dashboard') }}"
-                                        class="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white"
+                                        class="rounded-md px-3 py-2 text-[#4a0a0a] ring-1 ring-transparent transition hover:text-[#4a0a0a]/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-[#ffe4e4] dark:hover:text-[#ffe4e4]/80 dark:focus-visible:ring-white"
                                     >
                                         Dashboard
                                     </a>
