@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Kumaw Dimsum')</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🥟</text></svg>">
+    <link rel="icon" type="image/png" href="{{ asset('images/dimsum-logo.png') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -367,7 +367,7 @@
             box-shadow: 0 0 0 3px rgba(245,158,11,0.1);
         }
 
-        select option { background: var(--bg2); }
+        select option { background: var(--bg2); font-size: 0.85rem; }
         .invalid-feedback { color: var(--error); font-size: 0.8125rem; margin-top: 0.3rem; }
         .form-hint { font-size: 0.775rem; color: var(--muted); margin-top: 0.25rem; }
 
@@ -414,12 +414,12 @@
             .main { padding: 1.25rem 1rem; }
             .navbar-nav { display: none; }   /* hide text nav links on phones — brand + actions only */
             .navbar-actions { gap: 0.5rem; }
-            .cart-btn, .order-btn { padding: 0.45rem 0.7rem; font-size: 0.8125rem; gap: 0.3rem; }
-            .cart-btn span:not(.cart-badge) { display: none; }  /* icon only for cart on very small */
-        }
-
-        @media (max-width: 400px) {
-            .order-btn { display: none; }   /* hide "Pesanan Saya" on tiny phones, rely on footer/menu */
+            .cart-btn, .order-btn { width: 36px; height: 36px; padding: 0; justify-content: center; font-size: 1.1rem; }
+            .nav-text { display: none; }
+            select {
+                font-size: 0.8rem !important;
+                padding: 0.5rem 0.75rem !important;
+            }
         }
 
         /* ---- MODAL (Bootstrap JS Interop) ---- */
@@ -460,7 +460,7 @@
     
     <script>
         // Apply theme immediately to prevent flashing
-        const savedTheme = localStorage.getItem('kumaw-theme') || 'light';
+        const savedTheme = localStorage.getItem('kumaw-theme') || 'dark';
         document.documentElement.setAttribute('data-theme', savedTheme);
     </script>
 </head>
@@ -482,17 +482,13 @@
 
 
             <div class="navbar-actions">
-                <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle theme">
-                    <span id="theme-icon">☀️</span>
-                </button>
-
                 @if(!Auth::check())
-                    <a href="{{ route('orders.index') }}" class="order-btn" style="background: var(--surface); color: var(--text); border-color: var(--border);">
-                        🧾 Pesanan Saya
+                    <a href="{{ route('orders.index') }}" class="order-btn" title="Pesanan Saya" style="background: var(--surface); color: var(--text); border-color: var(--border);">
+                        🧾 <span class="nav-text">Pesanan Saya</span>
                     </a>
 
-                    <a href="{{ route('cart.index') }}" class="cart-btn">
-                        <i class="bi bi-cart"></i> 🛒 Keranjang
+                    <a href="{{ route('cart.index') }}" class="cart-btn" title="Keranjang">
+                        🛒 <span class="nav-text">Keranjang</span>
                         @php
                             $cartQty = collect(session('cart', []))->sum('quantity');
                         @endphp
@@ -500,11 +496,15 @@
                     </a>
                 @endif
 
+                <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle theme" title="Ganti Tema">
+                    <span id="theme-icon">☀️</span>
+                </button>
+
                 @auth
                     <div class="user-menu dropdown" style="position: relative;">
-                        <button class="user-btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <button class="user-btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="padding-right: 0.5rem;">
                             <div class="user-avatar">{{ strtoupper(substr(Auth::user()->name, 0, 1)) }}</div>
-                            {{ Auth::user()->name }} ▾
+                            <span class="nav-text">{{ Auth::user()->name }} ▾</span>
                         </button>
                         <div class="dropdown-menu dropdown-menu-end dropdown-menu-custom">
                             @if(Auth::user()->isStaff())

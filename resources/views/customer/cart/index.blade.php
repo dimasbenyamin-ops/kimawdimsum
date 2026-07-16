@@ -284,7 +284,7 @@
                                         name="type"
                                         value="{{ $value }}"
                                         class="radio-hidden"
-                                        {{ old('type', 'dine_in') === $value ? 'checked' : '' }}
+                                        {{ old('type', session('table_number') ? 'dine_in' : 'dine_in') === $value ? 'checked' : '' }}
                                     >
                                     <span class="type-tab">{{ $opt['label'] }}</span>
                                 </label>
@@ -297,13 +297,20 @@
 
                     <div class="form-group" id="table-number-group">
                         <label for="table_number">Nomor Meja (opsional)</label>
+                        @if(session('table_number'))
+                            <div class="alert alert-info" style="padding: 0.5rem; margin-bottom: 0.5rem; border-radius: 6px; font-size: 0.85rem; background: rgba(59, 130, 246, 0.1); color: #2563eb; border: 1px solid rgba(59, 130, 246, 0.2);">
+                                📱 Terhubung dari QR Code Meja
+                            </div>
+                        @endif
                         <input
                             type="number"
                             id="table_number"
                             name="table_number"
-                            value="{{ old('table_number') }}"
+                            value="{{ old('table_number', session('table_number')) }}"
                             min="1" max="999"
                             placeholder="Contoh: 5"
+                            {{ session('table_number') ? 'readonly' : '' }}
+                            style="{{ session('table_number') ? 'background-color: var(--bg2); cursor: not-allowed;' : '' }}"
                         >
                         @error('table_number')
                             <div class="invalid-feedback">{{ $message }}</div>

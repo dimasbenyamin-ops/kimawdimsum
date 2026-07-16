@@ -7,6 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Admin') – Kumaw Dimsum</title>
+    <link rel="icon" type="image/png" href="{{ asset('images/dimsum-logo.png') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -492,6 +493,30 @@
         /* ================================================================
            FORMS
         ================================================================ */
+        .filter-form {
+            display: flex; gap: 1rem; align-items: flex-end; flex-wrap: wrap;
+        }
+
+        @media (max-width: 640px) {
+            .filter-form {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0.75rem;
+            }
+            .filter-form > div {
+                width: 100%;
+            }
+            .filter-form button {
+                width: 100%;
+                padding: 0.6rem;
+                font-size: 0.9rem;
+            }
+            select {
+                font-size: 0.8rem !important;
+                padding: 0.5rem 0.75rem !important;
+            }
+        }
+
         .form-group { margin-bottom: 1.25rem; }
 
         label {
@@ -528,7 +553,7 @@
             box-shadow: 0 0 0 3px rgba(245,158,11,0.1);
         }
 
-        select option { background: var(--bg2); }
+        select option { background: var(--bg2); font-size: 0.85rem; }
 
         input.is-invalid, select.is-invalid { border-color: var(--error); }
 
@@ -637,7 +662,7 @@
     </style>
     @yield('styles')
     <script>
-        const savedTheme = localStorage.getItem('kumaw-theme') || 'light';
+        const savedTheme = localStorage.getItem('kumaw-theme') || 'dark';
         document.documentElement.setAttribute('data-theme', savedTheme);
     </script>
 </head>

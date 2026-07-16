@@ -23,6 +23,7 @@ RUN apk add --no-cache \
     zip \
     icu-dev \
     oniguruma-dev \
+    postgresql-dev \
     linux-headers \
     supervisor
 
@@ -33,6 +34,8 @@ RUN docker-php-ext-configure gd \
         --with-webp && \
     docker-php-ext-install -j$(nproc) \
         pdo_mysql \
+        pdo_pgsql \
+        pgsql \
         mbstring \
         zip \
         gd \

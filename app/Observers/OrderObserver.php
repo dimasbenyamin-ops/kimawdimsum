@@ -63,11 +63,11 @@ class OrderObserver
             }
 
             // Get order items and their associated menu's master recipes and ingredients
-            $order->loadMissing('orderItems.menu.masterRecipes.ingredients');
+            $order->loadMissing('items.menu.masterRecipes.ingredients');
 
             $ingredientDeductions = [];
 
-            foreach ($order->orderItems as $orderItem) {
+            foreach ($order->items as $orderItem) {
                 if (! $orderItem->menu) continue;
 
                 $quantityOrdered = $orderItem->quantity;
@@ -122,11 +122,11 @@ class OrderObserver
                 return;
             }
 
-            $order->loadMissing('orderItems.menu.masterRecipes.ingredients');
+            $order->loadMissing('items.menu.masterRecipes.ingredients');
 
             $ingredientRestocks = [];
 
-            foreach ($order->orderItems as $orderItem) {
+            foreach ($order->items as $orderItem) {
                 if (! $orderItem->menu) continue;
 
                 $quantityOrdered = $orderItem->quantity;

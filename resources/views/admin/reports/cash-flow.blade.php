@@ -16,6 +16,7 @@
         justify-content: space-between;
         padding: 0.75rem 0;
         border-bottom: 1px dashed var(--border);
+        font-size: 1rem;
     }
     .report-row:last-child {
         border-bottom: none;
@@ -28,7 +29,7 @@
     }
     .report-row.total {
         font-weight: 700;
-        font-size: 1.25rem;
+        font-size: 1.5rem;
         border-top: 2px solid var(--border);
         border-bottom: none;
         padding-top: 1rem;
@@ -36,6 +37,54 @@
     }
     .text-success { color: var(--success); }
     .text-danger { color: var(--danger); }
+    
+    .report-title {
+        font-size: 1.5rem;
+        text-align: center;
+        margin-bottom: 0.5rem;
+    }
+    
+    .filter-form {
+        display: flex; gap: 1rem; align-items: flex-end; flex-wrap: wrap;
+    }
+
+    @media (max-width: 640px) {
+        .report-card {
+            padding: 1rem;
+        }
+        .report-title {
+            font-size: 1.2rem;
+        }
+        .report-row {
+            flex-direction: column;
+            gap: 0.25rem;
+            font-size: 0.85rem;
+        }
+        .report-row.header {
+            font-size: 0.95rem;
+        }
+        .report-row.total {
+            font-size: 1.1rem;
+            margin-top: 1rem;
+        }
+        .filter-form {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 0.75rem;
+        }
+        .filter-form > div {
+            width: 100%;
+        }
+        .filter-form button {
+            width: 100%;
+            padding: 0.6rem;
+            font-size: 0.9rem;
+        }
+        .form-control {
+            font-size: 0.9rem;
+            padding: 0.5rem;
+        }
+    }
 </style>
 @endsection
 
@@ -49,7 +98,7 @@
 
     <div class="card" style="margin-bottom: 2rem;">
         <div style="padding:1.5rem;">
-            <form method="GET" action="{{ route('admin.reports.cash-flow') }}" style="display:flex; gap:1rem; align-items:flex-end; flex-wrap:wrap;">
+            <form method="GET" action="{{ route('admin.reports.cash-flow') }}" class="filter-form">
                 <div>
                     <label style="font-size:0.875rem; color:var(--muted); display:block; margin-bottom:0.25rem">Dari Tanggal</label>
                     <input type="date" name="start_date" value="{{ $startDate }}" class="form-control">
@@ -64,8 +113,8 @@
     </div>
 
     <div class="report-card">
-        <h2 style="font-size: 1.5rem; text-align: center; margin-bottom: 0.5rem;">Kumaw Dimsum</h2>
-        <div style="text-align: center; color: var(--muted); margin-bottom: 2rem;">
+        <h2 class="report-title">Kumaw Dimsum</h2>
+        <div style="text-align: center; color: var(--muted); margin-bottom: 2rem; font-size: 0.9rem;">
             Periode: {{ \Carbon\Carbon::parse($startDate)->format('d M Y') }} - {{ \Carbon\Carbon::parse($endDate)->format('d M Y') }}
         </div>
 
@@ -78,7 +127,7 @@
                 <div>Penerimaan Penjualan (POS)</div>
                 <div style="font-family:monospace" class="text-success">Rp {{ number_format($inflow, 2, ',', '.') }}</div>
             </div>
-            <div class="report-row" style="font-weight: 600; background: var(--surface-hover);">
+            <div class="report-row" style="font-weight: 600; background: var(--surface-hover); padding: 0.75rem;">
                 <div>Total Arus Kas Masuk</div>
                 <div style="font-family:monospace" class="text-success">Rp {{ number_format($inflow, 2, ',', '.') }}</div>
             </div>
@@ -95,13 +144,13 @@
                 <div>Pembayaran Biaya Operasional (OpEx)</div>
                 <div style="font-family:monospace" class="text-danger">(Rp {{ number_format($expenses, 2, ',', '.') }})</div>
             </div>
-            <div class="report-row" style="font-weight: 600; background: var(--surface-hover);">
+            <div class="report-row" style="font-weight: 600; background: var(--surface-hover); padding: 0.75rem;">
                 <div>Total Arus Kas Keluar</div>
                 <div style="font-family:monospace" class="text-danger">(Rp {{ number_format($totalOutflow, 2, ',', '.') }})</div>
             </div>
 
             <!-- Net Cash Flow -->
-            <div class="report-row total" style="{{ $netCashFlow >= 0 ? 'color:var(--success)' : 'color:var(--danger)' }}; font-size: 1.5rem; margin-top:2rem">
+            <div class="report-row total" style="{{ $netCashFlow >= 0 ? 'color:var(--success)' : 'color:var(--danger)' }}; margin-top:2rem;">
                 <div>ARUS KAS BERSIH (Net Cash Flow)</div>
                 <div style="font-family:monospace">
                     {{ $netCashFlow < 0 ? '(' : '' }}Rp {{ number_format(abs($netCashFlow), 2, ',', '.') }}{{ $netCashFlow < 0 ? ')' : '' }}
