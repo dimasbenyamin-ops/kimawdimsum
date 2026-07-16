@@ -33,11 +33,11 @@ class SecurityHeaders
         // TODO(security): Tighten script-src by using CSP nonces for inline scripts
         $csp = implode(' ', [
             "default-src 'self';",
-            "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://app.sandbox.midtrans.com https://app.midtrans.com;",
+            "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://app.sandbox.midtrans.com https://app.midtrans.com https://static.cloudflareinsights.com;",
             "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net;",
             "font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net;",
             "img-src 'self' data: blob:;",
-            "connect-src 'self' {$wsSrc} https://cdn.jsdelivr.net https://app.sandbox.midtrans.com https://app.midtrans.com;",
+            "connect-src 'self' {$wsSrc} https://cdn.jsdelivr.net https://app.sandbox.midtrans.com https://app.midtrans.com https://cloudflareinsights.com;",
             "frame-src 'self' https://app.sandbox.midtrans.com https://app.midtrans.com;",
             "object-src 'none';",
             "base-uri 'self';",
