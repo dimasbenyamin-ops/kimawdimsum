@@ -142,8 +142,16 @@ class OrderController extends Controller
     private function generateOrderNumber(): string
     {
         $prefix = 'KD-' . now()->format('ymd');
-        // Use DB lock to prevent race conditions on concurrent orders
-        $count = Order::whereDate('created_at', today())->lockForUpdate()->count() + 1;
+        
+        // Postgres does not allow lockForUpdate() with aggregate functions like count().
+        // We lock the last order row instead to prevent race conditions.
+        $lastOrder = Order::whereDate('created_at', today())
+                          ->orderBy('id', 'desc')
+                          ->lockForUpdate()
+                          ->first();
+                          
+        $count = $lastOrder ? (int) substr($lastOrder->order_number, -4) + 1 : 1;
+        
         return $prefix . '-' . str_pad($count, 4, '0', STR_PAD_LEFT);
     }
 }
