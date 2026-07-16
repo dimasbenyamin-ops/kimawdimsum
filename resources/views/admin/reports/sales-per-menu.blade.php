@@ -12,7 +12,7 @@
 
     <div class="card" style="margin-bottom: 2rem;">
         <div style="padding:1.5rem;">
-            <form method="GET" action="{{ route('admin.reports.sales-per-menu') }}" style="display:flex; gap:1rem; align-items:flex-end; flex-wrap:wrap;">
+            <form method="GET" action="{{ route('admin.reports.sales-per-menu') }}" class="filter-form">
                 <div>
                     <label style="font-size:0.875rem; color:var(--muted); display:block; margin-bottom:0.25rem">Dari Tanggal</label>
                     <input type="date" name="start_date" value="{{ $startDate }}" class="form-control">

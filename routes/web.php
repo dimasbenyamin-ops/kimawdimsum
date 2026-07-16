@@ -20,6 +20,12 @@ use Illuminate\Support\Facades\Route;
 // ── Root: redirect to customer menu ─────────────────────────────────────────
 Route::get('/', fn () => redirect()->route('menu.index'));
 
+// ── QR Scan Route ───────────────────────────────────────────────────────────
+Route::get('/scan/{table}', function ($table) {
+    session(['table_number' => $table]);
+    return redirect()->route('menu.index')->with('success', 'Berhasil terhubung ke Meja ' . $table);
+})->name('scan.table');
+
 // ============================================================
 // STAFF AUTH — Login / Logout only (no public registration)
 // ============================================================
@@ -108,6 +114,7 @@ Route::middleware(['auth', 'admin.access'])
          // ── Setup > Store Identity ────────────────────────────────────────────
          Route::get('/settings/store-identity',  [SettingController::class, 'storeIdentity'])->name('settings.store_identity');
          Route::post('/settings/store-identity', [SettingController::class, 'updateStoreIdentity'])->name('settings.store_identity.update');
+         Route::get('/settings/qr-codes',        [SettingController::class, 'qrCodes'])->name('settings.qr_codes');
 
          // ── Reports ───────────────────────────────────────────────────────────
          Route::get('/reports/revenue', [App\Http\Controllers\Admin\RevenueReportController::class, 'index'])->name('reports.revenue');

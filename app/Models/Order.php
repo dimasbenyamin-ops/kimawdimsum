@@ -79,6 +79,16 @@ class Order extends Model
         'cashier_notes',
         'processed_by',
         'estimated_ready_at',
+        'is_inventory_deducted',
+    ];
+
+    /**
+     * The model's default values for attributes.
+     *
+     * @var array
+     */
+    protected $attributes = [
+        'is_inventory_deducted' => false,
     ];
 
     protected function casts(): array

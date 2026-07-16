@@ -33,4 +33,10 @@ class SettingController extends Controller
 
         return back()->with('success', 'Identitas toko berhasil diperbarui!');
     }
+
+    public function qrCodes(Request $request)
+    {
+        $tableCount = $request->input('tables', 10); // Default to 10 tables if not provided
+        return view('admin.settings.qr-codes', compact('tableCount'));
+    }
 }

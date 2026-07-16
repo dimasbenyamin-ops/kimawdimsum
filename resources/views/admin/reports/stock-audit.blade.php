@@ -2,6 +2,23 @@
 
 @section('title', 'Valuasi & Audit Stok Gudang – Kumaw Dimsum Admin')
 
+@section('styles')
+<style>
+    .valuation-total {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: var(--gold);
+        font-family: monospace;
+    }
+    @media (max-width: 640px) {
+        .valuation-total {
+            font-size: 1.6rem;
+            word-break: break-word;
+        }
+    }
+</style>
+@endsection
+
 @section('content')
     <div class="page-header">
         <div>
@@ -12,7 +29,7 @@
 
     <div class="card" style="margin-bottom: 2rem; padding: 2rem; background: var(--surface-hover); text-align: center;">
         <h2 style="font-size: 1rem; color: var(--muted); margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 1px;">Total Nilai Aset Bahan Baku</h2>
-        <div style="font-size: 2.5rem; font-weight: 800; color: var(--gold); font-family: monospace;">
+        <div class="valuation-total">
             Rp {{ number_format($totalStockValue, 2, ',', '.') }}
         </div>
     </div>
