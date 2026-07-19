@@ -18,3 +18,6 @@ Thumbs.db
 
 # Docker volumes (do not commit DB data)
 /.docker/mysql/data/
+
+# User Uploads
+/public/images/
