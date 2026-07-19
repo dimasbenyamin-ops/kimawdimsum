@@ -535,7 +535,7 @@
 
             {{-- HEADER --}}
             <div class="invoice-header">
-                <div class="invoice-brand">🥟 Kumaw Dimsum</div>
+                <div class="invoice-brand">🥟 Kumaw X Atmosphr</div>
                 <div class="invoice-tagline">Jl. Dimsum Enak No. 88 · Telp. (021) 888-0000</div>
                 <hr class="invoice-divider">
                 <div class="invoice-number" id="inv-number">—</div>
@@ -608,7 +608,7 @@
             {{-- FOOTER --}}
             <div class="invoice-footer">
                 Terima kasih telah memesan di<br>
-                <strong>Kumaw Dimsum</strong> 🥟<br>
+                <strong>Kumaw X Atmosphr</strong> 🥟<br>
                 <span style="font-size:0.7rem">Simpan struk ini sebagai bukti pembayaran</span>
             </div>
 

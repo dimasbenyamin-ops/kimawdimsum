@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Laporan Arus Kas – Kumaw Dimsum Admin')
+@section('title', 'Laporan Arus Kas – Kumaw X Atmosphr Admin')
 
 @section('styles')
 <style>
@@ -113,7 +113,7 @@
     </div>
 
     <div class="report-card">
-        <h2 class="report-title">Kumaw Dimsum</h2>
+        <h2 class="report-title">Kumaw X Atmosphr</h2>
         <div style="text-align: center; color: var(--muted); margin-bottom: 2rem; font-size: 0.9rem;">
             Periode: {{ \Carbon\Carbon::parse($startDate)->format('d M Y') }} - {{ \Carbon\Carbon::parse($endDate)->format('d M Y') }}
         </div>

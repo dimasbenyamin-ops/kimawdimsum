@@ -158,7 +158,7 @@
 <div class="page-header d-print-none">
     <div>
         <h1>Cetak QR Code Meja</h1>
-        <p>Hasilkan dan cetak QR Code meja. Desain ini menggunakan tema gelap eksklusif Kumaw Dimsum.</p>
+        <p>Hasilkan dan cetak QR Code meja. Desain ini menggunakan tema gelap eksklusif Kumaw X Atmosphr.</p>
     </div>
     <div>
         <button type="button" class="btn btn-gold" onclick="window.print()">
@@ -185,7 +185,7 @@
     @for($i = 1; $i <= $tableCount; $i++)
         <div class="qr-card">
             <div class="qr-card-header">
-                <h2>Kumaw Dimsum</h2>
+                <h2>Kumaw X Atmosphr</h2>
                 <p>SCAN UNTUK PESAN MENU</p>
             </div>
             <div class="qr-card-body">

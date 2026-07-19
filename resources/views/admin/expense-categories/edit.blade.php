@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Edit Kategori Biaya – Kumaw Dimsum Admin')
+@section('title', 'Edit Kategori Biaya – Kumaw X Atmosphr Admin')
 
 @section('styles')
 <style>

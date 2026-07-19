@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Detail SO ' . $stockOpname->opname_number . ' – Kumaw Dimsum Admin')
+@section('title', 'Detail SO ' . $stockOpname->opname_number . ' – Kumaw X Atmosphr Admin')
 
 @section('styles')
 <style>

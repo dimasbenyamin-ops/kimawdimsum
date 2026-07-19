@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
-@section('title', 'Menu – Kumaw Dimsum')
-@section('meta_description', 'Temukan berbagai pilihan dimsum autentik di Kumaw Dimsum.')
+@section('title', 'Menu – Kumaw X Atmosphr')
+@section('meta_description', 'Temukan berbagai pilihan dimsum autentik di Kumaw X Atmosphr.')
 
 @section('styles')
 <style>
@@ -320,8 +320,8 @@
 @section('content')
     {{-- Hero --}}
     <div class="hero">
-        <div class="hero-badge">🥟 Authentic Dimsum</div>
-        <h1>Pilih Dimsum<br>Favorit Kamu</h1>
+        <div class="hero-badge">🥟 Authentic Menu 🥂</div>
+        <h1>Pilih Menu<br>Favorit Kamu</h1>
         <p>Disajikan segar langsung dari dapur kami</p>
     </div>
 

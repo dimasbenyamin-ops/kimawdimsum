@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="@yield('meta_description', 'Kumaw Dimsum - Authentic Dimsum Experience')">
+    <meta name="description" content="@yield('meta_description', 'Kumaw X Atmosphr - Authentic Dimsum Experience')">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'Kumaw Dimsum')</title>
+    <title>@yield('title', 'Kumaw X Atmosphr')</title>
     <link rel="icon" type="image/png" href="{{ asset('images/dimsum-logo.png') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -475,8 +475,8 @@
                 }
             @endphp
             <a href="{{ $homeRoute }}" class="navbar-brand">
-                <img src="{{ asset('images/dimsum-logo.png') }}" alt="Kumaw Dimsum" width="36" height="36" style="border-radius: 50%; object-fit: contain;">
-                <span>Kumaw Dimsum</span>
+                <img src="{{ asset('images/dimsum-logo.png') }}" alt="Kumaw X Atmosphr" width="36" height="36" style="border-radius: 50%; object-fit: contain;">
+                <span>Kumaw X Atmosphr</span>
             </a>
 
 

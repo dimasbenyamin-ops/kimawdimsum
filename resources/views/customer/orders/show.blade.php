@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Detail Pesanan #' . $order->order_number . ' – Kumaw Dimsum')
+@section('title', 'Detail Pesanan #' . $order->order_number . ' – Kumaw X Atmosphr')
 
 @section('styles')
 <style>
@@ -456,7 +456,7 @@
                 </head>
                 <body>
                     <div class="header">
-                        <div class="brand">KUMAW DIMSUM</div>
+                        <div class="brand">Kumaw X Atmosphr</div>
                         <div style="font-size: 9px; margin-top: 3px;">Jl. Dimsum Enak No. 88</div>
                         <div style="margin-top: 8px;">Order: {{ $order->order_number }}</div>
                         <div>{{ $order->created_at->format('d/m/Y H:i') }}</div>

@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Kumaw Dimsum - Masuk ke akun Anda">
+    <meta name="description" content="Kumaw X Atmosphr - Masuk ke akun Anda">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>@yield('title', 'Kumaw Dimsum')</title>
+    <title>@yield('title', 'Kumaw X Atmosphr')</title>
     <link rel="icon" type="image/png" href="{{ asset('images/dimsum-logo.png') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -248,8 +248,8 @@
 <body>
     <div class="auth-wrapper">
         <div class="brand">
-            <img src="{{ asset('images/dimsum-logo.png') }}" alt="Kumaw Dimsum Logo" width="72" height="72" class="mb-4" style="border-radius: 50%; box-shadow: 0 0 40px rgba(245,158,11,0.3); object-fit: contain;">
-            <h1>Kumaw Dimsum</h1>
+            <img src="{{ asset('images/dimsum-logo.png') }}" alt="Kumaw X Atmosphr Logo" width="72" height="72" class="mb-4" style="border-radius: 50%; box-shadow: 0 0 40px rgba(245,158,11,0.3); object-fit: contain;">
+            <h1>Kumaw X Atmosphr</h1>
             <p>Authentic Dimsum Experience</p>
         </div>
 

@@ -12,7 +12,7 @@ class SettingController extends Controller
 
     public function storeIdentity()
     {
-        $storeName    = Setting::getValue('store_name', 'KUMAW DIMSUM');
+        $storeName    = Setting::getValue('store_name', 'Kumaw X Atmosphr');
         $storeAddress = Setting::getValue('store_address', 'Jl. Contoh Alamat No. 123');
         $storePhone   = Setting::getValue('store_phone', '081234567890');
 

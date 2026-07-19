@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Laporan HPP & Margin Menu – Kumaw Dimsum Admin')
+@section('title', 'Laporan HPP & Margin Menu – Kumaw X Atmosphr Admin')
 
 @section('content')
     <div class="page-header">

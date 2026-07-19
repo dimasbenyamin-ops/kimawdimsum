@@ -192,7 +192,7 @@
     <div class="d-flex align-items-center justify-content-between mb-4">
         <div>
             <h1 class="fw-bold mb-1" style="font-size: 1.75rem; color: var(--text);">Manajemen Role</h1>
-            <p class="text-muted mt-0 mb-0" style="font-size: 0.9rem;">Kelola klasifikasi hak akses staf Kumaw Dimsum</p>
+            <p class="text-muted mt-0 mb-0" style="font-size: 0.9rem;">Kelola klasifikasi hak akses staf Kumaw X Atmosphr</p>
         </div>
     </div>
 

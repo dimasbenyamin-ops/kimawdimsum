@@ -97,7 +97,7 @@
     <div class="d-flex align-items-center justify-content-between mb-4">
         <div>
             <h1 class="fw-bold mb-1" style="font-size: 1.75rem; color: var(--text);">Edit User</h1>
-            <p class="text-muted mt-0 mb-0" style="font-size: 0.9rem;">Perbarui data staf Kumaw Dimsum</p>
+            <p class="text-muted mt-0 mb-0" style="font-size: 0.9rem;">Perbarui data staf Kumaw X Atmosphr</p>
         </div>
         <a href="{{ route('admin.users.index') }}" class="btn btn-outline-secondary rounded-4 px-4 shadow-sm" style="color: var(--text); border-color: var(--border);">
             <i class="bi bi-arrow-left me-2"></i> Kembali

@@ -17,18 +17,18 @@ class MenuSeeder extends Seeder
         Menu::query()->update(['is_available' => false]);
 
         $menus = [
-            // Atmosphere x Kumaw Dimsum - Bundling
-            ['name' => '2 Dimsum Ori + 1 Coffee', 'price' => 25000, 'category' => 'bundling_hemat', 'description' => 'Atmosphere x Kumaw Dimsum Bundling'],
-            ['name' => '3 Dimsum Ori + 1 Coffee', 'price' => 30000, 'category' => 'bundling_hemat', 'description' => 'Atmosphere x Kumaw Dimsum Bundling'],
-            ['name' => '2 Dimsum Spicy Mayo + 1 Coffee', 'price' => 26000, 'category' => 'bundling_hemat', 'description' => 'Atmosphere x Kumaw Dimsum Bundling'],
-            ['name' => '3 Dimsum Spicy Mayo + 1 Coffee', 'price' => 32000, 'category' => 'bundling_hemat', 'description' => 'Atmosphere x Kumaw Dimsum Bundling'],
-            ['name' => '2 Dimsum Goreng Keju + 1 Coffee', 'price' => 48000, 'category' => 'bundling_hemat', 'description' => 'Atmosphere x Kumaw Dimsum Bundling'],
+            // Atmosphere x Kumaw X Atmosphr - Bundling
+            ['name' => '2 Dimsum Ori + 1 Coffee', 'price' => 25000, 'category' => 'bundling_hemat', 'description' => 'Atmosphere x Kumaw X Atmosphr Bundling'],
+            ['name' => '3 Dimsum Ori + 1 Coffee', 'price' => 30000, 'category' => 'bundling_hemat', 'description' => 'Atmosphere x Kumaw X Atmosphr Bundling'],
+            ['name' => '2 Dimsum Spicy Mayo + 1 Coffee', 'price' => 26000, 'category' => 'bundling_hemat', 'description' => 'Atmosphere x Kumaw X Atmosphr Bundling'],
+            ['name' => '3 Dimsum Spicy Mayo + 1 Coffee', 'price' => 32000, 'category' => 'bundling_hemat', 'description' => 'Atmosphere x Kumaw X Atmosphr Bundling'],
+            ['name' => '2 Dimsum Goreng Keju + 1 Coffee', 'price' => 48000, 'category' => 'bundling_hemat', 'description' => 'Atmosphere x Kumaw X Atmosphr Bundling'],
 
-            // Atmosphere x Kumaw Dimsum - Better Together
-            ['name' => '4 Dimsum Ori + 2 Coffee', 'price' => 48000, 'category' => 'bundling_hemat', 'description' => 'Atmosphere x Kumaw Dimsum Better Together'],
-            ['name' => '6 Dimsum Ori + 2 Coffee', 'price' => 57000, 'category' => 'bundling_hemat', 'description' => 'Atmosphere x Kumaw Dimsum Better Together'],
-            ['name' => '4 Dimsum Spicy Mayo + 2 Coffee', 'price' => 50000, 'category' => 'bundling_hemat', 'description' => 'Atmosphere x Kumaw Dimsum Better Together'],
-            ['name' => '6 Dimsum Spicy Mayo + 2 Coffee', 'price' => 60000, 'category' => 'bundling_hemat', 'description' => 'Atmosphere x Kumaw Dimsum Better Together'],
+            // Atmosphere x Kumaw X Atmosphr - Better Together
+            ['name' => '4 Dimsum Ori + 2 Coffee', 'price' => 48000, 'category' => 'bundling_hemat', 'description' => 'Atmosphere x Kumaw X Atmosphr Better Together'],
+            ['name' => '6 Dimsum Ori + 2 Coffee', 'price' => 57000, 'category' => 'bundling_hemat', 'description' => 'Atmosphere x Kumaw X Atmosphr Better Together'],
+            ['name' => '4 Dimsum Spicy Mayo + 2 Coffee', 'price' => 50000, 'category' => 'bundling_hemat', 'description' => 'Atmosphere x Kumaw X Atmosphr Better Together'],
+            ['name' => '6 Dimsum Spicy Mayo + 2 Coffee', 'price' => 60000, 'category' => 'bundling_hemat', 'description' => 'Atmosphere x Kumaw X Atmosphr Better Together'],
 
             // Original
             ['name' => 'Dimsum Original 4 pcs', 'price' => 18000, 'category' => 'original', 'description' => 'Include Saus Bangkok'],
