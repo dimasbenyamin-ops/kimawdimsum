@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Manajemen Aset & Inventaris – Kumaw Dimsum Admin')
+@section('title', 'Manajemen Aset & Inventaris – Kumaw X Atmosphr Admin')
 
 @section('content')
     <div class="page-header">

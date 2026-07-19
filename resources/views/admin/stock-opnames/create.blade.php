@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Buat Stock Opname – Kumaw Dimsum Admin')
+@section('title', 'Buat Stock Opname – Kumaw X Atmosphr Admin')
 
 @section('styles')
 <style>

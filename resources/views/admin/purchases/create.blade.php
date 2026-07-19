@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Buat PO Pembelian – Kumaw Dimsum Admin')
+@section('title', 'Buat PO Pembelian – Kumaw X Atmosphr Admin')
 
 @section('styles')
 <style>

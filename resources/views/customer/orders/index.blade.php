@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Pesanan Saya – Kumaw Dimsum')
+@section('title', 'Pesanan Saya – Kumaw X Atmosphr')
 
 @section('styles')
 <style>
@@ -112,7 +112,7 @@
     <div class="page-header">
         <div>
             <h1>🧾 Pesanan Saya</h1>
-            <p>Riwayat semua pesanan kamu di Kumaw Dimsum</p>
+            <p>Riwayat semua pesanan kamu di Kumaw X Atmosphr</p>
         </div>
         <a href="{{ route('menu.index') }}" class="btn btn-gold">🥟 Pesan Lagi</a>
     </div>

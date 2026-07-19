@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Edit Data Aset – Kumaw Dimsum Admin')
+@section('title', 'Edit Data Aset – Kumaw X Atmosphr Admin')
 
 @section('styles')
 <style>

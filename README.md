@@ -1,6 +1,6 @@
-# Kumaw Dimsum
+# Kumaw X Atmosphr
 
-Aplikasi Point of Sales (POS) dan sistem pemesanan makanan berbasis web untuk Kumaw Dimsum. Aplikasi ini dibangun menggunakan Laravel dan memungkinkan pelanggan untuk memesan langsung melalui perangkat mereka (Guest Checkout), serta menyediakan dashboard khusus untuk Kasir dan Admin dalam mengelola pesanan, menu, dan laporan penjualan.
+Aplikasi Point of Sales (POS) dan sistem pemesanan makanan berbasis web untuk Kumaw X Atmosphr. Aplikasi ini dibangun menggunakan Laravel dan memungkinkan pelanggan untuk memesan langsung melalui perangkat mereka (Guest Checkout), serta menyediakan dashboard khusus untuk Kasir dan Admin dalam mengelola pesanan, menu, dan laporan penjualan.
 
 ## Fitur Utama
 

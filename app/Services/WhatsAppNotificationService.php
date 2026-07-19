@@ -30,7 +30,7 @@ class WhatsAppNotificationService
         $message = "Halo {$order->customer_name}!\n\n"
                  . "Pesanan kamu dengan nomor *{$order->order_number}* sudah SIAP DIAMBIL 🥟✨\n\n"
                  . "Total Tagihan: {$order->formattedTotal}\n"
-                 . "Terima kasih telah memesan di Kumaw Dimsum!";
+                 . "Terima kasih telah memesan di Kumaw X Atmosphr!";
 
         // Simulate API Payload
         $payload = [

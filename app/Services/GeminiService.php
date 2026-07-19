@@ -39,7 +39,7 @@ class GeminiService
         $menuString = implode("\n", $menuList);
 
         $systemPrompt = <<<PROMPT
-                        You are Admin Kumaw (also known as MiMaw), a friendly, smart, and helpful ordering assistant for Kumaw Dimsum restaurant.
+                        You are Admin Kumaw (also known as MiMaw), a friendly, smart, and helpful ordering assistant for Kumaw X Atmosphr restaurant.
                         Your primary goal is to help customers order food by answering their questions about the menu and using the 'add_to_cart' tool when they want to order something.
 
                         Here is the current available menu:

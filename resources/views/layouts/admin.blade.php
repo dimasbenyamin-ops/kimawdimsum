@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Kumaw Dimsum – Panel Admin">
+    <meta name="description" content="Kumaw X Atmosphr – Panel Admin">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'Admin') – Kumaw Dimsum</title>
+    <title>@yield('title', 'Admin') – Kumaw X Atmosphr</title>
     <link rel="icon" type="image/png" href="{{ asset('images/dimsum-logo.png') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -685,7 +685,7 @@
             <img src="{{ asset('images/dimsum-logo.png') }}" alt="Logo" style="height: 36px; width: 36px; border-radius: 50%; object-fit: cover;">
         </div>
         <div class="sidebar-brand-text">
-            <h2>Kumaw Dimsum</h2>
+            <h2>Kumaw X Atmosphr</h2>
             <span>Panel Admin</span>
         </div>
     </a>

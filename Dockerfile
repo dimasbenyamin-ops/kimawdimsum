@@ -1,12 +1,12 @@
 # ============================================================
-# Kumaw Dimsum — Dockerfile
+# Kumaw X Atmosphr — Dockerfile
 # PHP 8.3-FPM, multi-stage: base → development → production
 # ============================================================
 
 # --- Base Stage: Shared PHP extensions & system deps ---
 FROM php:8.3-fpm-alpine AS base
 
-LABEL maintainer="Kumaw Dimsum Team"
+LABEL maintainer="Kumaw X Atmosphr Team"
 LABEL description="PHP 8.3 FPM for Laravel 11 + Reverb"
 
 # System dependencies

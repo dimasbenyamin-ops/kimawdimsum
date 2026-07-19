@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Edit Menu: ' . $menu->name . ' – Kumaw Dimsum Admin')
+@section('title', 'Edit Menu: ' . $menu->name . ' – Kumaw X Atmosphr Admin')
 
 @section('styles')
 <style>

@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Pencatatan Waste / Spoilage – Kumaw Dimsum Admin')
+@section('title', 'Pencatatan Waste / Spoilage – Kumaw X Atmosphr Admin')
 
 @section('content')
     <div class="page-header">

@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Edit Master Resep: ' . $masterRecipe->name . ' – Kumaw Dimsum Admin')
+@section('title', 'Edit Master Resep: ' . $masterRecipe->name . ' – Kumaw X Atmosphr Admin')
 
 @section('styles')
 <style>

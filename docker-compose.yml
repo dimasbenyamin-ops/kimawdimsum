@@ -1,5 +1,5 @@
 # ============================================================
-# Kumaw Dimsum — Docker Compose
+# Kumaw X Atmosphr — Docker Compose
 # Services: app (PHP-FPM), nginx, redis, reverb (WebSocket)
 # Database: shared 'mariadb' container on external optima network
 # Network: external 'optima' shared network

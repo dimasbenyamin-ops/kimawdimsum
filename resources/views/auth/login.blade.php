@@ -1,6 +1,6 @@
 @extends('layouts.guest')
 
-@section('title', 'Masuk – Kumaw Dimsum')
+@section('title', 'Masuk – Kumaw X Atmosphr')
 
 @section('content')
     <h2 style="font-size:1.125rem;font-weight:700;margin-bottom:1.5rem;text-align:center">Masuk ke Akun</h2>

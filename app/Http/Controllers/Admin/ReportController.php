@@ -18,8 +18,8 @@ class ReportController extends Controller
 {
     private function getDateRange(Request $request): array
     {
-        $startDate = $request->query('start_date', Carbon::now()->startOfMonth()->toDateString());
-        $endDate = $request->query('end_date', Carbon::now()->endOfMonth()->toDateString());
+        $startDate = $request->input('start_date', Carbon::now()->startOfMonth()->toDateString());
+        $endDate = $request->input('end_date', Carbon::now()->endOfMonth()->toDateString());
 
         return [$startDate, $endDate];
     }

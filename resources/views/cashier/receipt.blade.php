@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Cetak Struk – Kumaw Dimsum')
+@section('title', 'Cetak Struk – Kumaw X Atmosphr')
 
 @section('styles')
 <style>
@@ -197,7 +197,7 @@
     <div class="invoice-modal" id="invoice-printable">
         {{-- HEADER --}}
         <div class="invoice-header">
-            <div class="invoice-brand">{{ \App\Models\Setting::getValue('store_name', 'Kumaw Dimsum') }}</div>
+            <div class="invoice-brand">{{ \App\Models\Setting::getValue('store_name', 'Kumaw X Atmosphr') }}</div>
             <div class="invoice-tagline">{{ \App\Models\Setting::getValue('store_address', 'Jl. Dimsum Enak No. 88') }} · Telp. {{ \App\Models\Setting::getValue('store_phone', '(021) 888-0000') }}</div>
             <hr class="invoice-divider">
             <div class="invoice-number">#{{ $order->order_number }}</div>
@@ -286,7 +286,7 @@
         {{-- FOOTER --}}
         <div class="invoice-footer">
             Terima kasih telah memesan di<br>
-            <strong>{{ \App\Models\Setting::getValue('store_name', 'Kumaw Dimsum') }}</strong><br>
+            <strong>{{ \App\Models\Setting::getValue('store_name', 'Kumaw X Atmosphr') }}</strong><br>
             <span style="font-size:0.7rem">Simpan struk ini sebagai bukti pembayaran</span>
         </div>
 

@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Detail PO ' . $purchase->purchase_number . ' – Kumaw Dimsum Admin')
+@section('title', 'Detail PO ' . $purchase->purchase_number . ' – Kumaw X Atmosphr Admin')
 
 @section('styles')
 <style>
