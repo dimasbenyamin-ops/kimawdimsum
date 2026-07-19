@@ -143,8 +143,6 @@ class UserController extends Controller
      */
     private function validateUserRequest(Request $request, ?User $user = null): array
     {
-        $userId = $user?->id;
-
         return $request->validate([
             'username'   => [
                 'required',
@@ -152,14 +150,14 @@ class UserController extends Controller
                 'min:3',
                 'max:50',
                 'alpha_dash',             // only letters, numbers, dashes, underscores
-                "unique:users,username,{$userId}",
+                \Illuminate\Validation\Rule::unique('users', 'username')->ignore($user?->id),
             ],
             'name'       => ['required', 'string', 'min:2', 'max:100'],
             'email'      => [
                 'required',
                 'email:rfc,dns',
                 'max:254',
-                "unique:users,email,{$userId}",
+                \Illuminate\Validation\Rule::unique('users', 'email')->ignore($user?->id),
             ],
             // Required on create; optional (nullable) on update
             'password'   => [
