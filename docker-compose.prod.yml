@@ -1,0 +1,121 @@
+# ============================================================
+# Kumaw X Atmosphr — Production Docker Compose (server-gratis)
+# Standalone, without OpenShip. Uses external Supabase Postgres.
+# ============================================================
+
+networks:
+  kumaw_prod:
+    driver: bridge
+
+volumes:
+  redis_data:
+    driver: local
+
+services:
+
+  # ----------------------------------------------------------
+  # Redis — Cache, Session & Queue backend
+  # ----------------------------------------------------------
+  redis:
+    image: redis:7-alpine
+    container_name: kumaw_redis
+    restart: unless-stopped
+    networks:
+      - kumaw_prod
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  # ----------------------------------------------------------
+  # PHP-FPM + Nginx Application Server (production single container)
+  # ----------------------------------------------------------
+  app:
+    image: kumaw_app:prod
+    container_name: kumaw_app
+    restart: unless-stopped
+    working_dir: /var/www/html
+    networks:
+      - kumaw_prod
+    depends_on:
+      redis:
+        condition: service_healthy
+    environment:
+      APP_NAME: "${APP_NAME:-Kumaw X Atmosphr}"
+      APP_ENV: production
+      APP_DEBUG: "false"
+      APP_URL: "https://dimasbenyamin.web.id"
+      APP_KEY: "${APP_KEY}"
+      # --- Supabase Database ---
+      DB_CONNECTION: pgsql
+      DB_HOST: "${DB_HOST:-aws-1-ap-southeast-1.pooler.supabase.com}"
+      DB_PORT: 6543
+      DB_DATABASE: postgres
+      DB_USERNAME: "${DB_USERNAME:-postgres.twsvnacmunuspovzolhq}"
+      DB_PASSWORD: "${DB_PASSWORD}"
+      # -------------------------
+      CACHE_STORE: redis
+      SESSION_DRIVER: redis
+      QUEUE_CONNECTION: redis
+      REDIS_HOST: kumaw_redis
+      REDIS_PASSWORD: "null"
+      REDIS_PORT: 6379
+      BROADCAST_CONNECTION: reverb
+      REVERB_APP_ID: kumaw-app
+      REVERB_APP_KEY: kumaw-app-key
+      REVERB_APP_SECRET: kumaw-app-secret
+      REVERB_HOST: "dimasbenyamin.web.id"
+      REVERB_PORT: 443
+      REVERB_SCHEME: https
+      MIDTRANS_SERVER_KEY: "${MIDTRANS_SERVER_KEY}"
+      MIDTRANS_CLIENT_KEY: "${MIDTRANS_CLIENT_KEY}"
+      MIDTRANS_IS_PRODUCTION: "true"
+    ports:
+      - "80:8080"
+
+  # ----------------------------------------------------------
+  # Laravel Reverb — WebSocket Server
+  # ----------------------------------------------------------
+  reverb:
+    image: kumaw_app:prod
+    container_name: kumaw_reverb
+    restart: unless-stopped
+    working_dir: /var/www/html
+    command: php artisan reverb:start --host=0.0.0.0 --port=8080
+    networks:
+      - kumaw_prod
+    depends_on:
+      redis:
+        condition: service_healthy
+      app:
+        condition: service_started
+    ports:
+      - "8080:8080"
+    environment:
+      APP_ENV: production
+      APP_DEBUG: "false"
+      APP_KEY: "${APP_KEY}"
+      # --- Supabase Database ---
+      DB_CONNECTION: pgsql
+      DB_HOST: "${DB_HOST:-aws-1-ap-southeast-1.pooler.supabase.com}"
+      DB_PORT: 6543
+      DB_DATABASE: postgres
+      DB_USERNAME: "${DB_USERNAME:-postgres.twsvnacmunuspovzolhq}"
+      DB_PASSWORD: "${DB_PASSWORD}"
+      # -------------------------
+      CACHE_STORE: redis
+      SESSION_DRIVER: redis
+      QUEUE_CONNECTION: redis
+      REDIS_HOST: kumaw_redis
+      REDIS_PASSWORD: "null"
+      REDIS_PORT: 6379
+      BROADCAST_CONNECTION: reverb
+      REVERB_APP_ID: kumaw-app
+      REVERB_APP_KEY: kumaw-app-key
+      REVERB_APP_SECRET: kumaw-app-secret
+      REVERB_HOST: "dimasbenyamin.web.id"
+      REVERB_PORT: 443
+      REVERB_SCHEME: https
