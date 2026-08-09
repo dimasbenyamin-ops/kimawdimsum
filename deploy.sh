@@ -17,7 +17,7 @@ ok()  { echo -e "${GREEN}[OK]${NC} $1"; }
 warn(){ echo -e "${YELLOW}[WARN]${NC} $1"; }
 err() { echo -e "${RED}[ERROR]${NC} $1"; exit 1; }
 
-APP_DIR="$HOME/KumawDimsum"
+APP_DIR="$(pwd)"
 
 log "========================================"
 log "  Kumaw Dimsum — Production Deployment"
