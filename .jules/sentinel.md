@@ -4,3 +4,8 @@
 2. Timing attack vulnerability during cryptographic signature verification using `!==` in `PaymentController.php`.
 **Learning:** `getClientOriginalExtension()` should never be trusted as it can be easily spoofed, allowing malicious scripts to bypass extension checks. Similarly, standard string comparison operators (`==` or `!==`) short-circuit upon finding the first difference, allowing attackers to guess signatures byte-by-byte via timing attacks.
 **Prevention:** Always use `$file->extension()` (which determines extension via MIME type) instead of user-supplied extensions in Laravel. Always use `hash_equals()` for comparing cryptographic signatures to ensure constant-time comparison.
+
+## 2025-02-14 - Using `env()` outside config files in Laravel
+**Vulnerability:** Retrieving credentials and variables using `env()` directly in Controllers or Services (e.g. `PaymentController`, `GeminiService`).
+**Learning:** In Laravel, when configuration caching is enabled (`php artisan config:cache`), all `env()` calls outside of the config files will return `null`. This can cause production environments to silently fail or misconfigure security boundaries, as credentials become empty strings or null.
+**Prevention:** Always define environment-dependent variables in `config/` files, and access them using `config('file.key')` in the application code.

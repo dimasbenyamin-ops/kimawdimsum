@@ -13,8 +13,8 @@ class PaymentController extends Controller
     public function __construct()
     {
         // Set configuration based on env
-        Config::$serverKey = env('MIDTRANS_SERVER_KEY');
-        Config::$isProduction = env('MIDTRANS_IS_PRODUCTION', false);
+        Config::$serverKey = config('services.midtrans.server_key');
+        Config::$isProduction = config('services.midtrans.is_production');
         Config::$isSanitized = true;
         Config::$is3ds = true;
     }
@@ -266,7 +266,7 @@ class PaymentController extends Controller
         $orderId = $notification->order_id;
         $statusCode = $notification->status_code;
         $grossAmount = $notification->gross_amount;
-        $serverKey = env('MIDTRANS_SERVER_KEY');
+        $serverKey = config('services.midtrans.server_key');
         $signatureKey = $notification->signature_key;
 
         // Security: Verify Signature
