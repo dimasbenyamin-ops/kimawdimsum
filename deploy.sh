@@ -55,17 +55,9 @@ log "Menjalankan semua service..."
 docker compose -f docker-compose.prod.yml up -d
 ok "Service berjalan"
 
-# 7. Tunggu database siap
-log "Menunggu database siap..."
-sleep 15
-for i in {1..20}; do
-    if docker exec kumaw_mariadb healthcheck.sh --connect --innodb_initialized 2>/dev/null; then
-        ok "Database siap!"
-        break
-    fi
-    log "Menunggu database... ($i/20)"
-    sleep 5
-done
+# 7. Tunggu service siap
+log "Menunggu service siap..."
+sleep 10
 
 # 8. Jalankan migration
 log "Menjalankan database migration..."
