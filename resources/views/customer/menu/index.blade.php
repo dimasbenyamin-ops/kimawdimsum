@@ -8,24 +8,40 @@
     /* ---- Hero ---- */
     .hero {
         text-align: center;
-        padding: 3rem 1rem 2rem;
+        width: 100%;
+        height: 265.2px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin-top: 1rem;
         margin-bottom: 2.5rem;
         position: relative;
+        border-radius: 24px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
     }
     .hero::before {
         content: '';
         position: absolute;
         inset: 0;
-        background: radial-gradient(ellipse at 50% 0%, rgba(245,158,11,0.08) 0%, transparent 70%);
+        background: 
+            linear-gradient(to bottom, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.7)),
+            url('{{ asset("images/foto-outlet.png") }}');
+        background-size: cover;
+        background-position: center;
         pointer-events: none;
+        z-index: -1;
     }
     .hero-badge {
         display: inline-block;
-        padding: 0.25rem 0.875rem;
-        background: rgba(245,158,11,0.12);
-        border: 1px solid rgba(245,158,11,0.25);
+        padding: 0.35rem 1rem;
+        background: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+        border: 1px solid rgba(245,158,11,0.5);
         border-radius: 999px;
-        color: var(--gold);
+        color: #fcd34d;
         font-size: 0.8125rem;
         font-weight: 600;
         margin-bottom: 1rem;
@@ -34,13 +50,19 @@
         font-size: clamp(1.75rem, 5vw, 2.75rem);
         font-weight: 800;
         line-height: 1.15;
-        background: linear-gradient(135deg, var(--text) 30%, var(--gold) 100%);
+        background: linear-gradient(135deg, #ffffff 30%, #fcd34d 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
         margin-bottom: 0.75rem;
+        filter: drop-shadow(0 4px 6px rgba(0,0,0,0.6));
     }
-    .hero p { color: var(--muted); font-size: 1rem; }
+    .hero p { 
+        color: rgba(255, 255, 255, 0.9); 
+        font-size: 1rem; 
+        font-weight: 500;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+    }
 
     /* ---- Category filter ---- */
     .category-bar {
