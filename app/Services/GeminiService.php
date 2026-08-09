@@ -14,7 +14,7 @@ class GeminiService
 
     public function __construct()
     {
-        $this->apiKey = env('GEMINI_API_KEY', '');
+        $this->apiKey = config('services.gemini.api_key', '');
     }
 
     public function sendMessage(array $messages)
