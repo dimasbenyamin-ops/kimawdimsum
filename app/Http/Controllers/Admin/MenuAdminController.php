@@ -55,7 +55,8 @@ class MenuAdminController extends Controller
         $imagePath = null;
         if ($request->hasFile('image')) {
             $file = $request->file('image');
-            $filename = Str::random(40) . '.' . $file->getClientOriginalExtension();
+            // Security: Use safe extension instead of client provided extension
+            $filename = Str::random(40) . '.' . $file->extension();
             $file->move(public_path('images/menus'), $filename);
             $imagePath = 'images/menus/' . $filename;
         }
@@ -119,7 +120,8 @@ class MenuAdminController extends Controller
             }
 
             $file = $request->file('image');
-            $filename = Str::random(40) . '.' . $file->getClientOriginalExtension();
+            // Security: Use safe extension instead of client provided extension
+            $filename = Str::random(40) . '.' . $file->extension();
             $file->move(public_path('images/menus'), $filename);
             $updateData['image_path'] = 'images/menus/' . $filename;
         }
