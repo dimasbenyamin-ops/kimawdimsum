@@ -35,6 +35,9 @@ services:
   # ----------------------------------------------------------
   app:
     image: kumaw_app:prod
+    build:
+      context: .
+      target: production
     container_name: kumaw_app
     restart: unless-stopped
     working_dir: /var/www/html
