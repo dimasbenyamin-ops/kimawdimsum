@@ -54,7 +54,7 @@ services:
       DB_HOST: "aws-1-ap-southeast-1.pooler.supabase.com"
       DB_PORT: 6543
       DB_DATABASE: postgres
-      DB_USERNAME: "${DB_USERNAME:-postgres.twsvnacmunuspovzolhq}"
+      DB_USERNAME: "postgres.twsvnacmunuspovzolhq"
       DB_PASSWORD: "${DB_PASSWORD}"
       # -------------------------
       CACHE_STORE: redis
@@ -103,7 +103,7 @@ services:
       DB_HOST: "aws-1-ap-southeast-1.pooler.supabase.com"
       DB_PORT: 6543
       DB_DATABASE: postgres
-      DB_USERNAME: "${DB_USERNAME:-postgres.twsvnacmunuspovzolhq}"
+      DB_USERNAME: "postgres.twsvnacmunuspovzolhq"
       DB_PASSWORD: "${DB_PASSWORD}"
       # -------------------------
       CACHE_STORE: redis
