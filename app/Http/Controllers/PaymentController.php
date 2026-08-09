@@ -208,7 +208,8 @@ class PaymentController extends Controller
 
         $calculatedSignature = "HMACSHA256=" . base64_encode(hash_hmac('sha256', $componentSignature, $secretKey, true));
 
-        if ($calculatedSignature !== $signature) {
+        // Security: Use hash_equals to prevent timing attacks
+        if (!hash_equals($calculatedSignature, $signature)) {
             Log::warning('DOKU Webhook: Invalid Signature', ['payload' => $payload, 'calculated' => $calculatedSignature, 'signature' => $signature]);
             return response()->json(['message' => 'Invalid Signature'], 403);
         }
@@ -271,7 +272,8 @@ class PaymentController extends Controller
         // Security: Verify Signature
         $calculatedSignature = hash('sha512', $orderId . $statusCode . $grossAmount . $serverKey);
         
-        if ($calculatedSignature !== $signatureKey) {
+        // Security: Use hash_equals to prevent timing attacks
+        if (!hash_equals($calculatedSignature, $signatureKey)) {
             Log::warning('Midtrans Webhook: Invalid Signature', ['payload' => $notification]);
             return response()->json(['message' => 'Invalid Signature'], 403);
         }
