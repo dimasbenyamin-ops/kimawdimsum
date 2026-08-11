@@ -47,7 +47,7 @@ docker compose -f docker-compose.prod.yml down --remove-orphans 2>/dev/null || t
 
 # 5. Build image production
 log "Building Docker image (ini mungkin butuh 5-10 menit)..."
-docker compose -f docker-compose.prod.yml build --no-cache app
+docker compose -f docker-compose.prod.yml build app
 ok "Build selesai"
 
 # 6. Jalankan semua service
